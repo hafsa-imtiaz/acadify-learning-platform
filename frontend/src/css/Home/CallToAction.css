@@ -1,0 +1,88 @@
+.cta-section {
+    background-color: #111827; /* gray-900 */
+    color: white;
+    padding: 80px 20px;
+  }
+  
+  .cta-container {
+    max-width: 1120px; /* 7xl */
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .cta-content {
+    max-width: 768px; /* 3xl */
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .cta-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+  
+  .cta-description {
+    font-size: 1.125rem;
+    color: #d1d5db; /* gray-300 */
+    margin-bottom: 40px;
+  }
+  
+  .cta-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  @media (min-width: 640px) {
+    .cta-buttons {
+      flex-direction: row;
+    }
+  }
+  
+  .cta-button {
+    padding: 16px 32px;
+    font-size: 1.125rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+  }
+  
+  .cta-button.primary {
+    background-color: #0d9488; /* teal-600 */
+    color: white;
+  }
+  
+  .cta-button.primary:hover {
+    background-color: #0f766e; /* teal-700 */
+  }
+  
+  .cta-button.secondary {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+  }
+  
+  .cta-button.secondary:hover {
+    background-color: white;
+    color: #111827;
+  }
+  
+  .cta-login {
+    margin-top: 24px;
+    color: #9ca3af; /* gray-400 */
+  }
+  
+  .cta-link {
+    color: #2dd4bf; /* teal-400 */
+    text-decoration: none;
+  }
+  
+  .cta-link:hover {
+    text-decoration: underline;
+  }
+  

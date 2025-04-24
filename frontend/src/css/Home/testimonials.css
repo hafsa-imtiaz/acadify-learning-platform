@@ -1,0 +1,125 @@
+.testimonials-section {
+    padding: 80px 20px;
+    background-color: #fff;
+  }
+  
+  .testimonial-container {
+    max-width: 960px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .testimonial-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #222;
+  }
+  
+  .testimonial-header p {
+    font-size: 1.125rem;
+    color: #666;
+    margin-bottom: 40px;
+  }
+  
+  .testimonial-card-wrapper {
+    position: relative;
+  }
+  
+  .testimonial-card {
+    background: linear-gradient(135deg, #2563eb, #14b8a6);
+    color: white;
+    padding: 60px 40px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  .quote-icon {
+    width: 40px;
+    height: 40px;
+    opacity: 0.2;
+    margin-bottom: 20px;
+  }
+  
+  .testimonial-text {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+  
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .testimonial-author h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .testimonial-author p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #d1fae5;
+  }
+  
+  .nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    color: #444;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .nav-button:hover {
+    color: #14b8a6;
+  }
+  
+  .nav-button.left {
+    left: -25px;
+  }
+  
+  .nav-button.right {
+    right: -25px;
+  }
+  
+  .dot-indicators {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+    gap: 10px;
+  }
+  
+  .dot {
+    height: 10px;
+    width: 30px;
+    background-color: #ddd;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dot.active {
+    background-color: #14b8a6;
+  }
+  

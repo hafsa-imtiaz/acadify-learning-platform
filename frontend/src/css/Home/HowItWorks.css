@@ -1,0 +1,148 @@
+/* HowItWorks.css */
+.how-it-works-section {
+    padding: 4rem 0;
+    background-color: white;
+  }
+  
+  .how-it-works-container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .how-it-works-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+  
+  .how-it-works-title {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #1f2937; /* gray-900 */
+  }
+  
+  .how-it-works-subtitle {
+    margin-top: 1rem;
+    font-size: 1.125rem;
+    color: #4b5563; /* gray-600 */
+    max-width: 768px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .how-it-works-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(1, 1fr);
+    margin-bottom: 4rem; /* Add some bottom space */
+  }
+  
+  @media (min-width: 768px) {
+    .how-it-works-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .how-it-works-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  .step-card-wrapper {
+    position: relative;
+  }
+  
+  .step-card {
+    background-color: #f0fdfa;
+    border-radius: 0.5rem;
+    padding: 3rem 2rem 2rem; /* Extra top padding */
+    height: 90%;
+    position: relative;
+  }
+  
+  .step-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #0d9488; /* teal-600 */
+    color: white;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    transform: translate(50%, -50%);
+  }
+  
+  .step-icon-wrapper {
+    color: #0d9488; /* teal-600 */
+    margin-bottom: 1rem;
+  }
+  
+  .step-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .step-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #1f2937; /* gray-900 */
+    margin-bottom: 0.5rem;
+  }
+  
+  .step-description {
+    color: #4b5563; /* gray-600 */
+  }
+  
+  .step-connector {
+    display: none;
+  }
+  
+  @media (min-width: 1024px) {
+    .step-connector {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      width: 2rem;
+      height: 2px;
+      background-color: #e5e7eb; /* gray-200 */
+      transform: translateY(-50%);
+    }
+  
+    .step-connector-dot {
+      position: absolute;
+      right: 0;
+      width: 0.5rem;
+      height: 0.5rem;
+      background-color: #0d9488; /* teal-600 */
+      border-radius: 9999px;
+      transform: translateY(-50%);
+      top: 50%;
+    }
+  }
+  
+  .how-it-works-footer {
+    text-align: center;
+    margin-top: 3rem;
+  }
+  
+  .start-learning-button {
+    background-color: #0d9488; /* teal-600 */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .start-learning-button:hover {
+    background-color: #0f766e; /* teal-700 */
+  }
+  

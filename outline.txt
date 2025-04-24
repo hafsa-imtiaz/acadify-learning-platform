@@ -1,0 +1,130 @@
+
+### 🔒 **Post-Login Pages**
+
+#### 🧑‍🎓 **For Students**
+1. **Student Dashboard**
+   - Welcome header, upcoming classes or assessments
+   - Navigation to assignments, resources, and profile
+
+2. **My Courses / Classes**
+   - List of enrolled subjects/courses
+   - Access to class materials or announcements
+
+3. **Assignments Page**
+   - View current assignments
+   - Submit assignment (file upload or text)
+
+4. **Grades / Feedback Page**
+   - See marks, feedback from teachers
+
+5. **Profile Page**
+   - View & edit personal info
+   - Change password
+
+---
+
+#### 👩‍🏫 **For Teachers**
+1. **Teacher Dashboard**
+   - Overview of classes being taught
+   - Quick access to add assignments or announcements
+
+2. **Class Management**
+   - List of classes they handle
+   - Option to add/edit/delete students in a class
+
+3. **Create Assignment Page**
+   - Upload materials / set deadlines
+
+4. **Submissions Page**
+   - View student submissions
+   - Grade and leave feedback
+
+5. **Profile Page**
+   - View & edit personal info
+   - Change password
+
+---
+
+### 🛠️ **Shared Pages (Optional but Useful)**
+- **404 Not Found / Error Page**
+- **Terms & Conditions / Privacy Policy**
+- **About / Contact Page**
+- **Settings Page** (account-level settings)
+- **Logout Button / Logic**
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+Perfect! Based on your updated requirements — where **course browsing is public**, but **enrollment & deep access (like quizzes, lessons)** requires login — here's a **clean breakdown** of all the pages you'll need:
+
+---
+
+## 🌐 **Public Pages (Accessible Without Login)**
+
+1. ### **Landing Page** ✅  
+   - Hero section, value proposition, call to action buttons (Login/Register)
+
+2. ### **Course Catalog / Browse Courses Page** ✅ 
+   - Shows list/grid of all available courses  
+   - Each course card shows: title, duration, summary, tags/topics  
+   - Search bar + filters (optional): category, level, duration
+
+3. ### **Course Preview Page** ✅ 
+   - When user clicks a course from catalog  
+   - Shows:
+     - Course title, instructor
+     - Duration
+     - Topics covered (overview)
+     - Prerequisites
+     - ⭐ Ratings or reviews
+     - Enroll/Login to access full content
+
+4. ### **Login Page** ✅  
+5. ### **Register Page** (Student/Teacher Flow) ✅  
+6. ### **About / Contact Page** *(Optional, adds credibility)*  ✅ 
+7. ### **404 / Not Found Page**
+
+---
+
+## 🔒 **Private Pages (Require Login / Registration)**
+
+### 🧑‍🎓 **Student**
+1. **Student Dashboard**
+   - Enrolled courses
+   - Progress tracking
+
+2. **Course Details Page (Private Version)**
+   - Lessons, quizzes, materials, discussions  
+   - “Mark as complete” button, etc.
+
+3. **Assignment Submission / Quizzes Page**
+
+4. **Grades & Feedback Page**
+
+5. **Profile / Settings Page**
+
+---
+
+### 👩‍🏫 **Teacher**
+1. **Teacher Dashboard**
+   - Courses they teach
+   - Stats: enrollments, submissions
+
+2. **Course Creation / Management Page**
+   - Add/edit course details, topics, durations  
+   - Upload lessons, quizzes
+
+3. **Student Submissions & Grading Page**
+
+4. **Profile / Settings Page**
+
+---
+
+### 📌 **Suggested User Flow (Example)**
+
+1. Visitor opens site → sees **Landing Page**
+2. Clicks “Browse Courses” → lands on **Course Catalog**
+3. Clicks a course → sees **Public Preview Page**
+4. Clicks “Enroll” or “Access Content” → gets redirected to **Login/Register**
+5. After login:
+   - If student → lands on **Student Dashboard**
+   - If teacher → lands on **Teacher Dashboard**
