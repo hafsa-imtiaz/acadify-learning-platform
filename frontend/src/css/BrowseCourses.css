@@ -26,14 +26,14 @@
   color: white;
 }
 
-.search-container {
+.search-container-courses {
   display: flex;
   gap: 1rem;
   max-width: 32rem;
   margin: 0 auto;
 }
 
-.search-input-wrapper {
+.search-input-wrapper-courses {
   position: relative;
   flex: 1;
 }
@@ -193,7 +193,9 @@
 }
 
 /* Main Content */
-.main-content {
+.main-content-courses {
+  padding-left: 10px;
+  margin-left:0px;
   flex: 1;
 }
 

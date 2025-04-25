@@ -3,6 +3,7 @@ import React from "react";
 import "../../css/Home/herosection.css";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import introImage from '../../assets/Courses/introtoweb.jpg';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -40,7 +41,13 @@ const HeroSection = () => {
             <div className="hero-demo-bg-yellow"></div>
             <div className="hero-demo-bg-blue"></div>
             <div className="hero-demo">
-              <div className="hero-demo-video">
+              <div className="hero-demo-video" style={{
+                  backgroundImage: `url(${introImage})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  height: '350px',
+                  position: 'relative',
+                }}>
                 <div className="hero-demo-play">
                   <svg className="hero-demo-play-icon" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8.0001 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />

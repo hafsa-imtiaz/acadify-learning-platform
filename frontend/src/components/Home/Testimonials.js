@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import '../../css/Home/testimonials.css';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Maryum from '../../assets/Home/maryum.jpg'
+import Mahum from '../../assets/Home/Mahum.jpg'
+import Abeer from '../../assets/Home/Abeer.jpg'
 
 const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -9,29 +12,29 @@ const Testimonials = () => {
     {
       id: 1,
       content:
-        "LearnHub completely transformed my career. I went from knowing nothing about programming to landing a job as a full-stack developer in just 6 months. The courses are well-structured and the instructors are amazing!",
-      author: "Alex Morgan",
+        "Acadify completely transformed my career. I went from knowing nothing about programming to landing a job as a full-stack developer in just 6 months. The courses are well-structured and the instructors are amazing!",
+      author: "Mahum Hamid",
       role: "Software Developer",
       company: "TechCorp",
-      avatar: "https://i.pravatar.cc/64?u=1",
+      avatar: Mahum,
     },
     {
       id: 2,
       content:
-        "As someone running a small business, the marketing courses on LearnHub have been invaluable. I've been able to implement strategies that have doubled our online presence and increased sales by 40%.",
-      author: "Samantha Lee",
+        "As someone running a small business, the marketing courses on Acadify have been invaluable. I've been able to implement strategies that have doubled our online presence and increased sales by 40%.",
+      author: "Abeer Jawad",
       role: "Business Owner",
       company: "Bloom Boutique",
-      avatar: "https://i.pravatar.cc/64?u=2",
+      avatar: Abeer,
     },
     {
       id: 3,
       content:
-        "The quality of instruction on LearnHub is unmatched. I've tried many online learning platforms, but the depth of content and the engagement from instructors here make it stand out. Worth every penny!",
-      author: "James Wilson",
+        "The quality of instruction on Acadify is unmatched. I've tried many online learning platforms, but the depth of content and the engagement from instructors here make it stand out. Worth every penny!",
+      author: "Maryum Fasih",
       role: "Project Manager",
       company: "InnovateTech",
-      avatar: "https://i.pravatar.cc/64?u=3",
+      avatar: Maryum,
     },
   ];
 

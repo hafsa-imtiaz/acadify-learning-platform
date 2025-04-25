@@ -154,6 +154,7 @@
     position: relative;
     z-index: 2;
   }
+
   .hero-demo-video {
     aspect-ratio: 16 / 9;
     background: #f3f4f6;
@@ -171,6 +172,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .hero-demo-play-icon {
     height: 2rem;

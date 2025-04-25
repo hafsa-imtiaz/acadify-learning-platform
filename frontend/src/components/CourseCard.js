@@ -7,7 +7,7 @@ const CourseCard = ({ title, instructor, rating, reviewCount, price, image, leve
   return (
     <div className="coursecard">
       <div className="coursecard-img-wrapper">
-        <img src="/api/placeholder/320/180" alt={title} className="coursecard-img" />
+        <img src={image} alt={title} className="coursecard-img" />
         <div className="coursecard-level">{level}</div>
       </div>
       <div className="coursecard-content">

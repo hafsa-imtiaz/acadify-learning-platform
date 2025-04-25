@@ -5,83 +5,89 @@ import Footer from '../components/Home/Footer';
 import { Search, Filter } from "lucide-react";
 import "../css/BrowseCourses.css";
 import { Link } from 'react-router-dom';
+import dscourse from '../assets/Courses/datascicourse.jpg';
+import webcourse from '../assets/Courses/webdev.png';
+import reactcourse from '../assets/Courses/reactdev.jpeg';
+import pythoncourse from '../assets/Courses/python.png';
+import uiuxcourse from '../assets/Courses/advanceuiux.png';
+import mlcourse from '../assets/Courses/machineL.jpeg'
 
 const mockCourses = [
   {
     id: 1,
     title: "Intro to Python",
-    instructor: "Jane Doe",
+    instructor: "Aoun Jee",
     duration: "4 weeks",
     level: "Beginner",
     rating: 4.7,
     reviewCount: 1254,
     price: 49.99,
-    image: "/api/placeholder/320/180",
+    image: pythoncourse,
     topics: ["Python", "Programming", "Beginner"],
     category: "Programming"
   },
   {
     id: 2,
     title: "Web Development Bootcamp",
-    instructor: "John Smith",
+    instructor: "Tajwar Mehmood",
     duration: "6 weeks",
     level: "Intermediate",
     rating: 4.9,
     reviewCount: 3421,
     price: 79.99,
-    image: "/api/placeholder/320/180",
+    image: webcourse,
     topics: ["HTML", "CSS", "JavaScript"],
     category: "Programming"
   },
   {
     id: 3,
     title: "Data Science Basics",
-    instructor: "Alice Brown",
+    instructor: "Areen Zainab",
     duration: "5 weeks",
     level: "Beginner",
     rating: 4.5,
     reviewCount: 987,
     price: 59.99,
-    image: "/api/placeholder/320/180",
+    image: dscourse,
     topics: ["Data Analysis", "Pandas", "Beginner"],
     category: "Data Science"
   },
   {
     id: 4,
     title: "Advanced React Patterns",
-    instructor: "Mike Johnson",
+    instructor: "Tajwar Mehmood",
     duration: "4 weeks",
     level: "Advanced",
     rating: 4.8,
     reviewCount: 765,
     price: 89.99,
-    image: "/api/placeholder/320/180",
+    image: reactcourse,
     topics: ["React", "JavaScript", "Advanced"],
     category: "Programming"
   },
   {
     id: 5,
     title: "Machine Learning Fundamentals",
-    instructor: "Sarah Williams",
+    instructor: "Hafsa Imtiaz",
     duration: "8 weeks",
     level: "Intermediate",
     rating: 4.6,
     reviewCount: 1876,
     price: 99.99,
-    image: "/api/placeholder/320/180",
+    image: mlcourse,
     topics: ["Machine Learning", "Python", "Data Science"],
     category: "Data Science"
   },
   {
     id: 6,
     title: "UX/UI Design Principles",
-    instructor: "David Lee",
+    instructor: "Fatimah Rehman",
     duration: "5 weeks",
     level: "Beginner",
     rating: 4.7,
     reviewCount: 1134,
     price: 69.99,
-    image: "/api/placeholder/320/180",
+    image: uiuxcourse,
     topics: ["Design", "UX", "UI"],
     category: "Design"
   }
@@ -101,7 +107,6 @@ const BrowseCourses = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState("popular");
 
-  // Define available categories
   const categories = ["All Courses", "Programming", "Design", "Business", "Data Science"];
 
   useEffect(() => {
@@ -236,8 +241,10 @@ const BrowseCourses = () => {
   );
 
   return (
-    <div className="main-container">
+    <div>
       <Navbar />
+    
+    <div className="main-container">
       
       {/* Hero Section */}
       <div className="hero-section">
@@ -245,8 +252,8 @@ const BrowseCourses = () => {
           <div className="hero-content">
             <h1 className="hero-title">Discover Your Next Learning Journey</h1>
             <p className="hero-description">Explore thousands of expert-led courses to fuel your career, passion, and personal growth</p>
-            <div className="search-container">
-              <div className="search-input-wrapper">
+            <div className="search-container-courses">
+              <div className="search-input-wrapper-courses">
                 <Search size={20} className="search-icon" />
                 <input
                   type="text"
@@ -362,7 +369,7 @@ const BrowseCourses = () => {
           </div>
           
           {/* Main Content */}
-          <div className="main-content">
+          <div className="main-content-courses">
             {/* Category tags and Sort Bar */}
             <div className="category-sort-bar">
               <div className="category-tags">
@@ -469,6 +476,7 @@ const BrowseCourses = () => {
             )}
           </div>
         </div>
+      </div>
       </div>
       <Footer />
     </div>

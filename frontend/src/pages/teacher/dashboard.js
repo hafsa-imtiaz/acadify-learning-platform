@@ -4,11 +4,10 @@ import PerformanceAnalytics from '../../components/teacher/TeacherDashboard/Perf
 import UpcomingItems from '../../components/teacher/TeacherDashboard/UpcomingItems';
 import ActivityFeed from '../../components/teacher/TeacherDashboard/ActivityFeed';
 import QuickActions from '../../components/teacher/TeacherDashboard/QuickActions';
-import { Bell, ChevronDown, Search, Settings } from 'lucide-react';
+import TeacherLayout from '../../components/teacher/sidebar';
 import '../../css/teacher/TeacherDashboard.css';
 
 const TeacherDashboard = () => {
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [courses, setCourses] = useState([
     {
       id: 1,
@@ -37,50 +36,14 @@ const TeacherDashboard = () => {
   ]);
 
   return (
-    <div className="teacher-dashboard">
-      <header className="dashboard-header">
-        <div className="header-left">
-          <h1>Teacher Dashboard</h1>
-          <p className="welcome-message">Welcome back, Prof. Jane!</p>
-        </div>
-        <div className="header-right">
-          <div className="search-container">
-            <Search size={18} />
-            <input type="text" placeholder="Search..." />
-          </div>
-          <button className="icon-button">
-            <Bell size={20} />
-            <span className="notification-badge">3</span>
-          </button>
-          <button className="icon-button">
-            <Settings size={20} />
-          </button>
-          <div className="profile-dropdown">
-            <button 
-              className="profile-button" 
-              onClick={() => setShowProfileMenu(!showProfileMenu)}
-            >
-              <img 
-                src="/api/placeholder/40/40" 
-                alt="Profile" 
-                className="profile-image" 
-              />
-              <span>Jane Smith</span>
-              <ChevronDown size={16} />
-            </button>
-            {showProfileMenu && (
-              <div className="dropdown-menu">
-                <a href="#">Profile</a>
-                <a href="#">Account Settings</a>
-                <a href="#">Help Center</a>
-                <a href="#">Log Out</a>
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
-
+    <TeacherLayout>
       <div className="dashboard-content">
+        <section className="dashboard-section quick-actions-section">
+          <div className="section-header">
+            <h2>Quick Actions</h2>
+          </div>
+          <QuickActions />
+        </section>
         <section className="dashboard-section">
           <div className="section-header">
             <h2>My Courses</h2>
@@ -122,6 +85,7 @@ const TeacherDashboard = () => {
               <h2>Upcoming Lessons & Tasks</h2>
               <button className="text-button">View Calendar</button>
             </div> 
+            <UpcomingItems />
           </section>
 
           <section className="dashboard-section activity-section">
@@ -129,16 +93,11 @@ const TeacherDashboard = () => {
               <h2>Student Activity</h2>
               <button className="text-button">View All Activity</button>
             </div>
+            <ActivityFeed />
           </section>
         </div>
-
-        <section className="dashboard-section quick-actions-section">
-          <div className="section-header">
-            <h2>Quick Actions</h2>
-          </div>
-        </section>
       </div>
-    </div>
+    </TeacherLayout>
   );
 };
 

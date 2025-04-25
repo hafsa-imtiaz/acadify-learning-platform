@@ -11,9 +11,9 @@ const mockCourse = {
   id: 1,
   title: "Introduction to Python Programming",
   subtitle: "Learn Python from scratch and build your first applications",
-  instructor: "Dr. Jane Doe",
+  instructor: "Aoun Jee",
   instructorTitle: "Senior Software Engineer at Tech Company",
-  instructorBio: "Dr. Jane has over 10 years of experience in software development and has taught programming to thousands of students worldwide.",
+  instructorBio: "Dr. Jee has over 10 years of experience in software development and has taught programming to thousands of students worldwide.",
   duration: "4 weeks",
   level: "Beginner",
   price: 49.99,
@@ -50,8 +50,7 @@ const mockCourse = {
 };
 
 const CoursePreview = () => {
-  const { courseId } = useParams(); // To support dynamic routing
-  // Changed to use an object for tracking multiple open sections
+  const { courseId } = useParams(); 
   const [openSections, setOpenSections] = useState({
     overview: true,
     instructor: false,
