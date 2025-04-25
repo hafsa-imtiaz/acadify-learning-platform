@@ -9,7 +9,9 @@ import BrowseCourses from './pages/BrowseCourses';
 import CoursePreview from './pages/CoursePreview';
 import AboutSection from './pages/AboutSection';
 import TeacherDashboard from './pages/teacher/dashboard';
-import MyCourses from './pages/teacher/MyCourses';
+import TeacherCourses from './pages/teacher/MyCourses';
+import TeacherCalender from './pages/teacher/MyCalendar';
+import CreateCourse from './pages/teacher/createcourse';
 
 function App() {
   return (
@@ -24,7 +26,9 @@ function App() {
         <Route path="/courses/:courseId" element={<CoursePreview />} />
         <Route path='/about' element={<AboutSection />} />
         <Route path='/teacher/dashboard' element={<TeacherDashboard />} />
-        <Route path='/teacher/courses' element={<MyCourses />} />
+        <Route path='/teacher/courses' element={<TeacherCourses />} />
+        <Route path='/teacher/calendar' element={<TeacherCalender />} />
+        <Route path='/courses/create' element={<CreateCourse />} />
       </Routes>
     </Router>
   );

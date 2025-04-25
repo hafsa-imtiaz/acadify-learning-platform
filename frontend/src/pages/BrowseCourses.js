@@ -29,7 +29,7 @@ const mockCourses = [
   {
     id: 2,
     title: "Web Development Bootcamp",
-    instructor: "Tajwar Mehmood",
+    instructor: "Abdullah Azeem",
     duration: "6 weeks",
     level: "Intermediate",
     rating: 4.9,

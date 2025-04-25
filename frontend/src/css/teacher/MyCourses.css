@@ -1,5 +1,5 @@
-/* MyCourses.css */
 .my-courses-page {
+    margin-top: 35px;
     display: flex;
     min-height: 100vh;
     background-color: #f8f9fb;
@@ -8,8 +8,7 @@
   .courses-container {
     flex: 1;
     padding: 0 24px 32px;
-    margin-left: 250px; /* Adjust based on your sidebar width */
-    overflow-y: auto;
+    margin-left: 10px; 
   }
   
   .courses-header {

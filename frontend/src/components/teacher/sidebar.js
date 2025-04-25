@@ -8,20 +8,149 @@ import {
   Shield, Mail, BookOpen as Course,
   PenTool, UserCheck, MessageSquare, Moon
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../../css/teacher/teachersidebar.css';
 import Areen from '../../assets/Profile/Areen.jpg';
 
 export default function TeacherLayout({ children }) {
   const PFPImage = Areen;
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notifications, setNotifications] = useState(3);
-  const [activeItem, setActiveItem] = useState('dashboard');
-  const [activeSubItem, setActiveSubItem] = useState('assignments');
-  const [expandedGroup, setExpandedGroup] = useState('main');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  
+  // Set default active states based on current path
+  const [activeItem, setActiveItem] = useState('dashboard');
+  const [activeSubItem, setActiveSubItem] = useState('overview');
+  const [expandedGroup, setExpandedGroup] = useState('main');
+  const [coursesSubmenuOpen, setCoursesSubmenuOpen] = useState(false);
 
   const profileRef = useRef(null);
+
+  // Menu structure with routes
+  const menuGroups = [
+    {
+      id: 'main',
+      title: 'Main',
+      items: [
+        { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/teacher/dashboard', 
+          description: 'Overview of your courses, students and activity' },
+        { id: 'calendar', label: 'Calendar', icon: Calendar, path: '/teacher/calendar',
+          description: 'View and manage course schedule and deadlines' },
+      ]
+    },
+    {
+      id: 'teaching',
+      title: 'Teaching',
+      items: [
+        { 
+          id: 'courses', 
+          label: 'Courses', 
+          icon: BookOpen, 
+          path: '/teacher/courses',
+          description: 'Create, edit and manage your course content',
+          hasSubmenu: true,
+          subItems: [
+            { id: 'overview', label: 'Overview', path: '/teacher/courses' },
+            { id: 'modules', label: 'Modules', path: '/teacher/courses/modules' },
+            { id: 'assignments', label: 'Assignments & Grading', path: '/teacher/courses/assignments' },
+            { id: 'students', label: 'Students', path: '/teacher/courses/students' },
+          ],
+        },
+        { id: 'students', label: 'Students', icon: Users, path: '/teacher/students', 
+          description: 'View enrollments, progress and student data' },
+        { id: 'assignments', label: 'Assignments', icon: PenTool, path: '/teacher/assignments', 
+          description: 'Manage assignments across all courses' },
+        { id: 'sessions', label: 'Live Sessions', icon: Video, path: '/teacher/sessions', 
+          description: 'Schedule and manage webinars and office hours' },
+      ]
+    },
+    {
+      id: 'community',
+      title: 'Community',
+      items: [
+        { id: 'discussions', label: 'Discussions', icon: MessageCircle, path: '/teacher/discussions', 
+          description: 'Manage course discussions and student questions' },
+        { id: 'reviews', label: 'Reviews', icon: Star, path: '/teacher/reviews', 
+          description: 'See student reviews and course ratings' },
+      ]
+    },
+    {
+      id: 'insights',
+      title: 'Insights',
+      items: [
+        { id: 'analytics', label: 'Analytics', icon: BarChart2, path: '/teacher/analytics', 
+          description: 'View detailed performance metrics and analytics' },
+        { id: 'reports', label: 'Reports', icon: FileText, path: '/teacher/reports', 
+          description: 'Generate and view detailed reports' },
+      ]
+    },
+    {
+      id: 'account',
+      title: 'Account',
+      items: [
+        { id: 'settings', label: 'Settings', icon: Settings, path: '/teacher/settings', 
+          description: 'Configure profile, payments and preferences' },
+        { id: 'help', label: 'Help Center', icon: HelpCircle, path: '/teacher/help', 
+          description: 'Get help and support' },
+      ]
+    },
+  ];
+
+  const subMenuItems = [
+    { id: 'overview', label: 'Overview', path: '/teacher/courses' },
+    { id: 'modules', label: 'Modules', path: '/teacher/courses/modules' },
+    { id: 'assignments', label: 'Assignments & Grading', path: '/teacher/courses/assignments' },
+    { id: 'students', label: 'Students', path: '/teacher/courses/students' },
+    { id: 'settings', label: 'Settings', path: '/teacher/courses/settings' }
+  ];
+
+  // Initialize active item and submenu based on current path
+  useEffect(() => {
+    const currentPath = location.pathname;
+    
+    // Find the item that matches the current path
+    let foundItem = false;
+    
+    for (const group of menuGroups) {
+      for (const item of group.items) {
+        // Check if the current path matches this item's path
+        if (currentPath === item.path || currentPath.startsWith(item.path + '/')) {
+          setActiveItem(item.id);
+          setExpandedGroup(group.id);
+          foundItem = true;
+          
+          // If this is courses, check for submenu match
+          if (item.id === 'courses' && item.hasSubmenu) {
+            setCoursesSubmenuOpen(true);
+            
+            // Find matching submenu item
+            const subItem = item.subItems.find(sub => 
+              currentPath === sub.path || currentPath.startsWith(sub.path + '/')
+            );
+            
+            if (subItem) {
+              setActiveSubItem(subItem.id);
+            } else {
+              // Default to overview if no match
+              setActiveSubItem('overview');
+            }
+          }
+          
+          break;
+        }
+      }
+      if (foundItem) break;
+    }
+    
+    // Default to dashboard if no match found
+    if (!foundItem) {
+      setActiveItem('dashboard');
+      setExpandedGroup('main');
+    }
+  }, [location.pathname]);
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -37,20 +166,6 @@ export default function TeacherLayout({ children }) {
     };
   }, [profileRef]);
 
-  // Expand the group of the active item by default
-  useEffect(() => {
-    const findGroupForActiveItem = () => {
-      for (const group of menuGroups) {
-        if (group.items.some(item => item.id === activeItem)) {
-          return group.id;
-        }
-      }
-      return '';
-    };
-    
-    setExpandedGroup(findGroupForActiveItem());
-  }, [activeItem]);
-
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -58,72 +173,37 @@ export default function TeacherLayout({ children }) {
   const toggleGroup = (groupId) => {
     setExpandedGroup(expandedGroup === groupId ? '' : groupId);
   };
-
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    // backend baad main
-    navigate('/login'); 
+  
+  const handleNavigation = (item) => {
+    // If it's the courses item and it's already active, just toggle the submenu
+    if (item.id === 'courses' && activeItem === 'courses') {
+      setCoursesSubmenuOpen(!coursesSubmenuOpen);
+    } else {
+      // Otherwise navigate to the item's path
+      setActiveItem(item.id);
+      
+      // If the item has a submenu, open it
+      if (item.hasSubmenu) {
+        setCoursesSubmenuOpen(true);
+        // Set the first sub-item as active
+        if (item.subItems && item.subItems.length > 0) {
+          setActiveSubItem(item.subItems[0].id);
+        }
+      }
+      
+      // Navigate to the path
+      navigate(item.path);
+    }
   };
-  const menuGroups = [
-    {
-      id: 'main',
-      title: 'Main',
-      items: [
-        { id: 'dashboard', label: 'Dashboard', icon: Home, description: 'Overview of your courses, students and activity' },
-        { id: 'calendar', label: 'Calendar', icon: Calendar, description: 'View and manage course schedule and deadlines' },
-      ],
-      onClick: () => navigate('/teacher/dashboard')
-    },
-    {
-      id: 'teaching',
-      title: 'Teaching',
-      items: [
-        { id: 'courses', label: 'Courses', icon: BookOpen, description: 'Create, edit and manage your course content',
-          subItems: [
-            { id: 'overview', label: 'Overview', onClick: () => navigate('/teacher/courses') },
-            { id: 'modules', label: 'Modules' },
-            { id: 'assignments', label: 'Assignments & Grading' },
-            { id: 'students', label: 'Students' },
-          ],
-        },
-        { id: 'students', label: 'Students', icon: Users, description: 'View enrollments, progress and student data' },
-        { id: 'assignments', label: 'Assignments', icon: PenTool, description: 'Manage assignments across all courses' },
-        { id: 'sessions', label: 'Live Sessions', icon: Video, description: 'Schedule and manage webinars and office hours' },
-      ]
-    },
-    {
-      id: 'community',
-      title: 'Community',
-      items: [
-        { id: 'discussions', label: 'Discussions', icon: MessageCircle, description: 'Manage course discussions and student questions' },
-        { id: 'reviews', label: 'Reviews', icon: Star, description: 'See student reviews and course ratings' },
-      ]
-    },
-    {
-      id: 'insights',
-      title: 'Insights',
-      items: [
-        { id: 'analytics', label: 'Analytics', icon: BarChart2, description: 'View detailed performance metrics and analytics' },
-        { id: 'reports', label: 'Reports', icon: FileText, description: 'Generate and view detailed reports' },
-      ]
-    },
-    {
-      id: 'account',
-      title: 'Account',
-      items: [
-        { id: 'settings', label: 'Settings', icon: Settings, description: 'Configure profile, payments and preferences' },
-        { id: 'help', label: 'Help Center', icon: HelpCircle, description: 'Get help and support' },
-      ]
-    },
-  ];
+  
+  const handleSubItemClick = (subItem) => {
+    setActiveSubItem(subItem.id);
+    navigate(subItem.path);
+  };
 
-  const subMenuItems = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'modules', label: 'Modules' },
-    { id: 'assignments', label: 'Assignments & Grading' },
-    { id: 'students', label: 'Students' },
-    { id: 'settings', label: 'Settings' }
-  ];
+  const handleLogout = () => {
+    navigate('/login');
+  };
 
   return (
     <div className="teacher-layout-td">
@@ -173,12 +253,7 @@ export default function TeacherLayout({ children }) {
                 {group.items.map(item => (
                   <li key={item.id}>
                     <button
-                      onClick={() => {
-                        setActiveItem(item.id);
-                        if (item.subItems && item.subItems.length > 0) {
-                          setActiveSubItem(item.subItems[0].id);
-                        }
-                      }}
+                      onClick={() => handleNavigation(item)}
                       className={`menu-item-td ${activeItem === item.id ? 'active-td' : ''}`}
                       title={!sidebarOpen ? item.description : ""}
                     >
@@ -186,17 +261,22 @@ export default function TeacherLayout({ children }) {
                       {sidebarOpen && (
                         <>
                           <span className="menu-label-td">{item.label}</span>
-                          {item.subItems && <ChevronDown size={16} className="submenu-indicator-td" />}
+                          {item.hasSubmenu && (
+                            <ChevronDown 
+                              size={16} 
+                              className={`submenu-indicator-td ${coursesSubmenuOpen ? 'rotated-td' : ''}`} 
+                            />
+                          )}
                         </>
                       )}
                     </button>
 
-                    {sidebarOpen && item.subItems && activeItem === item.id && (
-                      <ul className="submenu-list-td">
+                    {sidebarOpen && item.hasSubmenu && activeItem === item.id && (
+                      <ul className={`submenu-list-td ${coursesSubmenuOpen ? 'visible-td' : 'hidden-td'}`}>
                         {item.subItems.map(subItem => (
                           <li key={subItem.id}>
                             <button
-                              onClick={() => setActiveSubItem(subItem.id)}
+                              onClick={() => handleSubItemClick(subItem)}
                               className={`submenu-item-td ${activeSubItem === subItem.id ? 'active-td' : ''}`}
                             >
                               <span className="submenu-dot-td"></span>
@@ -315,7 +395,10 @@ export default function TeacherLayout({ children }) {
                 <button
                   key={item.id}
                   className={activeSubItem === item.id ? 'active-submenu-td' : ''}
-                  onClick={() => setActiveSubItem(item.id)}
+                  onClick={() => {
+                    setActiveSubItem(item.id);
+                    navigate(item.path);
+                  }}
                 >
                   {item.label}
                 </button>
@@ -329,36 +412,18 @@ export default function TeacherLayout({ children }) {
             <span>
               {menuGroups.flatMap(group => group.items).find(item => item.id === activeItem)?.label || 'Dashboard'}
             </span>
-            {activeItem === 'courses' && (
+            {activeItem === 'courses' && activeSubItem && (
               <>
                 <span>/</span>
-                <span>{subMenuItems.find(item => item.id === activeSubItem)?.label || 'Assignments & Grading'}</span>
+                <span>{subMenuItems.find(item => item.id === activeSubItem)?.label || 'Overview'}</span>
               </>
             )}
           </div>
         </header>
 
-        {/* Page Content */}
+        {/* Page Content - Only render children here */}
         <div className="content-td">
-          {children || (
-            <div className="content-card-td">
-              <h2 className="content-title-td">
-                Welcome to your {menuGroups.flatMap(group => group.items).find(item => item.id === activeItem)?.label || 'Dashboard'}
-              </h2>
-              <p className="content-description-td">
-                {menuGroups.flatMap(group => group.items).find(item => item.id === activeItem)?.description || 'View and manage your teaching activities'}
-              </p>
-
-              {activeItem === 'courses' && activeSubItem === 'assignments' && (
-                <div className="assignments-section-td">
-                  <h3>Assignments & Grading</h3>
-                  <p>
-                    Create, manage and grade assignments, quizzes and exams for your courses. You can access this section from within any course.
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
+          {children}
         </div>
       </div>
       

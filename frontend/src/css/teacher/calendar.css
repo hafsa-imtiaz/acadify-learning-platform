@@ -1,0 +1,459 @@
+/* calendar.css */
+
+/* Base styles */
+.instructor-calendar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    color: #333;
+  }
+  
+  /* Calendar Header Styles */
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .calendar-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .calendar-title h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+  
+  .calendar-icon {
+    color: #3b82f6;
+  }
+  
+  .view-toggle {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 0.25rem;
+  }
+  
+  .toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .toggle-btn:hover {
+    color: #1e293b;
+  }
+  
+  .toggle-btn.active {
+    background: #ffffff;
+    color: #3b82f6;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* Content animations */
+  .calendar-content {
+    transition: opacity 0.3s ease;
+  }
+  
+  .fade-in {
+    opacity: 1;
+  }
+  
+  .fade-out {
+    opacity: 0.6;
+  }
+  
+  /* Calendar View Styles */
+  .calendar-view {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  
+  .month-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .month-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: #1e293b;
+  }
+  
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: none;
+    background: #f8fafc;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .nav-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+  }
+  
+  .weekday-headers {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .weekday {
+    padding: 0.75rem 0;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #64748b;
+  }
+  
+  .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+  
+  .calendar-day {
+    min-height: 110px;
+    border-right: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.5rem;
+    position: relative;
+  }
+  
+  .calendar-day:nth-child(7n) {
+    border-right: none;
+  }
+  
+  .calendar-day.other-month {
+    background: #f8fafc;
+  }
+  
+  .calendar-day.is-today {
+    background: #eff6ff;
+  }
+  
+  .calendar-day.is-today .day-number {
+    background: #3b82f6;
+    color: #ffffff;
+  }
+  
+  .day-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  
+  .day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .event-item {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .event-title {
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .event-course {
+    font-size: 0.7rem;
+    opacity: 0.9;
+  }
+  
+  /* List View Styles */
+  .list-view {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  
+  .list-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .list-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: #1e293b;
+  }
+  
+  .deadlines-list {
+    padding: 1rem;
+  }
+  
+  .month-group {
+    margin-bottom: 2rem;
+  }
+  
+  .month-group:last-child {
+    margin-bottom: 0;
+  }
+  
+  .month-heading {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b;
+    margin: 0.5rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .month-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+  }
+  
+  .deadline-item {
+    display: flex;
+    background: #f8fafc;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+  }
+  
+  .deadline-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .deadline-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    width: 4rem;
+    color: white;
+    text-align: center;
+  }
+  
+  .date-day {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  
+  .date-month {
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+  }
+  
+  .deadline-details {
+    padding: 0.75rem 1rem;
+    flex: 1;
+  }
+  
+  .deadline-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: #1e293b;
+  }
+  
+  .deadline-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+  
+  .deadline-course, .deadline-countdown {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  
+  /* Monthly Summary Styles */
+  .monthly-summary {
+    margin-top: 1.5rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+  }
+  
+  .monthly-summary h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: #1e293b;
+  }
+  
+  .summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .summary-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 8px;
+    background: #f8fafc;
+    transition: background-color 0.2s ease;
+  }
+  
+  .summary-item:hover {
+    background: #f1f5f9;
+  }
+  
+  .summary-indicator {
+    width: 0.5rem;
+    height: 2rem;
+    border-radius: 4px;
+    margin-right: 0.75rem;
+  }
+  
+  .summary-content {
+    flex: 1;
+  }
+  
+  .summary-title {
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+  }
+  
+  .summary-details {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+  
+  .summary-course {
+    font-weight: 500;
+  }
+  
+  .summary-status {
+    display: flex;
+    align-items: center;
+  }
+  
+  .status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    background: #e2e8f0;
+    color: #1e293b;
+    margin-top: 70px;
+    margin-right: 40px;
+  }
+  
+  .status-badge.urgent {
+    background: #fee2e2;
+    color: #ef4444;
+  }
+  
+  .no-deadlines {
+    text-align: center;
+    padding: 2rem;
+    color: #94a3b8;
+    font-style: italic;
+  }
+  
+  /* Course Colors */
+  .blue {
+    background-color: #3b82f6;
+  }
+  
+  .green {
+    background-color: #10b981;
+  }
+  
+  .purple {
+    background-color: #8b5cf6;
+  }
+  
+  .amber {
+    background-color: #f59e0b;
+  }
+  
+  .red {
+    background-color: #ef4444;
+  }
+  
+  .teal {
+    background-color: #14b8a6;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .calendar-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    
+    .toggle-btn span {
+      display: none;
+    }
+    
+    .calendar-day {
+      min-height: 80px;
+    }
+    
+    .event-item {
+      padding: 0.15rem 0.3rem;
+    }
+    
+    .event-course {
+      display: none;
+    }
+    
+    .summary-details {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+  }

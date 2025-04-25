@@ -121,8 +121,8 @@ const MyCourses = () => {
   };
 
   return (
+    <Sidebar>
     <div className="my-courses-page">
-      <Sidebar />
       <div className="courses-container">
        
         <div className="courses-header">
@@ -245,6 +245,7 @@ const MyCourses = () => {
         )}
       </div>
     </div>
+    </Sidebar>
   );
 };
 

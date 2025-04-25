@@ -1,6 +1,6 @@
 ### **Teacher UI Structure Outline**
 
-#### 1️⃣ **Teacher Dashboard**
+#### 1️⃣ **Teacher Dashboard** ✅ 
    - **Purpose**: The central hub for instructors to view and manage their courses and see relevant information about their teaching activities.
    - **Key Features**:
      - Overview of **enrolled students** in each course.
@@ -131,7 +131,7 @@ Perfect — this is a core part of the teacher experience. Based on your require
 
 ---
 
-### 🔹 **1. My Courses Page**
+### 🔹 **1. My Courses Page** ✅ 
 - **Purpose**: Display all the courses a teacher has created.
 - **Page**: `TeacherCoursesPage.js`
 - **Components**:
@@ -212,5 +212,72 @@ Perfect — this is a core part of the teacher experience. Based on your require
 - **Autosave drafts** for in-progress courses.
 
 ---
+/////////////////////////
 
-Would you like to **start designing the "My Courses" page** next or jump to **Course Detail view** for deeper editing functionality?
+---
+
+### 🛠️ **Course Creation Page Outline**
+
+#### 📄 Page: `CreateCourse.js`
+
+---
+
+### ✅ **Tabs / Steps (Sections)**
+
+Each tab corresponds to a logical step in creating a course:
+
+---
+
+#### 1. **📝 Basic Info**
+- Course Title
+- Short Description
+- Detailed Description (Rich Text / Markdown)
+- Thumbnail Upload
+- Category / Tags
+- Language
+
+---
+
+#### 2. **📅 Structure**
+- Decide course structure: by **weeks**, **modules**, or **chapters**
+- Add Modules → Within Modules, add Lessons
+- Option to rearrange via drag-and-drop (optional)
+- Lesson Info:
+  - Title
+  - Type (video, text, quiz)
+  - Content or File Upload
+
+---
+
+#### 3. **📎 Attachments & Resources**
+- Add PDFs, Slides, Links
+- Assign to a lesson or general
+
+---
+
+#### 4. **📊 Course Settings**
+- Course Level (Beginner, Intermediate, Advanced)
+- Estimated Duration
+- Prerequisites
+- Learning Outcomes
+- Enrollment Type (Free / Paid / Invite Only)
+
+---
+
+#### 5. **👨‍🎓 Publish & Preview**
+- Preview course as student
+- Save as Draft
+- Publish Course
+
+---
+
+### 🧱 Additional Components
+
+- **Progress Tabs or Stepper** (to show which step they’re on)
+- **Auto-Save or Save as Draft** button at all times
+- **Form validation and field helpers**
+- **Image/File Uploader component**
+- **Rich Text Editor** for long descriptions
+- **Module & Lesson Form Modal**
+
+---
