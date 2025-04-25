@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect} from 'react';
 import {
   Home, BookOpen, Users, BarChart2,
   FileText, MessageCircle, Star, Video,
@@ -8,7 +8,7 @@ import {
   Shield, Mail, BookOpen as Course,
   PenTool, UserCheck, MessageSquare, Moon
 } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom';
 import '../../css/teacher/teachersidebar.css';
 import Areen from '../../assets/Profile/Areen.jpg';
 
@@ -59,6 +59,11 @@ export default function TeacherLayout({ children }) {
     setExpandedGroup(expandedGroup === groupId ? '' : groupId);
   };
 
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    // backend baad main
+    navigate('/login'); 
+  };
   const menuGroups = [
     {
       id: 'main',
@@ -66,7 +71,8 @@ export default function TeacherLayout({ children }) {
       items: [
         { id: 'dashboard', label: 'Dashboard', icon: Home, description: 'Overview of your courses, students and activity' },
         { id: 'calendar', label: 'Calendar', icon: Calendar, description: 'View and manage course schedule and deadlines' },
-      ]
+      ],
+      onClick: () => navigate('/teacher/dashboard')
     },
     {
       id: 'teaching',
@@ -74,11 +80,11 @@ export default function TeacherLayout({ children }) {
       items: [
         { id: 'courses', label: 'Courses', icon: BookOpen, description: 'Create, edit and manage your course content',
           subItems: [
-            { id: 'overview', label: 'Overview' },
+            { id: 'overview', label: 'Overview', onClick: () => navigate('/teacher/courses') },
             { id: 'modules', label: 'Modules' },
             { id: 'assignments', label: 'Assignments & Grading' },
             { id: 'students', label: 'Students' },
-          ]
+          ],
         },
         { id: 'students', label: 'Students', icon: Users, description: 'View enrollments, progress and student data' },
         { id: 'assignments', label: 'Assignments', icon: PenTool, description: 'Manage assignments across all courses' },
@@ -208,7 +214,7 @@ export default function TeacherLayout({ children }) {
         </nav>
 
         <div className="logout-section-td">
-          <button className="logout-button-td">
+          <button className="logout-button-td" onClick={handleLogout}>
             <LogOut size={20} />
             {sidebarOpen && <span className="menu-label-td">Logout</span>}
           </button>
@@ -293,7 +299,7 @@ export default function TeacherLayout({ children }) {
                       </li>
                     </ul>
                     <div className="dropdown-divider-td"></div>
-                    <a href="#logout" className="dropdown-logout-td">
+                    <a href="#logout" className="dropdown-logout-td" onClick={handleLogout}>
                       <LogOut size={16} />
                       <span>Logout</span>
                     </a>

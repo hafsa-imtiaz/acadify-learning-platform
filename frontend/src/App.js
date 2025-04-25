@@ -9,6 +9,7 @@ import BrowseCourses from './pages/BrowseCourses';
 import CoursePreview from './pages/CoursePreview';
 import AboutSection from './pages/AboutSection';
 import TeacherDashboard from './pages/teacher/dashboard';
+import MyCourses from './pages/teacher/MyCourses';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/courses/:courseId" element={<CoursePreview />} />
         <Route path='/about' element={<AboutSection />} />
         <Route path='/teacher/dashboard' element={<TeacherDashboard />} />
+        <Route path='/teacher/courses' element={<MyCourses />} />
       </Routes>
     </Router>
   );
