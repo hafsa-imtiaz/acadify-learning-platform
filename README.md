@@ -240,7 +240,6 @@ Acadify is a comprehensive learning platform built on the MERN stack (MongoDB, E
 
 ## Table of Contents
 - [Features](#features)
-- [Demo](#demo)
 - [Technologies Used](#technologies-used)
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
@@ -273,9 +272,6 @@ Acadify is a comprehensive learning platform built on the MERN stack (MongoDB, E
 - Track student progress
 - Profile management
 
-## Demo
-
-[Live Demo](https://acadify-learning.example.com) (Coming Soon)
 
 ## Technologies Used
 
@@ -470,4 +466,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-Built with ❤️ by [Your Name]
+Built with love by Hafsa and Areen 
