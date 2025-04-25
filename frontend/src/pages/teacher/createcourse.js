@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import CourseBasicInfoForm from "../../components/teacher/create/CourseBasicInfoForm";
+import CourseBasicInfoForm from "../../components/teacher/create/BasicInfoForm";
 import StructureBuilder from "../../components/teacher/create/CourseStructureBuilder";
+import CourseResourcesUploader from "../../components/teacher/create/CourseResourcesUploader";
+import CourseSettings from "../../components/teacher/create/CourseSettings";
+import PublishPreview from "../../components/teacher/create/PublishPreview";
 import TeacherLayout from '../../components/teacher/sidebar';
 import "../../css/teacher/create/createcourse.css";
 
@@ -22,8 +25,11 @@ const CreateCourse = () => {
       case 1:
         return <StructureBuilder />
       case 2:
+        return <CourseResourcesUploader />
       case 3:
+        return <CourseSettings />
       case 4:
+        return <PublishPreview />
       default:
         return null;
     }
