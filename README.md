@@ -77,7 +77,7 @@ Acadify is a comprehensive learning platform built on the MERN stack (MongoDB, E
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/acadify.git
+git clone https://github.com/hafsa-imtiaz/acadify-learning-platform.git
 cd acadify
 ```
 
