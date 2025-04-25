@@ -1,0 +1,162 @@
+.course-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+  }
+  
+  .course-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
+  
+  .course-image-container {
+    position: relative;
+  }
+  
+  .course-image {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+  }
+  
+  .last-updated {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+  }
+  
+  .course-content {
+    padding: 1rem;
+  }
+  
+  .course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+  
+  .course-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #1f2937;
+    line-height: 1.4;
+    flex: 1;
+  }
+  
+  .menu-container {
+    position: relative;
+  }
+  
+  .menu-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    border-radius: 4px;
+  }
+  
+  .menu-button:hover {
+    background-color: #f3f4f6;
+    color: #4b5563;
+  }
+  
+  .card-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.25rem;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: 180px;
+    overflow: hidden;
+    z-index: 10;
+  }
+  
+  .card-dropdown-menu a {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #4b5563;
+    text-decoration: none;
+  }
+  
+  .card-dropdown-menu a:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .delete-option {
+    color: #ef4444 !important;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .course-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+  
+  .filled-star {
+    color: #f59e0b;
+    fill: #f59e0b;
+  }
+  
+  .course-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .primary-button {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    flex: 1;
+    transition: background-color 0.2s ease;
+  }
+  
+  .primary-button:hover {
+    background-color: #4338ca;
+  }
+  
+  .secondary-button {
+    background-color: white;
+    color: #4f46e5;
+    border: 1px solid #4f46e5;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    flex: 1;
+    transition: all 0.2s ease;
+  }
+  
+  .secondary-button:hover {
+    background-color: #f5f3ff;
+  }

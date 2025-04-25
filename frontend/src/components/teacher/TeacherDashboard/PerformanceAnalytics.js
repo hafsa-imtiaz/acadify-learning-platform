@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import '../../../css/teacher/PerformanceAnalytics.css';
+import '../../../css/teacher/Dashboard/PerformanceAnalytics.css';
 
 const PerformanceAnalytics = () => {
   const [activeTab, setActiveTab] = useState('activity');

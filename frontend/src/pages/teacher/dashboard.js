@@ -37,37 +37,29 @@ const TeacherDashboard = () => {
 
   return (
     <TeacherLayout>
-      <div className="dashboard-content">
-        <section className="dashboard-section quick-actions-section">
-          <div className="section-header">
-            <h2>Quick Actions</h2>
+      <div className="dashboard-content-td">
+        <div className="dashboard-header-td">
+          <h1>Teacher Dashboard</h1>
+          <div className="date-display-td">
+            {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </div>
-          <QuickActions />
-        </section>
-        <section className="dashboard-section">
-          <div className="section-header">
-            <h2>My Courses</h2>
-            <button className="text-button">View All</button>
-          </div>
-          <div className="course-grid">
-            {courses.map(course => (
-              <CourseSummaryCard key={course.id} course={course} />
-            ))}
-            <div className="add-course-card">
-              <div className="add-course-content">
-                <div className="plus-icon">+</div>
-                <p>Create New Course</p>
-              </div>
-            </div>
-          </div>
-        </section>
+        </div>
 
-        <div className="dashboard-row">
-          <section className="dashboard-section analytics-section">
-            <div className="section-header">
+        <div className="dashboard-grid-td">
+          {/* Top row: Quick Actions */}
+          <section className="dashboard-section-td quick-actions-section-td">
+            <div className="section-header-td">
+              <h2>Quick Actions</h2>
+            </div>
+            <QuickActions />
+          </section>
+
+          {/* Second row: Analytics */}
+          <section className="dashboard-section-td analytics-section-td">
+            <div className="section-header-td">
               <h2>Performance Analytics</h2>
-              <div className="analytics-filters">
-                <select defaultValue="lastWeek">
+              <div className="analytics-filters-td">
+                <select defaultValue="lastWeek" className="time-filter-td">
                   <option value="today">Today</option>
                   <option value="lastWeek">Last Week</option>
                   <option value="lastMonth">Last Month</option>
@@ -77,24 +69,44 @@ const TeacherDashboard = () => {
             </div>
             <PerformanceAnalytics />
           </section>
-        </div>
 
-        <div className="dashboard-row">
-          <section className="dashboard-section upcoming-section">
-            <div className="section-header">
-              <h2>Upcoming Lessons & Tasks</h2>
-              <button className="text-button">View Calendar</button>
-            </div> 
-            <UpcomingItems />
-          </section>
-
-          <section className="dashboard-section activity-section">
-            <div className="section-header">
-              <h2>Student Activity</h2>
-              <button className="text-button">View All Activity</button>
+          {/* Third row: My Courses */}
+          <section className="dashboard-section-td courses-section-td">
+            <div className="section-header-td">
+              <h2>My Courses</h2>
+              <button className="text-button-td">View All</button>
             </div>
-            <ActivityFeed />
+            <div className="course-grid-td">
+              {courses.map(course => (
+                <CourseSummaryCard key={course.id} course={course} />
+              ))}
+              <div className="add-course-card-td">
+                <div className="add-course-content-td">
+                  <div className="plus-icon-td">+</div>
+                  <p>Create New Course</p>
+                </div>
+              </div>
+            </div>
           </section>
+
+          {/* Bottom row: Two columns with Upcoming Items and Activity Feed */}
+          <div className="bottom-row-td">
+            <section className="dashboard-section-td upcoming-section-td">
+              <div className="section-header-td">
+                <h2>Upcoming Lessons & Tasks</h2>
+                <button className="text-button-td">View Calendar</button>
+              </div> 
+              <UpcomingItems />
+            </section>
+
+            <section className="dashboard-section-td activity-section-td">
+              <div className="section-header-td">
+                <h2>Student Activity</h2>
+                <button className="text-button-td">View All Activity</button>
+              </div>
+              <ActivityFeed />
+            </section>
+          </div>
         </div>
       </div>
     </TeacherLayout>

@@ -6,11 +6,11 @@ import {
   HelpCircle, LogOut, Calendar, User,
   Layers, Award, ChevronDown, CreditCard,
   Shield, Mail, BookOpen as Course,
-  PenTool, UserCheck, MessageSquare
+  PenTool, UserCheck, MessageSquare, Moon
 } from 'lucide-react';
 
 import '../../css/teacher/teachersidebar.css';
-import Areen from '../../assets/Profile/Areen.jpg'
+import Areen from '../../assets/Profile/Areen.jpg';
 
 export default function TeacherLayout({ children }) {
   const PFPImage = Areen;
@@ -18,7 +18,7 @@ export default function TeacherLayout({ children }) {
   const [notifications, setNotifications] = useState(3);
   const [activeItem, setActiveItem] = useState('dashboard');
   const [activeSubItem, setActiveSubItem] = useState('assignments');
-  const [expandedGroup, setExpandedGroup] = useState('');
+  const [expandedGroup, setExpandedGroup] = useState('main');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   const profileRef = useRef(null);
@@ -36,6 +36,20 @@ export default function TeacherLayout({ children }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [profileRef]);
+
+  // Expand the group of the active item by default
+  useEffect(() => {
+    const findGroupForActiveItem = () => {
+      for (const group of menuGroups) {
+        if (group.items.some(item => item.id === activeItem)) {
+          return group.id;
+        }
+      }
+      return '';
+    };
+    
+    setExpandedGroup(findGroupForActiveItem());
+  }, [activeItem]);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -106,50 +120,50 @@ export default function TeacherLayout({ children }) {
   ];
 
   return (
-    <div className="teacher-layout">
+    <div className="teacher-layout-td">
       {/* Sidebar */}
-      <div className={`sidebar ${sidebarOpen ? 'expanded' : 'collapsed'}`}>
-        <div className="sidebar-header">
-          {sidebarOpen && <div className="logo">Acadify</div>}
-          <button onClick={toggleSidebar} className="toggle-button">
+      <div className={`sidebar-td ${sidebarOpen ? 'expanded-td' : 'collapsed-td'}`}>
+        <div className="sidebar-header-td">
+          {sidebarOpen && <div className="logo-td">Acadify</div>}
+          <button onClick={toggleSidebar} className="toggle-button-td">
             {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
           </button>
         </div>
 
-        <div className="profile-section">
-          <div className="avatar-container">
-            <img src={PFPImage} alt="Teacher Profile" className="avatar" />
-            <span className="status-indicator"></span>
+        <div className="profile-section-td">
+          <div className="avatar-container-td">
+            <img src={PFPImage} alt="Teacher Profile" className="avatar-td" />
+            <span className="status-indicator-td"></span>
           </div>
           {sidebarOpen && (
-            <div className="profile-details">
-              <div className="name">Prof. PFPImage Zainab</div>
-              <div className="department">Computer Science</div>
-              <div className="badges">
-                <span className="badge badge-instructor">Instructor</span>
-                <span className="badge badge-rating">4.9 ★</span>
+            <div className="profile-details-td">
+              <div className="name-td">Prof. Areen Zainab</div>
+              <div className="department-td">Computer Science</div>
+              <div className="badges-td">
+                <span className="badge-td badge-instructor-td">Instructor</span>
+                <span className="badge-td badge-rating-td">4.9 ★</span>
               </div>
             </div>
           )}
         </div>
 
-        <nav className="menu">
+        <nav className="menu-td">
           {menuGroups.map(group => (
-            <div key={group.id} className="menu-group">
+            <div key={group.id} className="menu-group-td">
               {sidebarOpen && (
                 <div
-                  className="group-header"
+                  className="group-header-td"
                   onClick={() => toggleGroup(group.id)}
                 >
-                  <span className="group-title">{group.title}</span>
+                  <span className="group-title-td">{group.title}</span>
                   <ChevronDown
                     size={16}
-                    className={`group-chevron ${expandedGroup === group.id ? 'rotated' : ''}`}
+                    className={`group-chevron-td ${expandedGroup === group.id ? 'rotated-td' : ''}`}
                   />
                 </div>
               )}
 
-              <ul className={`menu-list ${(!sidebarOpen || expandedGroup === group.id) ? 'visible' : 'hidden'}`}>
+              <ul className={`menu-list-td ${(!sidebarOpen || expandedGroup === group.id) ? 'visible-td' : 'hidden-td'}`}>
                 {group.items.map(item => (
                   <li key={item.id}>
                     <button
@@ -159,27 +173,27 @@ export default function TeacherLayout({ children }) {
                           setActiveSubItem(item.subItems[0].id);
                         }
                       }}
-                      className={`menu-item ${activeItem === item.id ? 'active' : ''}`}
+                      className={`menu-item-td ${activeItem === item.id ? 'active-td' : ''}`}
                       title={!sidebarOpen ? item.description : ""}
                     >
                       <item.icon size={20} />
                       {sidebarOpen && (
                         <>
-                          <span className="menu-label">{item.label}</span>
-                          {item.subItems && <ChevronDown size={16} className="submenu-indicator" />}
+                          <span className="menu-label-td">{item.label}</span>
+                          {item.subItems && <ChevronDown size={16} className="submenu-indicator-td" />}
                         </>
                       )}
                     </button>
 
                     {sidebarOpen && item.subItems && activeItem === item.id && (
-                      <ul className="submenu-list">
+                      <ul className="submenu-list-td">
                         {item.subItems.map(subItem => (
                           <li key={subItem.id}>
                             <button
                               onClick={() => setActiveSubItem(subItem.id)}
-                              className={`submenu-item ${activeSubItem === subItem.id ? 'active' : ''}`}
+                              className={`submenu-item-td ${activeSubItem === subItem.id ? 'active-td' : ''}`}
                             >
-                              <span className="submenu-dot"></span>
+                              <span className="submenu-dot-td"></span>
                               {subItem.label}
                             </button>
                           </li>
@@ -193,66 +207,66 @@ export default function TeacherLayout({ children }) {
           ))}
         </nav>
 
-        <div className="logout-section">
-          <button className="logout-button">
+        <div className="logout-section-td">
+          <button className="logout-button-td">
             <LogOut size={20} />
-            {sidebarOpen && <span className="menu-label">Logout</span>}
+            {sidebarOpen && <span className="menu-label-td">Logout</span>}
           </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="main-content">
-        <header className="header">
-          <div className="header-top">
-            <h1 className="page-title">
+      <div className="main-content-td">
+        <header className="header-td">
+          <div className="header-top-td">
+            <h1 className="page-title-td">
               {menuGroups.flatMap(group => group.items).find(item => item.id === activeItem)?.label || 'Dashboard'}
             </h1>
 
-            <div className="header-actions">
-              <div className="search-bar">
+            <div className="header-actions-td">
+              <div className="search-bar-td">
                 <input type="text" placeholder="Search courses, students, or content..." />
-                <button className="search-icon">
-                  <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <button className="search-icon-td">
+                  <svg className="icon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </button>
               </div>
-              <button className="icon-button" title="Create New Course">
+              <button className="icon-button-td" title="Create New Course">
                 <Course size={20} />
               </button>
-              <button className="icon-button" title="Help Center">
+              <button className="icon-button-td" title="Help Center">
                 <HelpCircle size={20} />
               </button>
-              <div className="notification">
-                <button className="icon-button">
+              <div className="notification-td">
+                <button className="icon-button-td">
                   <Bell size={20} />
-                  {notifications > 0 && <span className="notification-badge">{notifications}</span>}
+                  {notifications > 0 && <span className="notification-badge-td">{notifications}</span>}
                 </button>
               </div>
 
               {/* Profile dropdown */}
-              <div className="profile-dropdown" ref={profileRef}>
+              <div className="profile-dropdown-td" ref={profileRef}>
                 <button
-                  className="profile-button"
+                  className="profile-button-td"
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                 >
-                  <img src={PFPImage} alt="Teacher" className="avatar-small" />
-                  <span className="profile-name">Areen Zainab</span>
-                  <ChevronDown size={16} className={`dropdown-arrow ${profileDropdownOpen ? 'rotated' : ''}`} />
+                  <img src={PFPImage} alt="Teacher" className="avatar-small-td" />
+                  <span className="profile-name-td">Areen Zainab</span>
+                  <ChevronDown size={16} className={`dropdown-arrow-td ${profileDropdownOpen ? 'rotated-td' : ''}`} />
                 </button>
 
                 {profileDropdownOpen && (
-                  <div className="dropdown-menu">
-                    <div className="dropdown-header">
-                      <img src={PFPImage} alt="Teacher" className="dropdown-avatar" />
+                  <div className="dropdown-menu-td">
+                    <div className="dropdown-header-td">
+                      <img src={PFPImage} alt="Teacher" className="dropdown-avatar-td" />
                       <div>
-                        <div className="dropdown-name">Prof. PFPImage Zainab</div>
-                        <div className="dropdown-email">i221115@nu.edu.pk</div>
+                        <div className="dropdown-name-td">Prof. Areen Zainab</div>
+                        <div className="dropdown-email-td">i221115@nu.edu.pk</div>
                       </div>
                     </div>
-                    <div className="dropdown-divider"></div>
-                    <ul className="dropdown-list">
+                    <div className="dropdown-divider-td"></div>
+                    <ul className="dropdown-list-td">
                       <li>
                         <a href="#profile">
                           <User size={16} />
@@ -278,8 +292,8 @@ export default function TeacherLayout({ children }) {
                         </a>
                       </li>
                     </ul>
-                    <div className="dropdown-divider"></div>
-                    <a href="#logout" className="dropdown-logout">
+                    <div className="dropdown-divider-td"></div>
+                    <a href="#logout" className="dropdown-logout-td">
                       <LogOut size={16} />
                       <span>Logout</span>
                     </a>
@@ -290,11 +304,11 @@ export default function TeacherLayout({ children }) {
           </div>
 
           {activeItem === 'courses' && (
-            <div className="submenu">
+            <div className="submenu-td">
               {subMenuItems.map(item => (
                 <button
                   key={item.id}
-                  className={activeSubItem === item.id ? 'active-submenu' : ''}
+                  className={activeSubItem === item.id ? 'active-submenu-td' : ''}
                   onClick={() => setActiveSubItem(item.id)}
                 >
                   {item.label}
@@ -303,7 +317,7 @@ export default function TeacherLayout({ children }) {
             </div>
           )}
 
-          <div className="breadcrumbs">
+          <div className="breadcrumbs-td">
             <span>Home</span>
             <span>/</span>
             <span>
@@ -319,18 +333,18 @@ export default function TeacherLayout({ children }) {
         </header>
 
         {/* Page Content */}
-        <div className="content">
+        <div className="content-td">
           {children || (
-            <div className="content-card">
-              <h2 className="content-title">
+            <div className="content-card-td">
+              <h2 className="content-title-td">
                 Welcome to your {menuGroups.flatMap(group => group.items).find(item => item.id === activeItem)?.label || 'Dashboard'}
               </h2>
-              <p className="content-description">
+              <p className="content-description-td">
                 {menuGroups.flatMap(group => group.items).find(item => item.id === activeItem)?.description || 'View and manage your teaching activities'}
               </p>
 
               {activeItem === 'courses' && activeSubItem === 'assignments' && (
-                <div className="assignments-section">
+                <div className="assignments-section-td">
                   <h3>Assignments & Grading</h3>
                   <p>
                     Create, manage and grade assignments, quizzes and exams for your courses. You can access this section from within any course.
@@ -341,6 +355,11 @@ export default function TeacherLayout({ children }) {
           )}
         </div>
       </div>
+      
+      {/* Dark mode toggle button (optional) */}
+      <button className="dark-mode-toggle-td" title="Toggle Dark Mode">
+        <Moon size={20} />
+      </button>
     </div>
   );
 }

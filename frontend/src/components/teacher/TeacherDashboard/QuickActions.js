@@ -9,7 +9,7 @@ import {
   BarChart2, 
   Settings 
 } from 'lucide-react';
-import '../../../css/teacher/QuickActions.css';
+import '../../../css/teacher/Dashboard/QuickActions.css';
 
 const QuickActions = () => {
   const actions = [

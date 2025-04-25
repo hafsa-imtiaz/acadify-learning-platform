@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MoreHorizontal, Users, Star } from 'lucide-react';
-import '../../../css/teacher/CourseSummaryCard.css';
+import '../../../css/teacher/Dashboard/CourseSummaryCard.css';
 
 const CourseSummaryCard = ({ course }) => {
   const [showMenu, setShowMenu] = useState(false);

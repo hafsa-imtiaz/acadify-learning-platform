@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Video, FileText, CheckSquare, ChevronRight } from 'lucide-react';
-import '../../../css/teacher/UpcomingItems.css';
+import '../../../css/teacher/Dashboard/UpcomingItems.css';
 
 const UpcomingItems = () => {
   const upcomingEvents = [

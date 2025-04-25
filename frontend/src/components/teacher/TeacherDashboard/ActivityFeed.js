@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MessageSquare, FileText, HelpCircle, User } from 'lucide-react';
-import '../../../css/teacher/ActivityFeed.css';
+import '../../../css/teacher/Dashboard/ActivityFeed.css';
 
 const ActivityFeed = () => {
   const [filter, setFilter] = useState('all');
