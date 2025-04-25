@@ -1,5 +1,4 @@
 # Acadify - Modern Learning Platform
-# Acadify - Modern Learning Platform
 
 Acadify is a comprehensive learning platform built on the MERN stack (MongoDB, Express.js, React.js, Node.js) that connects teachers and students. Teachers can create and publish courses while students can browse, enroll, and engage with course content.
 
