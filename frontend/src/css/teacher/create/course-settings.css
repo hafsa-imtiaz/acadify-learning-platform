@@ -16,14 +16,15 @@
 }
 
 .settings-title {
-  font-size: 1.5rem; /* Increased size */
-  font-weight: 700;
-  color: #0f172a; /* Darker color for better contrast */
   display: flex;
   align-items: center;
-  gap: 12px; /* Increased gap */
-  border-bottom: 2px solid #e2e8f0; /* Added stylish underline */
-  padding-bottom: 12px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #2563eb;
+  margin-bottom: 22px;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e5e7eb;
 }
 
 /* Grid layout for settings cards */

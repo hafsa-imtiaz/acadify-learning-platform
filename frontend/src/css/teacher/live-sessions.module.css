@@ -1,0 +1,691 @@
+/* LiveSessions.module.css */
+
+/* Main Container */
+.container {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #333;
+  }
+  
+  /* Header Styles */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+  }
+  
+  /* Controls and Filter Section */
+  .controls {
+    margin-bottom: 24px;
+  }
+  
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 16px;
+  }
+  
+  .tabButton {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    font-size: 15px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  
+  .tabButton:hover {
+    color: #3182ce;
+  }
+  
+  .activeTab {
+    color: #3182ce;
+    font-weight: 600;
+  }
+  
+  .activeTab::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #3182ce;
+  }
+  
+  .filterControls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .searchBar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 280px;
+    max-width: 400px;
+    flex-grow: 1;
+  }
+  
+  .searchBar input {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 10px 10px 10px 36px;
+    font-size: 14px;
+    width: 100%;
+    transition: border-color 0.2s ease;
+  }
+  
+  .searchBar input:focus {
+    outline: none;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.1);
+  }
+  
+  .searchBar svg {
+    position: absolute;
+    left: 10px;
+    color: #888;
+  }
+  
+  .clearButton {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  .filterDropdowns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  
+  .filterItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .filterItem label {
+    font-size: 14px;
+    color: #666;
+    white-space: nowrap;
+  }
+  
+  .filterItem select {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #333;
+    background-color: white;
+    cursor: pointer;
+    min-width: 140px;
+  }
+  
+  .filterItem select:focus {
+    outline: none;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.1);
+  }
+  
+  /* Sessions Grid */
+  .sessionsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  /* Session Card */
+  .sessionCard {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #f0f0f0;
+  }
+  
+  .sessionCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+  
+  .sessionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  
+  .sessionHeader h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: #1a1a1a;
+    flex-grow: 1;
+    margin-right: 8px;
+  }
+  
+  .statusBadge {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 12px;
+    white-space: nowrap;
+  }
+  
+  .upcoming {
+    background-color: #e6f4ff;
+    color: #0066cc;
+  }
+  
+  .ongoing {
+    background-color: #edfcf4;
+    color: #00875a;
+  }
+  
+  .completed {
+    background-color: #f0f0f0;
+    color: #666;
+  }
+  
+  .courseName {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+  }
+  
+  .sessionDetails {
+    margin-bottom: 16px;
+  }
+  
+  .detailItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #555;
+  }
+  
+  .detailItem svg {
+    color: #888;
+  }
+  
+  .cardActions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+  }
+  
+  /* Buttons */
+  .addButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .addButton:hover {
+    background-color: #2c73b4;
+  }
+  
+  .viewButton, .editButton, .deleteButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    flex: 1;
+  }
+  
+  .viewButton {
+    background-color: #f0f7ff;
+    color: #2c73b4;
+    border: 1px solid #d8e6f8;
+  }
+  
+  .viewButton:hover {
+    background-color: #e6f0ff;
+  }
+  
+  .editButton {
+    background-color: #f5f5f5;
+    color: #555;
+    border: 1px solid #e0e0e0;
+  }
+  
+  .editButton:hover {
+    background-color: #ebebeb;
+  }
+  
+  .deleteButton {
+    background-color: #fff2f2;
+    color: #d32f2f;
+    border: 1px solid #ffd8d8;
+  }
+  
+  .deleteButton:hover {
+    background-color: #ffe6e6;
+  }
+  
+  /* Modal Styles */
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  
+  .modal {
+    background-color: white;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    animation: modalFadeIn 0.2s ease;
+  }
+  
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .modalHeader h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    color: #1a1a1a;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .closeButton:hover {
+    background-color: #f5f5f5;
+    color: #333;
+  }
+  
+  /* Form Styles */
+  .sessionForm {
+    padding: 24px;
+  }
+  
+  .formGroup {
+    margin-bottom: 16px;
+  }
+  
+  .formGroup label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 6px;
+  }
+  
+  .formGroup input,
+  .formGroup select,
+  .formGroup textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    transition: border-color 0.2s ease;
+  }
+  
+  .formGroup textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .formGroup input:focus,
+  .formGroup select:focus,
+  .formGroup textarea:focus {
+    outline: none;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.1);
+  }
+  
+  .formRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+  }
+  
+  .checkboxGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .checkboxGroup input {
+    width: auto;
+  }
+  
+  .formButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  
+  .cancelButton, .saveButton {
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .cancelButton {
+    background-color: #f5f5f5;
+    color: #555;
+    border: 1px solid #e0e0e0;
+  }
+  
+  .cancelButton:hover {
+    background-color: #ebebeb;
+  }
+  
+  .saveButton {
+    background-color: #3182ce;
+    color: white;
+    border: none;
+  }
+  
+  .saveButton:hover {
+    background-color: #2c73b4;
+  }
+  
+  /* Session Details View */
+  .detailHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding: 0 24px;
+    padding-top: 16px;
+  }
+  
+  .detailHeader h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: #1a1a1a;
+  }
+  
+  .detailRow {
+    display: flex;
+    margin-bottom: 12px;
+    padding: 0 24px;
+  }
+  
+  .detailLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    width: 100px;
+    flex-shrink: 0;
+  }
+  
+  .detailValue {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .sessionLink {
+    color: #3182ce;
+    text-decoration: none;
+    word-break: break-all;
+  }
+  
+  .sessionLink:hover {
+    text-decoration: underline;
+  }
+  
+  .detailDescription {
+    padding: 0 24px;
+    margin-bottom: 16px;
+  }
+  
+  .detailDescription p {
+    margin: 8px 0 0;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+  }
+  
+  .attendeesSection {
+    padding: 16px 24px;
+    margin-top: 16px;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  .attendeesSection h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: #333;
+  }
+  
+  .attendeesList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  
+  .attendeeItem {
+    font-size: 14px;
+    color: #333;
+    padding: 8px 12px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .sessionActions {
+    display: flex;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 16px;
+  }
+  
+  .primaryButton, .secondaryButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .primaryButton {
+    background-color: #3182ce;
+    color: white;
+    border: none;
+  }
+  
+  .primaryButton:hover {
+    background-color: #2c73b4;
+  }
+  
+  .secondaryButton {
+    background-color: #f5f5f5;
+    color: #555;
+    border: 1px solid #e0e0e0;
+  }
+  
+  .secondaryButton:hover {
+    background-color: #ebebeb;
+  }
+  
+  /* Empty State */
+  .emptyState {
+    text-align: center;
+    padding: 48px 24px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px dashed #e0e0e0;
+  }
+  
+  .emptyState p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 24px;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .filterControls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .searchBar {
+      max-width: 100%;
+    }
+    
+    .filterDropdowns {
+      width: 100%;
+    }
+    
+    .formRow {
+      grid-template-columns: 1fr;
+    }
+    
+    .sessionActions {
+      flex-direction: column;
+    }
+    
+    .tabs {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 8px;
+      scrollbar-width: thin;
+    }
+    
+    .tabButton {
+      padding: 10px 16px;
+    }
+    
+    .attendeesList {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .cardActions {
+      flex-direction: column;
+    }
+    
+    .filterItem {
+      width: 100%;
+    }
+    
+    .modalOverlay {
+      padding: 12px;
+    }
+    
+    .sessionCard {
+      padding: 16px;
+    }
+    
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    
+    .header h1 {
+      margin-bottom: 0;
+    }
+    
+    .addButton {
+      width: 100%;
+      justify-content: center;
+    }
+  }

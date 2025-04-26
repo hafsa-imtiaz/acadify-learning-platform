@@ -3,7 +3,8 @@ import { Plus, Save } from "lucide-react";
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import Module from "../../Module";
 import LessonModal from "./LessonModal";
-import "../../../css/teacher/create/StructureBuilder.css";
+import AssignmentModal from "./AssignmentModal";
+import styles from "../../../css/teacher/create/StructureBuilder.module.css";
 
 const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
   // Default structure if no initialData is provided
@@ -36,6 +37,18 @@ const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
           resources: [],
           resourceCount: 0
         },
+      ],
+      assignments: [
+        {
+          id: "assignment-1-1",
+          title: "Introduction Assignment",
+          description: "Tell us about yourself and your goals for this course",
+          dueDate: "2025-05-10",
+          points: 10,
+          submissionType: "text",
+          status: "published",
+          resources: []
+        }
       ]
     },
     {
@@ -67,16 +80,31 @@ const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
           resources: [],
           resourceCount: 0
         },
+      ],
+      assignments: [
+        {
+          id: "assignment-2-1",
+          title: "Setup Verification",
+          description: "Submit a screenshot of your development environment",
+          dueDate: "2025-05-15",
+          points: 15,
+          submissionType: "file",
+          status: "draft",
+          resources: []
+        }
       ]
     }
   ];
 
   const [modules, setModules] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLessonModalOpen, setIsLessonModalOpen] = useState(false);
+  const [isAssignmentModalOpen, setIsAssignmentModalOpen] = useState(false);
   const [currentLesson, setCurrentLesson] = useState(null);
+  const [currentAssignment, setCurrentAssignment] = useState(null);
   const [currentModuleId, setCurrentModuleId] = useState(null);
   const nextModuleId = useRef(1);
   const nextLessonIds = useRef({});
+  const nextAssignmentIds = useRef({});
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   
   // Initialize with initialData or default structure
@@ -90,6 +118,15 @@ const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
       moduleData = defaultModules;
     }
     
+    // Ensure all modules have assignments array and all assignments have status
+    moduleData = moduleData.map(module => ({
+      ...module,
+      assignments: (module.assignments || []).map(assignment => ({
+        ...assignment,
+        status: assignment.status || "draft"
+      }))
+    }));
+    
     setModules(moduleData);
     
     // Set the next module ID reference
@@ -101,18 +138,31 @@ const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
       nextModuleId.current = maxModuleId + 1;
     }
     
-    // Initialize nextLessonIds for existing modules
+    // Initialize nextLessonIds and nextAssignmentIds for existing modules
     const lessonIds = {};
+    const assignmentIds = {};
     moduleData.forEach(module => {
       const moduleIdNum = module.id.split('-')[1];
+      
+      // Process lessons
       const maxLessonId = Math.max(...module.lessons.map(l => {
         const lessonParts = l.id.split('-');
         const idNum = parseInt(lessonParts[2], 10);
         return isNaN(idNum) ? 0 : idNum;
       }), 0);
       lessonIds[module.id] = maxLessonId + 1;
+      
+      // Process assignments
+      const maxAssignmentId = Math.max(...(module.assignments || []).map(a => {
+        const assignmentParts = a.id.split('-');
+        const idNum = parseInt(assignmentParts[2], 10);
+        return isNaN(idNum) ? 0 : idNum;
+      }), 0);
+      assignmentIds[module.id] = maxAssignmentId + 1;
     });
+    
     nextLessonIds.current = lessonIds;
+    nextAssignmentIds.current = assignmentIds;
     
     setHasUnsavedChanges(false);
   }, [initialData, isEditMode]);
@@ -136,13 +186,15 @@ const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
     const newModuleId = `module-${nextModuleId.current}`;
     nextModuleId.current += 1;
     nextLessonIds.current[newModuleId] = 1;
+    nextAssignmentIds.current[newModuleId] = 1;
     
     const newModule = {
       id: newModuleId,
       title: "New Module",
       description: "Module description",
       isOpen: true,
-      lessons: []
+      lessons: [],
+      assignments: []
     };
     
     setModules([...modules, newModule]);
@@ -150,7 +202,7 @@ const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
 
   const deleteModule = (moduleId) => {
     // Add confirmation before deleting
-    if (window.confirm("Are you sure you want to delete this module? All lessons within it will be deleted as well.")) {
+    if (window.confirm("Are you sure you want to delete this module? All lessons and assignments within it will be deleted as well.")) {
       setModules(modules.filter(module => module.id !== moduleId));
     }
   };
@@ -163,16 +215,17 @@ const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
     ));
   };
 
+  // Lesson management
   const addLesson = (moduleId) => {
     setCurrentLesson(null);
     setCurrentModuleId(moduleId);
-    setIsModalOpen(true);
+    setIsLessonModalOpen(true);
   };
 
   const editLesson = (lesson, moduleId) => {
     setCurrentLesson({ ...lesson });
     setCurrentModuleId(moduleId);
-    setIsModalOpen(true);
+    setIsLessonModalOpen(true);
   };
 
   const deleteLesson = (lessonId, moduleId) => {
@@ -230,7 +283,78 @@ const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
     // Reset and close the modal
     setCurrentLesson(null);
     setCurrentModuleId(null);
-    setIsModalOpen(false);
+    setIsLessonModalOpen(false);
+  };
+
+  // Assignment management
+  const addAssignment = (moduleId) => {
+    setCurrentAssignment(null);
+    setCurrentModuleId(moduleId);
+    setIsAssignmentModalOpen(true);
+  };
+
+  const editAssignment = (assignment, moduleId) => {
+    setCurrentAssignment({ ...assignment });
+    setCurrentModuleId(moduleId);
+    setIsAssignmentModalOpen(true);
+  };
+
+  const deleteAssignment = (assignmentId, moduleId) => {
+    // Add confirmation before deleting
+    if (window.confirm("Are you sure you want to delete this assignment?")) {
+      setModules(modules.map(module => 
+        module.id === moduleId 
+          ? { 
+              ...module, 
+              assignments: module.assignments.filter(assignment => assignment.id !== assignmentId) 
+            } 
+          : module
+      ));
+    }
+  };
+
+  const saveAssignment = (assignmentData) => {
+    // Create a copy of modules to update
+    const updatedModules = [...modules];
+    
+    // Find the current module
+    const moduleIndex = updatedModules.findIndex(m => m.id === currentModuleId);
+    
+    if (moduleIndex !== -1) {
+      const module = updatedModules[moduleIndex];
+      
+      if (!currentAssignment) {
+        // Adding a new assignment
+        const newAssignmentId = `assignment-${currentModuleId.split('-')[1]}-${nextAssignmentIds.current[currentModuleId]}`;
+        nextAssignmentIds.current[currentModuleId] += 1;
+        
+        // Add the new assignment with a generated ID and ensure status field exists
+        module.assignments.push({
+          ...assignmentData,
+          id: newAssignmentId,
+          status: assignmentData.status || "draft"
+        });
+      } else {
+        // Editing an existing assignment
+        const assignmentIndex = module.assignments.findIndex(a => a.id === currentAssignment.id);
+        if (assignmentIndex !== -1) {
+          // Update existing assignment
+          module.assignments[assignmentIndex] = {
+            ...assignmentData,
+            id: currentAssignment.id,
+            status: assignmentData.status || currentAssignment.status || "draft"
+          };
+        }
+      }
+      
+      // Update the state with the modified modules
+      setModules(updatedModules);
+    }
+    
+    // Reset and close the modal
+    setCurrentAssignment(null);
+    setCurrentModuleId(null);
+    setIsAssignmentModalOpen(false);
   };
 
   const handleDragEnd = (result) => {
@@ -254,8 +378,9 @@ const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
 
     // Handle lesson reordering
     if (type === 'LESSON') {
-      const sourceModuleId = source.droppableId;
-      const destModuleId = destination.droppableId;
+      // Extract module IDs from the droppable IDs
+      const sourceModuleId = source.droppableId.split('-lessons')[0];
+      const destModuleId = destination.droppableId.split('-lessons')[0];
       
       // Create a new modules array to avoid direct state mutation
       const newModules = [...modules];
@@ -287,9 +412,45 @@ const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
         setModules(newModules);
       }
     }
+    
+    // Handle assignment reordering
+    if (type === 'ASSIGNMENT') {
+      // Extract module IDs from the droppable IDs
+      const sourceModuleId = source.droppableId.split('-assignments')[0];
+      const destModuleId = destination.droppableId.split('-assignments')[0];
+      
+      // Create a new modules array to avoid direct state mutation
+      const newModules = [...modules];
+      
+      // Find the source and destination modules
+      const sourceModule = newModules.find(m => m.id === sourceModuleId);
+      const destModule = newModules.find(m => m.id === destModuleId);
+      
+      if (sourceModule && destModule) {
+        // Copy the assignments arrays
+        const sourceAssignments = [...sourceModule.assignments];
+        const destAssignments = sourceModuleId === destModuleId ? 
+          sourceAssignments : [...destModule.assignments];
+        
+        // Remove the assignment from source and add to destination
+        const [movedAssignment] = sourceAssignments.splice(source.index, 1);
+        
+        if (sourceModuleId === destModuleId) {
+          // If within the same module
+          sourceAssignments.splice(destination.index, 0, movedAssignment);
+          sourceModule.assignments = sourceAssignments;
+        } else {
+          // If between different modules
+          destAssignments.splice(destination.index, 0, movedAssignment);
+          sourceModule.assignments = sourceAssignments;
+          destModule.assignments = destAssignments;
+        }
+        
+        setModules(newModules);
+      }
+    }
   };
 
-  const [hasUnsavedChange, setHasUnsavedChange] = useState(false);
   const handleSaveStructure = () => {
     if (onSave) {
       // Call the parent onSave function with current modules
@@ -297,91 +458,102 @@ const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
       setHasUnsavedChanges(false);
     }
   };
-  return (
-    <div className="structure-builder">
-      <div className="structure-header">
-        <div className="structure-header-text">
-          <h2 className="structure-title">Course Structure</h2>
-          <p className="structure-subtitle">Build your course by adding modules and lessons</p>
-        </div>
-        
-        {isEditMode && (
-          <button
-            className="button save-structure-btn button-primary"
-            onClick={handleSaveStructure}
-            disabled={!hasUnsavedChange}
-          >
-            <Save size={16} />
-            Save Structure
-          </button>
-        )}
+ return (
+  <div className={styles.structureBuilder}>
+    <div className={styles.structureHeader}>
+      <div className={styles.structureHeaderText}>
+        <h2 className={styles.structureTitle}>Course Structure</h2>
+        <p className={styles.structureSubtitle}>Build your course by adding modules, lessons, and assignments</p>
       </div>
       
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="modules" type="MODULE">
-          {(provided) => (
-            <div
-              className="structure-content"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {modules.length === 0 ? (
-                <div className="empty-state">
-                  No modules yet. Add your first module to get started.
-                </div>
-              ) : (
-                modules.map((module, moduleIndex) => (
-                  <Module
-                    key={module.id}
-                    module={module}
-                    moduleIndex={moduleIndex}
-                    onToggleModule={toggleModule}
-                    onEditModule={editModule}
-                    onDeleteModule={deleteModule}
-                    onAddLesson={addLesson}
-                    onEditLesson={editLesson}
-                    onDeleteLesson={deleteLesson}
-                  />
-                ))
-              )}
-              {provided.placeholder}
-              
-              <button
-                onClick={addNewModule}
-                className="btn-add-module"
-              >
-                <Plus className="icon-plus" size={18} />
-                Add New Module
-              </button>
-              
-              {!isEditMode && (
-                <div className="structure-actions">
-                  <button
-                    className="button button-primary next-step-btn"
-                    onClick={() => {
-                      if (onSave) {
-                        onSave(modules);
-                      }
-                    }}
-                  >
-                    Continue to Resources
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-      
-      {isModalOpen && (
-        <LessonModal
-          currentLesson={currentLesson}
-          onSave={saveLesson}
-          onClose={() => setIsModalOpen(false)}
-        />
+      {isEditMode && (
+        <button
+          className={`${styles.button} ${styles.saveStructureBtn} ${styles.buttonPrimary}`}
+          onClick={handleSaveStructure}
+          disabled={!hasUnsavedChanges}
+        >
+          <Save size={16} />
+          Save Structure
+        </button>
       )}
     </div>
-  );
+    
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <Droppable droppableId="modules" type="MODULE">
+        {(provided) => (
+          <div
+            className={styles.structureContent}
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            {modules.length === 0 ? (
+              <div className={styles.emptyState}>
+                No modules yet. Add your first module to get started.
+              </div>
+            ) : (
+              modules.map((module, moduleIndex) => (
+                <Module
+                  key={module.id}
+                  module={module}
+                  moduleIndex={moduleIndex}
+                  onToggleModule={toggleModule}
+                  onEditModule={editModule}
+                  onDeleteModule={deleteModule}
+                  onAddLesson={addLesson}
+                  onEditLesson={editLesson}
+                  onDeleteLesson={deleteLesson}
+                  onAddAssignment={addAssignment}
+                  onEditAssignment={editAssignment}
+                  onDeleteAssignment={deleteAssignment}
+                />
+              ))
+            )}
+            {provided.placeholder}
+            
+            <button
+              onClick={addNewModule}
+              className={styles.btnAddModule}
+            >
+              <Plus className="icon-plus" size={18} />
+              Add New Module
+            </button>
+            
+            {!isEditMode && (
+              <div className={styles.structureActions}>
+                <button
+                  className={`${styles.button} ${styles.buttonPrimary} ${styles.nextStepBtn}`}
+                  onClick={() => {
+                    if (onSave) {
+                      onSave(modules);
+                    }
+                  }}
+                >
+                  Continue to Resources
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+    
+    {isLessonModalOpen && (
+      <LessonModal
+        currentLesson={currentLesson}
+        onSave={saveLesson}
+        onClose={() => setIsLessonModalOpen(false)}
+      />
+    )}
+    
+    {isAssignmentModalOpen && (
+      <AssignmentModal
+        currentAssignment={currentAssignment}
+        onSave={saveAssignment}
+        onClose={() => setIsAssignmentModalOpen(false)}
+      />
+    )}
+  </div>
+);
 };
 
 export default StructureBuilder;

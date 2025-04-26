@@ -1,0 +1,564 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #333;
+  }
+  
+  .header {
+    margin-bottom: 32px;
+  }
+  
+  .header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+  }
+  
+  .header p {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.5;
+  }
+  
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid #e1e1e1;
+    margin-bottom: 24px;
+  }
+  
+  .tabButton {
+    padding: 12px 24px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  
+  .tabButton:hover {
+    color: #3366ff;
+  }
+  
+  .activeTab {
+    color: #3366ff;
+    font-weight: 600;
+  }
+  
+  .activeTab::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #3366ff;
+  }
+  
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .searchBar {
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f7;
+    border-radius: 8px;
+    padding: 8px 16px;
+    flex: 1;
+    max-width: 400px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+  
+  .searchBar:focus-within {
+    border-color: #3366ff;
+    box-shadow: 0 0 0 2px rgba(51, 102, 255, 0.1);
+  }
+  
+  .searchBar input {
+    border: none;
+    background: none;
+    flex: 1;
+    padding: 4px 8px;
+    outline: none;
+    font-size: 14px;
+  }
+  
+  .clearButton {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #666;
+  }
+  
+  .clearButton:hover {
+    color: #ff3333;
+  }
+  
+  .filterControls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  
+  .filterItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .filterItem label {
+    font-size: 14px;
+    color: #666;
+    white-space: nowrap;
+  }
+  
+  .filterItem select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #e1e1e1;
+    background-color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    min-width: 140px;
+  }
+  
+  .filterItem select:focus {
+    border-color: #3366ff;
+    box-shadow: 0 0 0 2px rgba(51, 102, 255, 0.1);
+  }
+  
+  .statsBar {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    gap: 24px;
+  }
+  
+  .statsItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .statsLabel {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .statsValue {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .starFilled {
+    color: #FFD700;
+  }
+  
+  .starEmpty {
+    color: #ddd;
+  }
+  
+  .reviewsList {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  
+  .reviewCard {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+    transition: transform 0.2s ease;
+  }
+  
+  .reviewCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+  
+  .reviewHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .reviewerInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .avatarPlaceholder {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #3366ff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
+  .reviewerName {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  
+  .reviewDate {
+    display: block;
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .reviewRating {
+    display: flex;
+    align-items: center;
+  }
+  
+  .starRating {
+    display: flex;
+    gap: 2px;
+  }
+  
+  .courseBadge {
+    display: inline-block;
+    background-color: #f0f7ff;
+    color: #3366ff;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  
+  .reviewTitle {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+  }
+  
+  .reviewContent {
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  
+  .expandButton {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #3366ff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: block;
+    margin-top: 8px;
+  }
+  
+  .expandButton:hover {
+    text-decoration: underline;
+  }
+  
+  .responseContainer {
+    background-color: #f8f9fa;
+    border-left: 3px solid #3366ff;
+    padding: 16px;
+    margin: 16px 0;
+    border-radius: 0 8px 8px 0;
+  }
+  
+  .responseHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .responseDate {
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .responseText {
+    color: #444;
+    line-height: 1.5;
+    font-size: 14px;
+  }
+  
+  .reviewActions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  
+  .actionButton {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid #e1e1e1;
+  }
+  
+  .replyButton {
+    background-color: #f0f7ff;
+    color: #3366ff;
+    border-color: #d0e1ff;
+  }
+  
+  .replyButton:hover {
+    background-color: #e0eeff;
+  }
+  
+  .flagButton {
+    background-color: #fff;
+    color: #666;
+  }
+  
+  .flagButton:hover {
+    background-color: #f5f5f7;
+  }
+  
+  .replyForm {
+    margin-top: 16px;
+    border-top: 1px solid #e1e1e1;
+    padding-top: 16px;
+  }
+  
+  .replyForm textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 100px;
+    margin-bottom: 12px;
+  }
+  
+  .replyForm textarea:focus {
+    outline: none;
+    border-color: #3366ff;
+    box-shadow: 0 0 0 2px rgba(51, 102, 255, 0.1);
+  }
+  
+  .replyFormActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  
+  .cancelButton {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #f5f5f7;
+    color: #666;
+    border: none;
+  }
+  
+  .cancelButton:hover {
+    background-color: #e5e5e7;
+  }
+  
+  .submitButton {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #3366ff;
+    color: white;
+    border: none;
+  }
+  
+  .submitButton:hover {
+    background-color: #2952cc;
+  }
+  
+  .submitButton:disabled {
+    background-color: #a0b1ff;
+    cursor: not-allowed;
+  }
+  
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 32px;
+  }
+  
+  .pageButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid #e1e1e1;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .pageButton:hover:not(:disabled) {
+    background-color: #f5f5f7;
+    border-color: #ccc;
+  }
+  
+  .pageButton:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .pageNumbers {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .pageNumber {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid #e1e1e1;
+    background-color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .pageNumber:hover:not(.activePage) {
+    background-color: #f5f5f7;
+    border-color: #ccc;
+  }
+  
+  .activePage {
+    background-color: #3366ff;
+    color: white;
+    border-color: #3366ff;
+  }
+  
+  .emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 24px;
+    text-align: center;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    color: #888;
+  }
+  
+  .emptyState svg {
+    margin-bottom: 16px;
+    color: #ccc;
+  }
+  
+  .emptyState p {
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+  
+  .clearFiltersButton {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #f0f7ff;
+    color: #3366ff;
+    border: 1px solid #d0e1ff;
+  }
+  
+  .clearFiltersButton:hover {
+    background-color: #e0eeff;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .searchBar {
+      max-width: none;
+    }
+    
+    .filterControls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .filterItem {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    
+    .filterItem select {
+      width: 100%;
+    }
+    
+    .statsBar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .reviewHeader {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .pagination {
+      flex-wrap: wrap;
+    }
+  }

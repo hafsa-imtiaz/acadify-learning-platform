@@ -1,18 +1,3 @@
-### **Teacher UI Structure Outline**
-
-#### 3️⃣ **Manage Students Page**
-   - **Purpose**: Allows instructors to see which students are enrolled in their courses and manage those students.
-   - **Key Features**:
-     - View **student details** (progress, quiz scores, participation).
-     - **Send messages** to students.
-     - **Grade assignments or quizzes**.
-     - **Remove or add students** manually if needed.
-
-   - **Components**:
-     - **Student List Component**: Displays a list of students with key details like enrollment status, progress, etc.
-     - **Student Profile**: Clickable profile for each student showing detailed progress.
-     - **Grade Assignment/Quiz Component**: Interface to grade and provide feedback to students.
-   
 #### 5️⃣ **Assignments/Quizzes Management**
    - **Purpose**: A page to manage all assignments and quizzes related to the courses.
    - **Key Features**:
@@ -25,12 +10,5 @@
      - **Create/Edit Assignment Component**: Allows the instructor to create/edit assignments or quizzes.
      - **Grade Assignment Component**: Where the instructor can view student submissions and grade them.
 
----
-
-### **Summary of Key Pages and Components for Teacher UI**
-5. **Assignments/Quizzes Management** (Manage assignments, grades, and feedback).
-
 ### 🧱 Additional Components
 - **Progress Tabs or Stepper** (to show which step they’re on)
-
----

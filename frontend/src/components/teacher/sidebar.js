@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect} from 'react';
+import { useState, useRef, useEffect, createContext, useContext } from 'react';
 import {
   Home, BookOpen, Users, BarChart2,
   FileText, MessageCircle, Star, Video,
@@ -11,6 +11,38 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from '../../css/teacher/teacher-sidebar.module.css';
 import Areen from '../../assets/Profile/Areen.jpg';
+
+// Create context for managing page metadata
+export const PageMetadataContext = createContext();
+
+export function usePageMetadata() {
+  return useContext(PageMetadataContext);
+}
+
+// Define a map of special routes that aren't in the sidebar
+const specialRoutes = {
+  '/teacher/courses/create': {
+    title: 'Create New Course',
+    breadcrumbs: ['Home', 'My Courses', 'Create New Course'],
+    parentId: 'mycourses' // This connects it to a sidebar item for highlighting
+  },
+  '/teacher/courses/:courseId': {
+    title: 'Course Details', // This will be dynamic
+    breadcrumbs: ['Home', 'My Courses', 'Course Details'],
+    parentId: 'mycourses'
+  },
+  '/teacher/students/:studentId': {
+    title: 'Student Profile',
+    breadcrumbs: ['Home', 'Students', 'Student Profile'],
+    parentId: 'students'
+  },
+  '/teacher/assignments/create': {
+    title: 'Create Assignment',
+    breadcrumbs: ['Home', 'Assignments', 'Create Assignment'],
+    parentId: 'assignments'
+  },
+  // Add more special routes as needed
+};
 
 export default function TeacherLayout({ children }) {
   const PFPImage = Areen;
@@ -26,6 +58,11 @@ export default function TeacherLayout({ children }) {
   const [activeSubItem, setActiveSubItem] = useState('overview');
   const [expandedGroup, setExpandedGroup] = useState('main');
   const [teachingSubmenuOpen, setTeachingSubmenuOpen] = useState(false);
+  
+  // Page metadata state
+  const [pageTitle, setPageTitle] = useState('Dashboard');
+  const [breadcrumbs, setBreadcrumbs] = useState(['Home', 'Dashboard']);
+  const [dynamicMetadata, setDynamicMetadata] = useState(null);
 
   const profileRef = useRef(null);
 
@@ -52,8 +89,6 @@ export default function TeacherLayout({ children }) {
           path: '/teacher/courses',
           description: 'Manage your courses',          
         },
-        { id: 'students', label: 'Students', icon: Users, path: '/teacher/students', 
-          description: 'View enrollments, progress and student data' },
         { id: 'assignments', label: 'Assignments', icon: PenTool, path: '/teacher/assignments', 
           description: 'Manage assignments across all courses' },
         { id: 'sessions', label: 'Live Sessions', icon: Video, path: '/teacher/sessions', 
@@ -64,8 +99,6 @@ export default function TeacherLayout({ children }) {
       id: 'community',
       title: 'Community',
       items: [
-        { id: 'discussions', label: 'Discussions', icon: MessageCircle, path: '/teacher/discussions', 
-          description: 'Manage course discussions and student questions' },
         { id: 'reviews', label: 'Reviews', icon: Star, path: '/teacher/reviews', 
           description: 'See student reviews and course ratings' },
       ]
@@ -92,23 +125,73 @@ export default function TeacherLayout({ children }) {
     },
   ];
 
-  const subMenuItems = [
-    { id: 'overview', label: 'Overview', path: '/teacher/courses' },
-    { id: 'modules', label: 'Modules', path: '/teacher/courses/modules' },
-    { id: 'assignments', label: 'Assignments & Grading', path: '/teacher/courses/assignments' },
-    { id: 'students', label: 'Students', path: '/teacher/courses/students' },
-    { id: 'settings', label: 'Settings', path: '/teacher/courses/settings' }
-  ];
+  // Helper function to match dynamic routes
+  const findSpecialRoute = (path) => {
+    // First check exact matches
+    if (specialRoutes[path]) {
+      return specialRoutes[path];
+    }
+    
+    // Then check for pattern matches (like :courseId)
+    for (const [routePattern, metadata] of Object.entries(specialRoutes)) {
+      if (routePattern.includes(':')) {
+        const regexPattern = routePattern
+          .replace(/:[^/]+/g, '([^/]+)') // Replace :param with capture group
+          .replace(/\//g, '\\/');         // Escape forward slashes
+          
+        const regex = new RegExp(`^${regexPattern}$`);
+        if (regex.test(path)) {
+          return metadata;
+        }
+      }
+    }
+    
+    return null;
+  };
+
+  // Function to update dynamic page metadata
+  const updatePageMetadata = (title, crumbs) => {
+    setDynamicMetadata({
+      title: title,
+      breadcrumbs: crumbs
+    });
+  };
 
   // Initialize active item and submenu based on current path
   useEffect(() => {
     const currentPath = location.pathname;
     
-    // Find the item that matches the current path
-    let foundItem = false;
-    if(currentPath == "/courses/create"){
-      foundItem = true;
+    // Check if this is a special route
+    const specialRoute = findSpecialRoute(currentPath);
+    
+    if (specialRoute) {
+      setPageTitle(specialRoute.title);
+      setBreadcrumbs(specialRoute.breadcrumbs);
+      
+      // If this special route is associated with a sidebar item, highlight it
+      if (specialRoute.parentId) {
+        // Find the parent menu item to highlight
+        for (const group of menuGroups) {
+          for (const item of group.items) {
+            if (item.id === specialRoute.parentId) {
+              setActiveItem(item.id);
+              setExpandedGroup(group.id);
+              break;
+            }
+          }
+        }
+      }
+      return;
     }
+    
+    // If we have dynamic metadata set by a child component, use that
+    if (dynamicMetadata) {
+      setPageTitle(dynamicMetadata.title);
+      setBreadcrumbs(dynamicMetadata.breadcrumbs);
+    }
+    
+    // Otherwise use the standard sidebar-based navigation
+    let foundItem = false;
     
     for (const group of menuGroups) {
       for (const item of group.items) {
@@ -116,6 +199,8 @@ export default function TeacherLayout({ children }) {
         if (currentPath === item.path || currentPath.startsWith(item.path + '/')) {
           setActiveItem(item.id);
           setExpandedGroup(group.id);
+          setPageTitle(item.label);
+          setBreadcrumbs(['Home', item.label]);
           foundItem = true;
           
           // If this is teaching, check for submenu match
@@ -129,6 +214,7 @@ export default function TeacherLayout({ children }) {
             
             if (subItem) {
               setActiveSubItem(subItem.id);
+              setBreadcrumbs(['Home', item.label, subItem.label]);
             } else {
               setActiveSubItem('my-courses');
             }
@@ -141,11 +227,13 @@ export default function TeacherLayout({ children }) {
     }
     
     // Default to dashboard if no match found
-    if (!foundItem) {
+    if (!foundItem && !specialRoute && !dynamicMetadata) {
       setActiveItem('dashboard');
       setExpandedGroup('main');
+      setPageTitle('Dashboard');
+      setBreadcrumbs(['Home', 'Dashboard']);
     }
-  }, [location.pathname]);
+  }, [location.pathname, dynamicMetadata]);
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -192,234 +280,216 @@ export default function TeacherLayout({ children }) {
   const handleLogout = () => {
     navigate('/login');
   };
+  
+  // Context value for child components
+  const pageMetadataContextValue = {
+    setPageMetadata: updatePageMetadata
+  };
+
   return (
-    <div className={styles.teacherLayout}>
-      {/* Sidebar */}
-      <div className={`${styles.sidebar} ${sidebarOpen ? styles.expanded : styles.collapsed}`}>
-        <div className={styles.sidebarHeader}>
-          {sidebarOpen && <div className={styles.logo}>Acadify</div>}
-          <button onClick={toggleSidebar} className={styles.toggleButton}>
-            {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-          </button>
-        </div>
-
-        <div className={styles.profileSection}>
-          <div className={styles.avatarContainer}>
-            <img src={PFPImage} alt="Teacher Profile" className={styles.avatar} onClick={() => navigate('/teacher/profile')}/>
-            <span className={styles.statusIndicator}></span>
+    <PageMetadataContext.Provider value={pageMetadataContextValue}>
+      <div className={styles.teacherLayout}>
+        {/* Sidebar */}
+        <div className={`${styles.sidebar} ${sidebarOpen ? styles.expanded : styles.collapsed}`}>
+          <div className={styles.sidebarHeader}>
+            {sidebarOpen && <div className={styles.logo}>Acadify</div>}
+            <button onClick={toggleSidebar} className={styles.toggleButton}>
+              {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+            </button>
           </div>
-          {sidebarOpen && (
-            <div className={styles.profileDetails}>
-              <div className={styles.name}>Prof. Areen Zainab</div>
-              <div className={styles.department}>Computer Science</div>
-              <div className={styles.badges}>
-                <span className={`${styles.badge} ${styles.badgeInstructor}`}>Instructor</span>
-                <span className={`${styles.badge} ${styles.badgeRating}`}>4.9 ★</span>
-              </div>
-            </div>
-          )}
-        </div>
 
-        <nav className={styles.menu}>
-          {menuGroups.map(group => (
-            <div key={group.id} className={styles.menuGroup}>
-              {sidebarOpen && (
-                <div
-                  className={styles.groupHeader}
-                  onClick={() => toggleGroup(group.id)}
-                >
-                  <span className={styles.groupTitle}>{group.title}</span>
-                  <ChevronDown
-                    size={16}
-                    className={`${styles.groupChevron} ${expandedGroup === group.id ? styles.rotated : ''}`}
-                  />
+          <div className={styles.profileSection}>
+            <div className={styles.avatarContainer}>
+              <img src={PFPImage} alt="Teacher Profile" className={styles.avatar} onClick={() => navigate('/teacher/profile')}/>
+              <span className={styles.statusIndicator}></span>
+            </div>
+            {sidebarOpen && (
+              <div className={styles.profileDetails}>
+                <div className={styles.name}>Prof. Areen Zainab</div>
+                <div className={styles.department}>Computer Science</div>
+                <div className={styles.badges}>
+                  <span className={`${styles.badge} ${styles.badgeInstructor}`}>Instructor</span>
+                  <span className={`${styles.badge} ${styles.badgeRating}`}>4.9 ★</span>
                 </div>
-              )}
-
-              <ul className={`${styles.menuList} ${(!sidebarOpen || expandedGroup === group.id) ? styles.visible : styles.hidden}`}>
-                {group.items.map(item => (
-                  <li key={item.id}>
-                    <button
-                      onClick={() => handleNavigation(item)}
-                      className={`${styles.menuItem} ${activeItem === item.id ? styles.active : ''}`}
-                      title={!sidebarOpen ? item.description : ""}
-                    >
-                      <item.icon size={20} />
-                      {sidebarOpen && (
-                        <>
-                          <span className={styles.menuLabel}>{item.label}</span>
-                          {item.hasSubmenu && (
-                            <ChevronDown 
-                              size={16} 
-                              className={`${styles.submenuIndicator} ${teachingSubmenuOpen ? styles.rotated : ''}`} 
-                            />
-                          )}
-                        </>
-                      )}
-                    </button>
-
-                    {sidebarOpen && item.hasSubmenu && activeItem === item.id && (
-                      <ul className={`${styles.submenuList} ${teachingSubmenuOpen ? styles.visible : styles.hidden}`}>
-                        {item.subItems.map(subItem => (
-                          <li key={subItem.id}>
-                            <button
-                              onClick={() => handleSubItemClick(subItem)}
-                              className={`${styles.submenuItem} ${activeSubItem === subItem.id ? styles.active : ''}`}
-                            >
-                              <span className={styles.submenuDot}></span>
-                              {subItem.label}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
-
-        <div className={styles.logoutSection}>
-          <button className={styles.logoutButton} onClick={handleLogout}>
-            <LogOut size={20} />
-            {sidebarOpen && <span className={styles.menuLabel}>Logout</span>}
-          </button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className={styles.mainContent}>
-        <header className={styles.header}>
-          <div className={styles.headerTop}>
-            <h1 className={styles.pageTitle}>
-              {menuGroups.flatMap(group => group.items).find(item => item.id === activeItem)?.label || 'Dashboard'}
-            </h1>
-
-            <div className={styles.headerActions}>
-              <div className={styles.searchBar}>
-                <input type="text" placeholder="Search courses, students, or content..." />
-                <button className={styles.searchIcon}>
-                  <svg className="icon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
               </div>
-              <button className={styles.iconButton} title="View My Courses" onClick={() => navigate('/teacher/courses')}>
-                <Course size={20} />
-              </button>
-              <button className={styles.iconButton} title="Help Center" onClick={() => navigate('/teacher/help')}>
-                <HelpCircle size={20} />
-              </button>
-              <div className={styles.notification}>
-                <button className={styles.iconButton} title="Notifications" onClick={() => navigate('/teacher/notifications')}>
-                  <Bell size={20} />
-                  {notifications > 0 && <span className={styles.notificationBadge}>{notifications}</span>}
-                </button>
-              </div>
-
-              {/* Profile dropdown */}
-              <div className={styles.profileDropdown} ref={profileRef}>
-                <button
-                  className={styles.profileButton}
-                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                >
-                  <img src={PFPImage} alt="Teacher" className={styles.avatarSmall} />
-                  <span className={styles.profileName}>Areen Zainab</span>
-                  <ChevronDown size={16} className={`${styles.dropdownArrow} ${profileDropdownOpen ? styles.rotated : ''}`} />
-                </button>
-
-                {profileDropdownOpen && (
-                  <div className={styles.dropdownMenu}>
-                    <div className={styles.dropdownHeader}>
-                      <img src={PFPImage} alt="Teacher" className={styles.dropdownAvatar} />
-                      <div>
-                        <div className={styles.dropdownName}>Prof. Areen Zainab</div>
-                        <div className={styles.dropdownEmail}>i221115@nu.edu.pk</div>
-                      </div>
-                    </div>
-                    <div className={styles.dropdownDivider}></div>
-                    <ul className={styles.dropdownList}>
-                      <li>
-                        <a href="/teacher/profile">
-                          <User size={16} />
-                          <span>View Profile</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/teacher/settings">
-                          <Settings size={16} />
-                          <span>Account Settings</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/teacher/settings#payment">
-                          <CreditCard size={16} />
-                          <span>Billing & Payments</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#privacy">
-                          <Shield size={16} />
-                          <span>Privacy & Security</span>
-                        </a>
-                      </li>
-                    </ul>
-                    <div className={styles.dropdownDivider}></div>
-                    <a href="#logout" className={styles.dropdownLogout} onClick={handleLogout}>
-                      <LogOut size={16} />
-                      <span>Logout</span>
-                    </a>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {activeItem === 'teaching' && (
-            <div className={styles.submenu}>
-              {menuGroups.find(g => g.id === 'teaching')?.items.find(i => i.id === 'teaching')?.subItems.map(item => (
-                <button
-                  key={item.id}
-                  className={activeSubItem === item.id ? styles.activeSubmenu : ''}
-                  onClick={() => {
-                    setActiveSubItem(item.id);
-                    navigate(item.path);
-                  }}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <div className={styles.breadcrumbs}>
-            <span>Home</span>
-            <span>/</span>
-            <span>
-              {menuGroups.flatMap(group => group.items).find(item => item.id === activeItem)?.label || 'Dashboard'}
-            </span>
-            {activeItem === 'teaching' && activeSubItem && (
-              <>
-                <span>/</span>
-                <span>
-                  {menuGroups.find(g => g.id === 'teaching')?.items.find(i => i.id === 'teaching')?.subItems.find(item => item.id === activeSubItem)?.label || 'My Courses'}
-                </span>
-              </>
             )}
           </div>
-        </header>
 
-        {/* Page Content - Only render children here */}
-        <div className={styles.content}>
-          {children}
+          <nav className={styles.menu}>
+            {menuGroups.map(group => (
+              <div key={group.id} className={styles.menuGroup}>
+                {sidebarOpen && (
+                  <div
+                    className={styles.groupHeader}
+                    onClick={() => toggleGroup(group.id)}
+                  >
+                    <span className={styles.groupTitle}>{group.title}</span>
+                    <ChevronDown
+                      size={16}
+                      className={`${styles.groupChevron} ${expandedGroup === group.id ? styles.rotated : ''}`}
+                    />
+                  </div>
+                )}
+
+                <ul className={`${styles.menuList} ${(!sidebarOpen || expandedGroup === group.id) ? styles.visible : styles.hidden}`}>
+                  {group.items.map(item => (
+                    <li key={item.id}>
+                      <button
+                        onClick={() => handleNavigation(item)}
+                        className={`${styles.menuItem} ${activeItem === item.id ? styles.active : ''}`}
+                        title={!sidebarOpen ? item.description : ""}
+                      >
+                        <item.icon size={20} />
+                        {sidebarOpen && (
+                          <>
+                            <span className={styles.menuLabel}>{item.label}</span>
+                            {item.hasSubmenu && (
+                              <ChevronDown 
+                                size={16} 
+                                className={`${styles.submenuIndicator} ${teachingSubmenuOpen ? styles.rotated : ''}`} 
+                              />
+                            )}
+                          </>
+                        )}
+                      </button>
+
+                      {sidebarOpen && item.hasSubmenu && activeItem === item.id && (
+                        <ul className={`${styles.submenuList} ${teachingSubmenuOpen ? styles.visible : styles.hidden}`}>
+                          {item.subItems.map(subItem => (
+                            <li key={subItem.id}>
+                              <button
+                                onClick={() => handleSubItemClick(subItem)}
+                                className={`${styles.submenuItem} ${activeSubItem === subItem.id ? styles.active : ''}`}
+                              >
+                                <span className={styles.submenuDot}></span>
+                                {subItem.label}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
+
+          <div className={styles.logoutSection}>
+            <button className={styles.logoutButton} onClick={handleLogout}>
+              <LogOut size={20} />
+              {sidebarOpen && <span className={styles.menuLabel}>Logout</span>}
+            </button>
+          </div>
         </div>
+
+        {/* Main Content */}
+        <div className={styles.mainContent}>
+          <header className={styles.header}>
+            <div className={styles.headerTop}>
+              <h1 className={styles.pageTitle}>{pageTitle}</h1>
+
+              <div className={styles.headerActions}>
+                <div className={styles.searchBar}>
+                  <input type="text" placeholder="Search courses, students, or content..." />
+                  <button className={styles.searchIcon}>
+                    <svg className="icon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                </div>
+                <button className={styles.iconButton} title="View My Courses" onClick={() => navigate('/teacher/courses')}>
+                  <Course size={20} />
+                </button>
+                <button className={styles.iconButton} title="Help Center" onClick={() => navigate('/teacher/help')}>
+                  <HelpCircle size={20} />
+                </button>
+                <div className={styles.notification}>
+                  <button className={styles.iconButton} title="Notifications" onClick={() => navigate('/teacher/notifications')}>
+                    <Bell size={20} />
+                    {notifications > 0 && <span className={styles.notificationBadge}>{notifications}</span>}
+                  </button>
+                </div>
+
+                {/* Profile dropdown */}
+                <div className={styles.profileDropdown} ref={profileRef}>
+                  <button
+                    className={styles.profileButton}
+                    onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                  >
+                    <img src={PFPImage} alt="Teacher" className={styles.avatarSmall} />
+                    <span className={styles.profileName}>Areen Zainab</span>
+                    <ChevronDown size={16} className={`${styles.dropdownArrow} ${profileDropdownOpen ? styles.rotated : ''}`} />
+                  </button>
+
+                  {profileDropdownOpen && (
+                    <div className={styles.dropdownMenu}>
+                      <div className={styles.dropdownHeader}>
+                        <img src={PFPImage} alt="Teacher" className={styles.dropdownAvatar} />
+                        <div>
+                          <div className={styles.dropdownName}>Prof. Areen Zainab</div>
+                          <div className={styles.dropdownEmail}>i221115@nu.edu.pk</div>
+                        </div>
+                      </div>
+                      <div className={styles.dropdownDivider}></div>
+                      <ul className={styles.dropdownList}>
+                        <li>
+                          <a href="/teacher/profile">
+                            <User size={16} />
+                            <span>View Profile</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/teacher/settings">
+                            <Settings size={16} />
+                            <span>Account Settings</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/teacher/settings#payment">
+                            <CreditCard size={16} />
+                            <span>Billing & Payments</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#privacy">
+                            <Shield size={16} />
+                            <span>Privacy & Security</span>
+                          </a>
+                        </li>
+                      </ul>
+                      <div className={styles.dropdownDivider}></div>
+                      <a href="#logout" className={styles.dropdownLogout} onClick={handleLogout}>
+                        <LogOut size={16} />
+                        <span>Logout</span>
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.breadcrumbs}>
+              {breadcrumbs.map((crumb, index) => (
+                <span key={index}>
+                  {index > 0 && <span className={styles.breadcrumbSeparator}>/</span>}
+                  <span className={index === breadcrumbs.length - 1 ? styles.activeBreadcrumb : ''}>{crumb}</span>
+                </span>
+              ))}
+            </div>
+          </header>
+
+          {/* Page Content - Only render children here */}
+          <div className={styles.content}>
+            {children}
+          </div>
+        </div>
+        
+        {/* Dark mode toggle button (optional) */}
+        <button className={styles.darkModeToggle} title="Toggle Dark Mode">
+          <Moon size={20} />
+        </button>
       </div>
-      
-      {/* Dark mode toggle button (optional) */}
-      <button className={styles.darkModeToggle} title="Toggle Dark Mode">
-        <Moon size={20} />
-      </button>
-    </div>
+    </PageMetadataContext.Provider>
   );
 }

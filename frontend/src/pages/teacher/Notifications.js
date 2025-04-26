@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Bell, Search, Filter, RefreshCw, MoreHorizontal, CheckCircle, AlertCircle, MessageSquare, User, Users, FileText, Calendar, Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Bell, Search, RefreshCw, MoreHorizontal, CheckCircle, MessageSquare, User, FileText, Calendar, Clock, Trash, Archive, Flag } from 'lucide-react';
 import '../../css/teacher/notifications.css';
 import TeacherLayout from '../../components/teacher/sidebar';
 
@@ -8,9 +8,12 @@ export default function InstructorNotifications() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterType, setFilterType] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [notifications, setNotifications] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [openMenuId, setOpenMenuId] = useState(null);
 
   // Sample notification data
-  const allNotifications = [
+  const initialNotifications = [
     {
       id: 1,
       type: 'student',
@@ -94,22 +97,32 @@ export default function InstructorNotifications() {
     }
   ];
 
-  // Analytics data
+  // Load notifications on mount
+  useEffect(() => {
+    setNotifications(initialNotifications);
+  }, []);
+
+  // Set document title
+  useEffect(() => {
+    document.title = 'Instructor Notifications';
+  }, []);
+
+  // Prepare analytics data
   const analytics = {
-    total: allNotifications.length,
-    unread: allNotifications.filter(n => !n.read).length,
-    today: allNotifications.filter(n => n.time.includes('minutes ago') || n.time.includes('hour') || n.time === 'today').length,
+    total: notifications.length,
+    unread: notifications.filter(n => !n.read).length,
+    today: notifications.filter(n => n.time.includes('minutes ago') || n.time.includes('hour') || n.time === 'today').length,
     byType: {
-      student: allNotifications.filter(n => n.type === 'student').length,
-      message: allNotifications.filter(n => n.type === 'message').length,
-      assignment: allNotifications.filter(n => n.type === 'assignment').length,
-      system: allNotifications.filter(n => n.type === 'system').length,
-      schedule: allNotifications.filter(n => n.type === 'schedule').length
+      student: notifications.filter(n => n.type === 'student').length,
+      message: notifications.filter(n => n.type === 'message').length,
+      assignment: notifications.filter(n => n.type === 'assignment').length,
+      system: notifications.filter(n => n.type === 'system').length,
+      schedule: notifications.filter(n => n.type === 'schedule').length
     }
   };
 
   // Filter notifications based on current filters and search
-  const filteredNotifications = allNotifications.filter(notification => {
+  const filteredNotifications = notifications.filter(notification => {
     // Filter by status (read/unread)
     if (filterStatus === 'read' && !notification.read) return false;
     if (filterStatus === 'unread' && notification.read) return false;
@@ -136,10 +149,82 @@ export default function InstructorNotifications() {
     }
   });
 
+  // Mark notification as read
   const markAsRead = (id) => {
-    // In a real app, this would update the database
-    console.log(`Marking notification ${id} as read`);
-    // This is just for demo purposes, in a real app you'd update state properly
+    setNotifications(prevNotifications => 
+      prevNotifications.map(notification => 
+        notification.id === id ? { ...notification, read: true } : notification
+      )
+    );
+  };
+
+  // Mark all as read
+  const markAllAsRead = () => {
+    setNotifications(prevNotifications => 
+      prevNotifications.map(notification => ({ ...notification, read: true }))
+    );
+  };
+
+  // Delete notification
+  const deleteNotification = (id) => {
+    setNotifications(prevNotifications => 
+      prevNotifications.filter(notification => notification.id !== id)
+    );
+    setOpenMenuId(null); // Close menu after action
+  };
+
+  // Archive notification
+  const archiveNotification = (id) => {
+    // In a real app, you'd move this to an archive collection
+    // For demo, we'll just remove it from the current list
+    deleteNotification(id);
+  };
+
+  // Flag notification as important
+  const flagNotification = (id) => {
+    setNotifications(prevNotifications => 
+      prevNotifications.map(notification => 
+        notification.id === id 
+          ? { ...notification, flagged: !notification.flagged } 
+          : notification
+      )
+    );
+    setOpenMenuId(null); // Close menu after action
+  };
+
+  // Toggle menu for a notification
+  const toggleMenu = (id) => {
+    setOpenMenuId(openMenuId === id ? null : id);
+  };
+
+  // Handle click outside to close menu
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setOpenMenuId(null);
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  // Refresh notifications
+  const refreshNotifications = () => {
+    setIsLoading(true);
+    
+    // Simulate API call with timeout
+    setTimeout(() => {
+      // In a real app, you'd fetch from an API
+      // For demo, we'll just reset to initial data with some randomization
+      const refreshedNotifications = initialNotifications.map(notification => ({
+        ...notification,
+        read: Math.random() > 0.7 ? false : notification.read // Randomly mark some as unread
+      }));
+      
+      setNotifications(refreshedNotifications);
+      setIsLoading(false);
+    }, 800);
   };
 
   const getNotificationIcon = (type) => {
@@ -160,14 +245,18 @@ export default function InstructorNotifications() {
         <div className="page-header">
           <h1>Notifications</h1>
           <div className="refresh-button">
-            <button className="icon-button">
-              <RefreshCw size={18} />
-              <span>Refresh</span>
+            <button 
+              className={`icon-button ${isLoading ? 'loading' : ''}`}
+              onClick={refreshNotifications}
+              disabled={isLoading}
+            >
+              <RefreshCw size={18} className={isLoading ? 'spin' : ''} />
+              <span>{isLoading ? 'Refreshing...' : 'Refresh'}</span>
             </button>
           </div>
         </div>
         
-        {/* Analytics Section - Rearranged */}
+        {/* Analytics Section */}
         <div className="analytics-section">
           <div className="analytics-card total">
             <div className="analytics-value">{analytics.total}</div>
@@ -183,7 +272,7 @@ export default function InstructorNotifications() {
           </div>
         </div>
         
-        {/* Type Analytics - Moved below the main analytics */}
+        {/* Type Analytics */}
         <div className="type-analytics-section">
           <h3>Notifications by Type</h3>
           <div className="type-analytics-container">
@@ -215,14 +304,14 @@ export default function InstructorNotifications() {
           </div>
         </div>
         
-        {/* Improved Search Bar */}
+        {/* Search Bar */}
         <div className="search-section">
           <div className="search-container">
             <div className="search-box">
               <Search className="search-icon" size={20} />
               <input 
                 type="text" 
-                placeholder="Search notifications by title, message or course..." 
+                placeholder="     Search notifications by title, message or course..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -279,6 +368,19 @@ export default function InstructorNotifications() {
               </select>
             </div>
           </div>
+          
+          {/* Actions row */}
+          <div className="bulk-actions">
+            {analytics.unread > 0 && (
+              <button 
+                className="action-button"
+                onClick={markAllAsRead}
+              >
+                <CheckCircle size={16} />
+                <span>Mark all as read</span>
+              </button>
+            )}
+          </div>
         </div>
         
         {/* Notifications List */}
@@ -287,7 +389,7 @@ export default function InstructorNotifications() {
             sortedNotifications.map(notification => (
               <div 
                 key={notification.id} 
-                className={`notification-item ${notification.read ? 'read' : 'unread'}`}
+                className={`notification-item ${notification.read ? 'read' : 'unread'} ${notification.flagged ? 'flagged' : ''}`}
               >
                 <div className="notification-icon-container">
                   {getNotificationIcon(notification.type)}
@@ -315,9 +417,42 @@ export default function InstructorNotifications() {
                       <span>Mark as read</span>
                     </button>
                   )}
-                  <button className="icon-button action-more">
-                    <MoreHorizontal size={16} />
-                  </button>
+                  <div className="dropdown-container">
+                    <button 
+                      className="icon-button action-more"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleMenu(notification.id);
+                      }}
+                    >
+                      <MoreHorizontal size={16} />
+                    </button>
+                    {openMenuId === notification.id && (
+                      <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
+                        <button 
+                          className="dropdown-item"
+                          onClick={() => flagNotification(notification.id)}
+                        >
+                          <Flag size={16} />
+                          <span>{notification.flagged ? 'Remove flag' : 'Flag as important'}</span>
+                        </button>
+                        <button 
+                          className="dropdown-item"
+                          onClick={() => archiveNotification(notification.id)}
+                        >
+                          <Archive size={16} />
+                          <span>Archive</span>
+                        </button>
+                        <button 
+                          className="dropdown-item delete"
+                          onClick={() => deleteNotification(notification.id)}
+                        >
+                          <Trash size={16} />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))

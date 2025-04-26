@@ -1,0 +1,209 @@
+/* Module.module.css */
+
+.moduleItem {
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    border: 1px solid #f0f0f0;
+  }
+  
+  .moduleItem:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .moduleHeader {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .dragHandle {
+    cursor: grab;
+    margin-right: 12px;
+    color: #888;
+    display: flex;
+    align-items: center;
+  }
+  
+  .dragHandle:active {
+    cursor: grabbing;
+  }
+  
+  .toggleButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 14px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    color: #666;
+    transition: all 0.2s ease;
+  }
+  
+  .toggleButton:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #333;
+  }
+  
+  .moduleInfo {
+    flex: 1;
+    margin-right: 16px;
+  }
+  
+  .moduleTitleInput {
+    display: block;
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    padding: 4px 0;
+    margin-bottom: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  
+  .moduleTitleInput:focus {
+    border-bottom: 2px solid #e67e22;
+  }
+  
+  .moduleDescriptionInput {
+    display: block;
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    color: #666;
+    padding: 4px 0;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  
+  .moduleDescriptionInput:focus {
+    border-bottom: 2px solid #f39c12;
+  }
+  
+  .moduleMeta {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+  }
+  
+  .moduleCount {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .countItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #555;
+    background: #f7f7f7;
+    padding: 6px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  
+  .countItem svg {
+    color: #e67e22;
+  }
+  
+  .moduleActions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .btnIconDelete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #e74c3c;
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  
+  .btnIconDelete:hover {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #c0392b;
+  }
+  
+  .moduleContent {
+    padding: 20px;
+    background-color: #fbfbfb;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .contentSection {
+    margin-bottom: 24px;
+  }
+  
+  .contentSection:last-child {
+    margin-bottom: 0;
+  }
+  
+  .sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .sectionTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #444;
+    margin: 0;
+  }
+  
+  .btnAddItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(230, 126, 34, 0.2);
+  }
+  
+  .btnAddItem:hover {
+    background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(230, 126, 34, 0.3);
+  }
+  
+  .lessonsList, .assignmentsList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .emptyListMessage {
+    background: #f5f5f5;
+    border: 2px dashed #ddd;
+    border-radius: 6px;
+    padding: 16px;
+    text-align: center;
+    color: #777;
+    font-size: 0.9rem;
+  }

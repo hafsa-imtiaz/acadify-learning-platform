@@ -20,6 +20,8 @@ import TeacherReports from './pages/teacher/Instructor-Reports';
 import TeacherProfile from './pages/teacher/teacher-profile'
 import ScrollToTop from './components/ScrollToTop';
 import TeacherSettings from './pages/teacher/teacher-settings';
+import TeacherSessions from './pages/teacher/liveSessions';
+import TeacherReviews from './pages/teacher/teacher-reviews'
 
 function App() {
   return (
@@ -46,6 +48,8 @@ function App() {
         <Route path='/teacher/reports' element={<TeacherReports />} />
         <Route path='/teacher/profile' element={<TeacherProfile />} /> 
         <Route path='/teacher/settings' element={<TeacherSettings />} />
+        <Route path='/teacher/sessions' element={<TeacherSessions />} />
+        <Route path='/teacher/reviews' element={<TeacherReviews />} />
       </Routes>
     </Router>
   );

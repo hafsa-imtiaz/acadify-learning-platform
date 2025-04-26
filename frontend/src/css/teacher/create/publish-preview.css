@@ -69,11 +69,15 @@
 }
 
 .publish-title {
-  font-size: 20px; /* Reduced size */
+  display: flex;
+  align-items: center;
+  font-size: 20px;
   font-weight: 600;
-  color: #0f172a; /* Darker color for better contrast */
-  margin: 0;
-  letter-spacing: -0.5px; /* Added letter spacing for style */
+  color: #2563eb;
+  margin-bottom: 22px;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e5e7eb;
 }
 
 .status-badge {

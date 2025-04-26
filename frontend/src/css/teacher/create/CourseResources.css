@@ -17,11 +17,15 @@
 }
 
 .header h2 {
-  font-size: 1.25rem;
-  font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 8px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #2563eb;
+  margin-bottom: 22px;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e5e7eb;
 }
 
 /* Button styles */

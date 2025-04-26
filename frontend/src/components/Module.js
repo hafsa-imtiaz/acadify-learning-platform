@@ -3,6 +3,7 @@ import { ChevronDown, ChevronRight, Plus, Edit2, Trash2, GripVertical, AlignLeft
 import { Draggable, Droppable } from '@hello-pangea/dnd';
 import Lesson from "./Lesson";
 import Assignment from "./Assignment";
+import styles from "../css/teacher/create/Module.module.css"
 
 const Module = ({
   module,
@@ -25,13 +26,13 @@ const Module = ({
     >
       {(provided) => (
         <div 
-          className="module-item"
+          className={styles.moduleItem}
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
-          <div className="module-header">
+          <div className={styles.moduleHeader}>
             <div
-              className="drag-handle"
+              className={styles.dragHandle}
               {...provided.dragHandleProps}
             >
               <GripVertical size={18} />
@@ -39,7 +40,7 @@ const Module = ({
             
             <button 
               onClick={() => onToggleModule(module.id)}
-              className="toggle-button"
+              className={styles.toggleButton}
             >
               {module.isOpen ? (
                 <ChevronDown size={18} />
@@ -48,40 +49,40 @@ const Module = ({
               )}
             </button>
             
-            <div className="module-info">
+            <div className={styles.moduleInfo}>
               <input
                 type="text"
                 value={module.title}
                 onChange={(e) => onEditModule(module.id, 'title', e.target.value)}
-                className="module-title-input"
+                className={styles.moduleTitleInput}
                 placeholder="Module Title"
               />
               <input
                 type="text"
                 value={module.description}
                 onChange={(e) => onEditModule(module.id, 'description', e.target.value)}
-                className="module-description-input"
+                className={styles.moduleDescriptionInput}
                 placeholder="Module Description"
               />
             </div>
             
-            <div className="module-meta">
-              <div className="module-count">
-                <span className="count-item">
+            <div className={styles.moduleMeta}>
+              <div className={styles.moduleCount}>
+                <span className={styles.countItem}>
                   <AlignLeft size={14} />
                   {module.lessons.length} Lesson{module.lessons.length !== 1 ? 's' : ''}
                 </span>
-                <span className="count-item">
+                <span className={styles.countItem}>
                   <AlertTriangle size={14} />
                   {module.assignments.length} Assignment{module.assignments.length !== 1 ? 's' : ''}
                 </span>
               </div>
             </div>
             
-            <div className="module-actions">
+            <div className={styles.moduleActions}>
               <button 
                 onClick={() => onDeleteModule(module.id)}
-                className="btn-icon-delete"
+                className={styles.btnIconDelete}
                 aria-label="Delete module"
               >
                 <Trash2 size={16} />
@@ -90,14 +91,14 @@ const Module = ({
           </div>
           
           {module.isOpen && (
-            <div className="module-content">
+            <div className={styles.moduleContent}>
               {/* Lessons Section */}
-              <div className="content-section">
-                <div className="section-header">
-                  <h4 className="section-title">Lessons</h4>
+              <div className={styles.contentSection}>
+                <div className={styles.sectionHeader}>
+                  <h4 className={styles.sectionTitle}>Lessons</h4>
                   <button 
                     onClick={() => onAddLesson(module.id)}
-                    className="btn-add-item"
+                    className={styles.btnAddItem}
                   >
                     <Plus size={14} />
                     Add Lesson
@@ -112,10 +113,10 @@ const Module = ({
                     <div
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className="lessons-list"
+                      className={styles.lessonsList}
                     >
                       {module.lessons.length === 0 ? (
-                        <div className="empty-list-message">
+                        <div className={styles.emptyListMessage}>
                           No lessons added yet. Click "Add Lesson" to create your first lesson.
                         </div>
                       ) : (
@@ -137,12 +138,12 @@ const Module = ({
               </div>
               
               {/* Assignments Section */}
-              <div className="content-section">
-                <div className="section-header">
-                  <h4 className="section-title">Assignments</h4>
+              <div className={styles.contentSection}>
+                <div className={styles.sectionHeader}>
+                  <h4 className={styles.sectionTitle}>Assignments</h4>
                   <button 
                     onClick={() => onAddAssignment(module.id)}
-                    className="btn-add-item"
+                    className={styles.btnAddItem}
                   >
                     <Plus size={14} />
                     Add Assignment
@@ -157,10 +158,10 @@ const Module = ({
                     <div
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className="assignments-list"
+                      className={styles.assignmentsList}
                     >
                       {module.assignments.length === 0 ? (
-                        <div className="empty-list-message">
+                        <div className={styles.emptyListMessage}>
                           No assignments added yet. Click "Add Assignment" to create your first assignment.
                         </div>
                       ) : (
