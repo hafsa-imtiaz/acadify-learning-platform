@@ -10,15 +10,18 @@ import {
   Settings 
 } from 'lucide-react';
 import '../../../css/teacher/Dashboard/QuickActions.css';
+import { useNavigate } from 'react-router-dom';
 
 const QuickActions = () => {
+  const navigate = useNavigate();
   const actions = [
     {
       id: 1,
       icon: <BookOpen size={24} />,
       title: 'Create Course',
       description: 'Start a new course from scratch',
-      color: 'blue'
+      color: 'blue',
+      onClick: () => navigate('/courses/create')
     },
     {
       id: 2,
@@ -75,7 +78,12 @@ const QuickActions = () => {
     <div className="quick-actions-container">
       <div className="actions-grid">
         {actions.map((action) => (
-          <div key={action.id} className={`action-card action-${action.color}`}>
+          <div
+            key={action.id}
+            className={`action-card action-${action.color}`}
+            onClick={action.onClick}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="action-icon">
               {action.icon}
             </div>
@@ -87,7 +95,7 @@ const QuickActions = () => {
         ))}
       </div>
     </div>
-  );
+  );  
 };
 
 export default QuickActions;

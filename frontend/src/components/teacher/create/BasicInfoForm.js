@@ -1,17 +1,32 @@
-import React, { useState } from 'react';
-import { BookOpen, Info, Clock, Users, Tag, Image, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { BookOpen, Info, Clock, Users, Tag, Image, ChevronRight, X } from 'lucide-react';
+import '../../../css/teacher/create/basicinfo.css'
 
-const CourseBasicInfoForm = ({ onNext, courseData, setCourseData }) => {
-  const [title, setTitle] = useState(courseData?.title || '');
-  const [description, setDescription] = useState(courseData?.description || '');
-  const [category, setCategory] = useState(courseData?.category || '');
-  const [level, setLevel] = useState(courseData?.level || 'beginner');
-  const [duration, setDuration] = useState(courseData?.duration || '');
-  const [capacity, setCapacity] = useState(courseData?.capacity || '');
-  const [image, setImage] = useState(courseData?.image || null);
-  const [tags, setTags] = useState(courseData?.tags || []);
+const CourseBasicInfoForm = ({ onNext, initialData, onSave, isEditMode }) => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [level, setLevel] = useState('beginner');
+  const [duration, setDuration] = useState('');
+  const [capacity, setCapacity] = useState('');
+  const [image, setImage] = useState(null);
+  const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
   const [errors, setErrors] = useState({});
+
+  // Initialize form data when initialData changes or on component mount
+  useEffect(() => {
+    if (initialData) {
+      setTitle(initialData.title || '');
+      setDescription(initialData.description || '');
+      setCategory(initialData.category || '');
+      setLevel(initialData.level || 'beginner');
+      setDuration(initialData.duration || '');
+      setCapacity(initialData.capacity || '');
+      setImage(initialData.image || null);
+      setTags(initialData.tags || []);
+    }
+  }, [initialData]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -24,11 +39,18 @@ const CourseBasicInfoForm = ({ onNext, courseData, setCourseData }) => {
     }
   };
 
-  const addTag = (e) => {
-    e.preventDefault();
-    if (tagInput && !tags.includes(tagInput)) {
+  const addTag = () => {
+    if (tagInput && !tags.includes(tagInput) && tags.length < 5) {
       setTags([...tags, tagInput]);
       setTagInput('');
+    }
+  };
+
+  // Handle Enter key press for tag input
+  const handleTagKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent form submission
+      addTag();
     }
   };
 
@@ -55,7 +77,6 @@ const CourseBasicInfoForm = ({ onNext, courseData, setCourseData }) => {
     }
 
     const updatedCourseData = {
-      ...courseData,
       title,
       description,
       category,
@@ -66,59 +87,71 @@ const CourseBasicInfoForm = ({ onNext, courseData, setCourseData }) => {
       tags
     };
 
-    setCourseData(updatedCourseData);
-    onNext();
+    // If onSave is provided (for edit/create functionality), call it with the data
+    if (onSave) {
+      onSave(updatedCourseData);
+    }
+    
+    // If onNext is provided (for multi-step form navigation), call it
+    if (onNext) {
+      onNext(updatedCourseData);
+    }
   };
+
+  // Update page title and button text based on edit mode
+  const submitButtonText = isEditMode 
+    ? "Save Changes" 
+    : "Continue to Course Structure";
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="form-section">
-        <h3 className="section-title">
+      <div className="form-section-basic">
+        <h3 className="section-title-basic">
           <BookOpen size={20} />
           Basic Course Information
         </h3>
         
-        <div className="form-group">
-          <label htmlFor="title">Course Title</label>
-          <p className="form-description">Be specific and clear about what you'll teach</p>
+        <div className="form-group-basic">
+          <label className="label-basic" htmlFor="title">Course Title</label>
+          <p className="form-description-basic">Be specific and clear about what you'll teach</p>
           <input 
             type="text" 
             id="title" 
-            className={`form-control ${errors.title ? 'error' : ''}`}
+            className={`form-control-basic ${errors.title ? 'error-basic' : ''}`}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g., Introduction to Python Programming"
           />
-          {errors.title && <div className="error-message">{errors.title}</div>}
+          {errors.title && <div className="error-message-basic">{errors.title}</div>}
         </div>
         
-        <div className="form-group">
-          <label htmlFor="description">Course Description</label>
-          <p className="form-description">What will students learn in this course?</p>
+        <div className="form-group-basic">
+          <label className="label-basic" htmlFor="description">Course Description</label>
+          <p className="form-description-basic">What will students learn in this course?</p>
           <textarea 
             id="description" 
-            className={`form-control textarea ${errors.description ? 'error' : ''}`}
+            className={`form-control-basic textarea-basic ${errors.description ? 'error-basic' : ''}`}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Describe your course content, objectives, and outcomes..."
             rows="5"
           ></textarea>
-          {errors.description && <div className="error-message">{errors.description}</div>}
+          {errors.description && <div className="error-message-basic">{errors.description}</div>}
         </div>
       </div>
       
-      <div className="form-section">
-        <h3 className="section-title">
+      <div className="form-section-basic">
+        <h3 className="section-title-basic">
           <Info size={20} />
           Course Details
         </h3>
         
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="category">Category</label>
+        <div className="form-row-basic">
+          <div className="form-group-basic">
+            <label className="label-basic" htmlFor="category">Category</label>
             <select 
               id="category" 
-              className={`form-control select ${errors.category ? 'error' : ''}`}
+              className={`form-control-basic select-basic ${errors.category ? 'error-basic' : ''}`}
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
@@ -131,16 +164,16 @@ const CourseBasicInfoForm = ({ onNext, courseData, setCourseData }) => {
               <option value="language">Language Learning</option>
               <option value="other">Other</option>
             </select>
-            {errors.category && <div className="error-message">{errors.category}</div>}
+            {errors.category && <div className="error-message-basic">{errors.category}</div>}
           </div>
         </div>
         
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="level">Difficulty Level</label>
+        <div className="form-row-basic">
+          <div className="form-group-basic">
+            <label className="label-basic" htmlFor="level">Difficulty Level</label>
             <select 
               id="level" 
-              className="form-control select"
+              className="form-control-basic select-basic"
               value={level}
               onChange={(e) => setLevel(e.target.value)}
             >
@@ -152,30 +185,30 @@ const CourseBasicInfoForm = ({ onNext, courseData, setCourseData }) => {
           </div>
         </div>
         
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="duration">Estimated Duration</label>
-            <p className="form-description">How long will it take to complete this course?</p>
+        <div className="form-row-basic">
+          <div className="form-group-basic">
+            <label className="label-basic" htmlFor="duration">Estimated Duration</label>
+            <p className="form-description-basic">How long will it take to complete this course?</p>
             <input 
               type="text" 
               id="duration" 
-              className={`form-control ${errors.duration ? 'error' : ''}`}
+              className={`form-control-basic ${errors.duration ? 'error-basic' : ''}`}
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
               placeholder="e.g., 6 weeks, 12 hours"
             />
-            {errors.duration && <div className="error-message">{errors.duration}</div>}
+            {errors.duration && <div className="error-message-basic">{errors.duration}</div>}
           </div>
         </div>
         
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="capacity">Student Capacity (Optional)</label>
-            <p className="form-description">Leave blank for unlimited students</p>
+        <div className="form-row-basic">
+          <div className="form-group-basic">
+            <label className="label-basic" htmlFor="capacity">Student Capacity (Optional)</label>
+            <p className="form-description-basic">Leave blank for unlimited students</p>
             <input 
               type="number" 
               id="capacity" 
-              className="form-control"
+              className="form-control-basic"
               value={capacity}
               onChange={(e) => setCapacity(e.target.value)}
               placeholder="e.g., 30"
@@ -185,89 +218,100 @@ const CourseBasicInfoForm = ({ onNext, courseData, setCourseData }) => {
         </div>
       </div>
       
-      <div className="form-section">
-        <h3 className="section-title">
+      <div className="form-section-basic">
+        <h3 className="section-title-basic">
           <Image size={20} />
           Course Image
         </h3>
         
-        <div className="form-group">
-          <label>Upload Course Thumbnail</label>
-          <p className="form-description">Recommended size: 1280x720 pixels (16:9 ratio)</p>
+        <div className="form-group-basic">
+          <label className="label-basic">Upload Course Thumbnail</label>
+          <p className="form-description-basic">Recommended size: 1280x720 pixels (16:9 ratio)</p>
           
-          <div className="image-upload-container">
+          <div className="image-upload-container-basic">
             {image ? (
-              <div className="image-preview">
+              <div className="image-preview-basic">
                 <img src={image} alt="Course thumbnail preview" />
                 <button 
                   type="button" 
-                  className="remove-image-btn"
+                  className="remove-image-btn-basic"
                   onClick={() => setImage(null)}
                 >
                   Remove
                 </button>
               </div>
             ) : (
-              <div className="upload-placeholder">
+              <div className="upload-placeholder-basic">
                 <input 
                   type="file" 
                   id="course-image" 
                   onChange={handleImageChange}
                   accept="image/*"
-                  className="image-input"
+                  className="image-input-basic"
                 />
-                <label htmlFor="course-image" className="upload-btn">
+                <label htmlFor="course-image" className="upload-btn-basic">
                   <Image size={24} />
                   <span>Choose Image</span>
                 </label>
-                <p className="upload-hint">JPG, PNG or GIF, max 5MB</p>
+                <p className="upload-hint-basic">JPG, PNG or GIF, max 5MB</p>
               </div>
             )}
           </div>
         </div>
       </div>
       
-      <div className="form-section">
-        <h3 className="section-title">
+      <div className="form-section-basic">
+        <h3 className="section-title-basic">
           <Tag size={20} />
           Tags
         </h3>
         
-        <div className="form-group">
-          <label htmlFor="tags">Course Tags</label>
-          <p className="form-description">Add up to 5 tags to help students find your course</p>
+        <div className="form-group-basic">
+          <label className="label-basic" htmlFor="tags">Course Tags</label>
+          <p className="form-description-basic">Add up to 5 tags to help students find your course</p>
           
-          <div className="tags-input-container">
+          <div className="tags-input-container-basic">
             {tags.map((tag, index) => (
-              <div key={index} className="tag">
+              <div key={index} className="tag-basic">
                 {tag}
-                <span className="tag-remove" onClick={() => removeTag(tag)}>
-                  ×
+                <span className="tag-remove-basic" onClick={() => removeTag(tag)}>
+                  <X size={14} />
                 </span>
               </div>
             ))}
-            <form onSubmit={addTag}>
+            <div className="tag-input-wrapper-basic">
               <input 
                 type="text" 
-                className="tags-input"
+                className="tags-input-basic"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleTagKeyDown}
                 placeholder={tags.length === 0 ? "Add tags..." : ""}
                 disabled={tags.length >= 5}
               />
-            </form>
+              {tagInput && (
+                <button 
+                  type="button" 
+                  className="add-tag-btn-basic" 
+                  onClick={addTag}
+                  disabled={tags.length >= 5}
+                >
+                  Add
+                </button>
+              )}
+            </div>
           </div>
-          <p className="form-description">Press Enter to add a tag</p>
+          <p className="form-description-basic">Press Enter to add a tag</p>
         </div>
       </div>
       
-      <div className="button-row">
-        <button type="button" className="button button-secondary" disabled>
+      <div className="button-row-basic">
+        <button type="button" className="button-basic button-secondary-basic">
           Cancel
         </button>
-        <button type="submit" className="button button-primary">
-          Continue to Course Structure
-          <ChevronRight size={16} />
+        <button type="submit" className="button-basic button-primary-basic">
+          {submitButtonText}
+          {!isEditMode && <ChevronRight size={16} />}
         </button>
       </div>
     </form>

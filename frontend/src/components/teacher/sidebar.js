@@ -9,7 +9,7 @@ import {
   PenTool, UserCheck, MessageSquare, Moon
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import '../../css/teacher/teachersidebar.css';
+import styles from '../../css/teacher/teacher-sidebar.module.css';
 import Areen from '../../assets/Profile/Areen.jpg';
 
 export default function TeacherLayout({ children }) {
@@ -25,7 +25,7 @@ export default function TeacherLayout({ children }) {
   const [activeItem, setActiveItem] = useState('dashboard');
   const [activeSubItem, setActiveSubItem] = useState('overview');
   const [expandedGroup, setExpandedGroup] = useState('main');
-  const [coursesSubmenuOpen, setCoursesSubmenuOpen] = useState(false);
+  const [teachingSubmenuOpen, setTeachingSubmenuOpen] = useState(false);
 
   const profileRef = useRef(null);
 
@@ -46,18 +46,11 @@ export default function TeacherLayout({ children }) {
       title: 'Teaching',
       items: [
         { 
-          id: 'courses', 
-          label: 'Courses', 
+          id: 'mycourses', 
+          label: 'My Courses', 
           icon: BookOpen, 
           path: '/teacher/courses',
-          description: 'Create, edit and manage your course content',
-          hasSubmenu: true,
-          subItems: [
-            { id: 'overview', label: 'Overview', path: '/teacher/courses' },
-            { id: 'modules', label: 'Modules', path: '/teacher/courses/modules' },
-            { id: 'assignments', label: 'Assignments & Grading', path: '/teacher/courses/assignments' },
-            { id: 'students', label: 'Students', path: '/teacher/courses/students' },
-          ],
+          description: 'Manage your courses',          
         },
         { id: 'students', label: 'Students', icon: Users, path: '/teacher/students', 
           description: 'View enrollments, progress and student data' },
@@ -113,6 +106,9 @@ export default function TeacherLayout({ children }) {
     
     // Find the item that matches the current path
     let foundItem = false;
+    if(currentPath == "/courses/create"){
+      foundItem = true;
+    }
     
     for (const group of menuGroups) {
       for (const item of group.items) {
@@ -122,9 +118,9 @@ export default function TeacherLayout({ children }) {
           setExpandedGroup(group.id);
           foundItem = true;
           
-          // If this is courses, check for submenu match
-          if (item.id === 'courses' && item.hasSubmenu) {
-            setCoursesSubmenuOpen(true);
+          // If this is teaching, check for submenu match
+          if (item.id === 'teaching' && item.hasSubmenu) {
+            setTeachingSubmenuOpen(true);
             
             // Find matching submenu item
             const subItem = item.subItems.find(sub => 
@@ -134,8 +130,7 @@ export default function TeacherLayout({ children }) {
             if (subItem) {
               setActiveSubItem(subItem.id);
             } else {
-              // Default to overview if no match
-              setActiveSubItem('overview');
+              setActiveSubItem('my-courses');
             }
           }
           
@@ -175,23 +170,16 @@ export default function TeacherLayout({ children }) {
   };
   
   const handleNavigation = (item) => {
-    // If it's the courses item and it's already active, just toggle the submenu
-    if (item.id === 'courses' && activeItem === 'courses') {
-      setCoursesSubmenuOpen(!coursesSubmenuOpen);
+    if (item.id === 'teaching' && activeItem === 'teaching') {
+      setTeachingSubmenuOpen(!teachingSubmenuOpen);
     } else {
-      // Otherwise navigate to the item's path
       setActiveItem(item.id);
-      
-      // If the item has a submenu, open it
       if (item.hasSubmenu) {
-        setCoursesSubmenuOpen(true);
-        // Set the first sub-item as active
+        setTeachingSubmenuOpen(true);
         if (item.subItems && item.subItems.length > 0) {
           setActiveSubItem(item.subItems[0].id);
         }
       }
-      
-      // Navigate to the path
       navigate(item.path);
     }
   };
@@ -204,67 +192,66 @@ export default function TeacherLayout({ children }) {
   const handleLogout = () => {
     navigate('/login');
   };
-
   return (
-    <div className="teacher-layout-td">
+    <div className={styles.teacherLayout}>
       {/* Sidebar */}
-      <div className={`sidebar-td ${sidebarOpen ? 'expanded-td' : 'collapsed-td'}`}>
-        <div className="sidebar-header-td">
-          {sidebarOpen && <div className="logo-td">Acadify</div>}
-          <button onClick={toggleSidebar} className="toggle-button-td">
+      <div className={`${styles.sidebar} ${sidebarOpen ? styles.expanded : styles.collapsed}`}>
+        <div className={styles.sidebarHeader}>
+          {sidebarOpen && <div className={styles.logo}>Acadify</div>}
+          <button onClick={toggleSidebar} className={styles.toggleButton}>
             {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
           </button>
         </div>
 
-        <div className="profile-section-td">
-          <div className="avatar-container-td">
-            <img src={PFPImage} alt="Teacher Profile" className="avatar-td" />
-            <span className="status-indicator-td"></span>
+        <div className={styles.profileSection}>
+          <div className={styles.avatarContainer}>
+            <img src={PFPImage} alt="Teacher Profile" className={styles.avatar} onClick={() => navigate('/teacher/profile')}/>
+            <span className={styles.statusIndicator}></span>
           </div>
           {sidebarOpen && (
-            <div className="profile-details-td">
-              <div className="name-td">Prof. Areen Zainab</div>
-              <div className="department-td">Computer Science</div>
-              <div className="badges-td">
-                <span className="badge-td badge-instructor-td">Instructor</span>
-                <span className="badge-td badge-rating-td">4.9 ★</span>
+            <div className={styles.profileDetails}>
+              <div className={styles.name}>Prof. Areen Zainab</div>
+              <div className={styles.department}>Computer Science</div>
+              <div className={styles.badges}>
+                <span className={`${styles.badge} ${styles.badgeInstructor}`}>Instructor</span>
+                <span className={`${styles.badge} ${styles.badgeRating}`}>4.9 ★</span>
               </div>
             </div>
           )}
         </div>
 
-        <nav className="menu-td">
+        <nav className={styles.menu}>
           {menuGroups.map(group => (
-            <div key={group.id} className="menu-group-td">
+            <div key={group.id} className={styles.menuGroup}>
               {sidebarOpen && (
                 <div
-                  className="group-header-td"
+                  className={styles.groupHeader}
                   onClick={() => toggleGroup(group.id)}
                 >
-                  <span className="group-title-td">{group.title}</span>
+                  <span className={styles.groupTitle}>{group.title}</span>
                   <ChevronDown
                     size={16}
-                    className={`group-chevron-td ${expandedGroup === group.id ? 'rotated-td' : ''}`}
+                    className={`${styles.groupChevron} ${expandedGroup === group.id ? styles.rotated : ''}`}
                   />
                 </div>
               )}
 
-              <ul className={`menu-list-td ${(!sidebarOpen || expandedGroup === group.id) ? 'visible-td' : 'hidden-td'}`}>
+              <ul className={`${styles.menuList} ${(!sidebarOpen || expandedGroup === group.id) ? styles.visible : styles.hidden}`}>
                 {group.items.map(item => (
                   <li key={item.id}>
                     <button
                       onClick={() => handleNavigation(item)}
-                      className={`menu-item-td ${activeItem === item.id ? 'active-td' : ''}`}
+                      className={`${styles.menuItem} ${activeItem === item.id ? styles.active : ''}`}
                       title={!sidebarOpen ? item.description : ""}
                     >
                       <item.icon size={20} />
                       {sidebarOpen && (
                         <>
-                          <span className="menu-label-td">{item.label}</span>
+                          <span className={styles.menuLabel}>{item.label}</span>
                           {item.hasSubmenu && (
                             <ChevronDown 
                               size={16} 
-                              className={`submenu-indicator-td ${coursesSubmenuOpen ? 'rotated-td' : ''}`} 
+                              className={`${styles.submenuIndicator} ${teachingSubmenuOpen ? styles.rotated : ''}`} 
                             />
                           )}
                         </>
@@ -272,14 +259,14 @@ export default function TeacherLayout({ children }) {
                     </button>
 
                     {sidebarOpen && item.hasSubmenu && activeItem === item.id && (
-                      <ul className={`submenu-list-td ${coursesSubmenuOpen ? 'visible-td' : 'hidden-td'}`}>
+                      <ul className={`${styles.submenuList} ${teachingSubmenuOpen ? styles.visible : styles.hidden}`}>
                         {item.subItems.map(subItem => (
                           <li key={subItem.id}>
                             <button
                               onClick={() => handleSubItemClick(subItem)}
-                              className={`submenu-item-td ${activeSubItem === subItem.id ? 'active-td' : ''}`}
+                              className={`${styles.submenuItem} ${activeSubItem === subItem.id ? styles.active : ''}`}
                             >
-                              <span className="submenu-dot-td"></span>
+                              <span className={styles.submenuDot}></span>
                               {subItem.label}
                             </button>
                           </li>
@@ -293,80 +280,80 @@ export default function TeacherLayout({ children }) {
           ))}
         </nav>
 
-        <div className="logout-section-td">
-          <button className="logout-button-td" onClick={handleLogout}>
+        <div className={styles.logoutSection}>
+          <button className={styles.logoutButton} onClick={handleLogout}>
             <LogOut size={20} />
-            {sidebarOpen && <span className="menu-label-td">Logout</span>}
+            {sidebarOpen && <span className={styles.menuLabel}>Logout</span>}
           </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="main-content-td">
-        <header className="header-td">
-          <div className="header-top-td">
-            <h1 className="page-title-td">
+      <div className={styles.mainContent}>
+        <header className={styles.header}>
+          <div className={styles.headerTop}>
+            <h1 className={styles.pageTitle}>
               {menuGroups.flatMap(group => group.items).find(item => item.id === activeItem)?.label || 'Dashboard'}
             </h1>
 
-            <div className="header-actions-td">
-              <div className="search-bar-td">
+            <div className={styles.headerActions}>
+              <div className={styles.searchBar}>
                 <input type="text" placeholder="Search courses, students, or content..." />
-                <button className="search-icon-td">
+                <button className={styles.searchIcon}>
                   <svg className="icon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </button>
               </div>
-              <button className="icon-button-td" title="Create New Course">
+              <button className={styles.iconButton} title="View My Courses" onClick={() => navigate('/teacher/courses')}>
                 <Course size={20} />
               </button>
-              <button className="icon-button-td" title="Help Center">
+              <button className={styles.iconButton} title="Help Center" onClick={() => navigate('/teacher/help')}>
                 <HelpCircle size={20} />
               </button>
-              <div className="notification-td">
-                <button className="icon-button-td">
+              <div className={styles.notification}>
+                <button className={styles.iconButton} title="Notifications" onClick={() => navigate('/teacher/notifications')}>
                   <Bell size={20} />
-                  {notifications > 0 && <span className="notification-badge-td">{notifications}</span>}
+                  {notifications > 0 && <span className={styles.notificationBadge}>{notifications}</span>}
                 </button>
               </div>
 
               {/* Profile dropdown */}
-              <div className="profile-dropdown-td" ref={profileRef}>
+              <div className={styles.profileDropdown} ref={profileRef}>
                 <button
-                  className="profile-button-td"
+                  className={styles.profileButton}
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                 >
-                  <img src={PFPImage} alt="Teacher" className="avatar-small-td" />
-                  <span className="profile-name-td">Areen Zainab</span>
-                  <ChevronDown size={16} className={`dropdown-arrow-td ${profileDropdownOpen ? 'rotated-td' : ''}`} />
+                  <img src={PFPImage} alt="Teacher" className={styles.avatarSmall} />
+                  <span className={styles.profileName}>Areen Zainab</span>
+                  <ChevronDown size={16} className={`${styles.dropdownArrow} ${profileDropdownOpen ? styles.rotated : ''}`} />
                 </button>
 
                 {profileDropdownOpen && (
-                  <div className="dropdown-menu-td">
-                    <div className="dropdown-header-td">
-                      <img src={PFPImage} alt="Teacher" className="dropdown-avatar-td" />
+                  <div className={styles.dropdownMenu}>
+                    <div className={styles.dropdownHeader}>
+                      <img src={PFPImage} alt="Teacher" className={styles.dropdownAvatar} />
                       <div>
-                        <div className="dropdown-name-td">Prof. Areen Zainab</div>
-                        <div className="dropdown-email-td">i221115@nu.edu.pk</div>
+                        <div className={styles.dropdownName}>Prof. Areen Zainab</div>
+                        <div className={styles.dropdownEmail}>i221115@nu.edu.pk</div>
                       </div>
                     </div>
-                    <div className="dropdown-divider-td"></div>
-                    <ul className="dropdown-list-td">
+                    <div className={styles.dropdownDivider}></div>
+                    <ul className={styles.dropdownList}>
                       <li>
-                        <a href="#profile">
+                        <a href="/teacher/profile">
                           <User size={16} />
                           <span>View Profile</span>
                         </a>
                       </li>
                       <li>
-                        <a href="#account">
+                        <a href="/teacher/settings">
                           <Settings size={16} />
                           <span>Account Settings</span>
                         </a>
                       </li>
                       <li>
-                        <a href="#billing">
+                        <a href="/teacher/settings#payment">
                           <CreditCard size={16} />
                           <span>Billing & Payments</span>
                         </a>
@@ -378,8 +365,8 @@ export default function TeacherLayout({ children }) {
                         </a>
                       </li>
                     </ul>
-                    <div className="dropdown-divider-td"></div>
-                    <a href="#logout" className="dropdown-logout-td" onClick={handleLogout}>
+                    <div className={styles.dropdownDivider}></div>
+                    <a href="#logout" className={styles.dropdownLogout} onClick={handleLogout}>
                       <LogOut size={16} />
                       <span>Logout</span>
                     </a>
@@ -389,12 +376,12 @@ export default function TeacherLayout({ children }) {
             </div>
           </div>
 
-          {activeItem === 'courses' && (
-            <div className="submenu-td">
-              {subMenuItems.map(item => (
+          {activeItem === 'teaching' && (
+            <div className={styles.submenu}>
+              {menuGroups.find(g => g.id === 'teaching')?.items.find(i => i.id === 'teaching')?.subItems.map(item => (
                 <button
                   key={item.id}
-                  className={activeSubItem === item.id ? 'active-submenu-td' : ''}
+                  className={activeSubItem === item.id ? styles.activeSubmenu : ''}
                   onClick={() => {
                     setActiveSubItem(item.id);
                     navigate(item.path);
@@ -406,29 +393,31 @@ export default function TeacherLayout({ children }) {
             </div>
           )}
 
-          <div className="breadcrumbs-td">
+          <div className={styles.breadcrumbs}>
             <span>Home</span>
             <span>/</span>
             <span>
               {menuGroups.flatMap(group => group.items).find(item => item.id === activeItem)?.label || 'Dashboard'}
             </span>
-            {activeItem === 'courses' && activeSubItem && (
+            {activeItem === 'teaching' && activeSubItem && (
               <>
                 <span>/</span>
-                <span>{subMenuItems.find(item => item.id === activeSubItem)?.label || 'Overview'}</span>
+                <span>
+                  {menuGroups.find(g => g.id === 'teaching')?.items.find(i => i.id === 'teaching')?.subItems.find(item => item.id === activeSubItem)?.label || 'My Courses'}
+                </span>
               </>
             )}
           </div>
         </header>
 
         {/* Page Content - Only render children here */}
-        <div className="content-td">
+        <div className={styles.content}>
           {children}
         </div>
       </div>
       
       {/* Dark mode toggle button (optional) */}
-      <button className="dark-mode-toggle-td" title="Toggle Dark Mode">
+      <button className={styles.darkModeToggle} title="Toggle Dark Mode">
         <Moon size={20} />
       </button>
     </div>

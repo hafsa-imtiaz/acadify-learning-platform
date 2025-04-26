@@ -1,12 +1,13 @@
-import React, { useState, useRef } from "react";
-import { Plus } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Plus, Save } from "lucide-react";
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import Module from "../../Module";
 import LessonModal from "./LessonModal";
 import "../../../css/teacher/create/StructureBuilder.css";
 
-const StructureBuilder = () => {
-  const [modules, setModules] = useState([
+const StructureBuilder = ({ initialData, onSave, isEditMode }) => {
+  // Default structure if no initialData is provided
+  const defaultModules = [
     {
       id: "module-1",
       title: "Introduction to the Course",
@@ -68,20 +69,60 @@ const StructureBuilder = () => {
         },
       ]
     }
-  ]);
+  ];
 
+  const [modules, setModules] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentLesson, setCurrentLesson] = useState(null);
   const [currentModuleId, setCurrentModuleId] = useState(null);
-  const nextModuleId = useRef(modules.length + 1);
+  const nextModuleId = useRef(1);
   const nextLessonIds = useRef({});
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   
-  // Initialize nextLessonIds for existing modules
-  modules.forEach(module => {
-    if (!nextLessonIds.current[module.id]) {
-      nextLessonIds.current[module.id] = module.lessons.length + 1;
+  // Initialize with initialData or default structure
+  useEffect(() => {
+    let moduleData = [];
+    
+    if (initialData && Array.isArray(initialData)) {
+      moduleData = initialData;
+    } else if (!isEditMode) {
+      // Only use default data for new courses
+      moduleData = defaultModules;
     }
-  });
+    
+    setModules(moduleData);
+    
+    // Set the next module ID reference
+    if (moduleData.length > 0) {
+      const maxModuleId = Math.max(...moduleData.map(m => {
+        const idNum = parseInt(m.id.split('-')[1], 10);
+        return isNaN(idNum) ? 0 : idNum;
+      }));
+      nextModuleId.current = maxModuleId + 1;
+    }
+    
+    // Initialize nextLessonIds for existing modules
+    const lessonIds = {};
+    moduleData.forEach(module => {
+      const moduleIdNum = module.id.split('-')[1];
+      const maxLessonId = Math.max(...module.lessons.map(l => {
+        const lessonParts = l.id.split('-');
+        const idNum = parseInt(lessonParts[2], 10);
+        return isNaN(idNum) ? 0 : idNum;
+      }), 0);
+      lessonIds[module.id] = maxLessonId + 1;
+    });
+    nextLessonIds.current = lessonIds;
+    
+    setHasUnsavedChanges(false);
+  }, [initialData, isEditMode]);
+
+  // Mark changes as unsaved when modules change
+  useEffect(() => {
+    if (modules.length > 0) {
+      setHasUnsavedChanges(true);
+    }
+  }, [modules]);
 
   const toggleModule = (moduleId) => {
     setModules(modules.map(module => 
@@ -248,18 +289,39 @@ const StructureBuilder = () => {
     }
   };
 
+  const [hasUnsavedChange, setHasUnsavedChange] = useState(false);
+  const handleSaveStructure = () => {
+    if (onSave) {
+      // Call the parent onSave function with current modules
+      onSave(modules);
+      setHasUnsavedChanges(false);
+    }
+  };
   return (
     <div className="structure-builder">
       <div className="structure-header">
-        <h2 className="structure-title">Course Structure</h2>
-        <p className="structure-subtitle">Build your course by adding modules and lessons</p>
+        <div className="structure-header-text">
+          <h2 className="structure-title">Course Structure</h2>
+          <p className="structure-subtitle">Build your course by adding modules and lessons</p>
+        </div>
+        
+        {isEditMode && (
+          <button
+            className="button save-structure-btn button-primary"
+            onClick={handleSaveStructure}
+            disabled={!hasUnsavedChange}
+          >
+            <Save size={16} />
+            Save Structure
+          </button>
+        )}
       </div>
       
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="modules" type="MODULE">
           {(provided) => (
-            <div 
-              className="structure-content" 
+            <div
+              className="structure-content"
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
@@ -288,16 +350,31 @@ const StructureBuilder = () => {
                 onClick={addNewModule}
                 className="btn-add-module"
               >
-                <Plus className="icon-plus" size={20} />
+                <Plus className="icon-plus" size={18} />
                 Add New Module
               </button>
+              
+              {!isEditMode && (
+                <div className="structure-actions">
+                  <button
+                    className="button button-primary next-step-btn"
+                    onClick={() => {
+                      if (onSave) {
+                        onSave(modules);
+                      }
+                    }}
+                  >
+                    Continue to Resources
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </Droppable>
       </DragDropContext>
       
       {isModalOpen && (
-        <LessonModal 
+        <LessonModal
           currentLesson={currentLesson}
           onSave={saveLesson}
           onClose={() => setIsModalOpen(false)}

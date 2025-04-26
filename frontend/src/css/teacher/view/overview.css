@@ -1,0 +1,397 @@
+/* Overview Component Styles */
+.overview-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  
+  /* Card Styling */
+  .card {
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    transition: box-shadow 0.3s ease;
+    border-left: 4px solid #3b82f6;
+  }
+  
+  .card:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05), 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  /* Information Section */
+  .info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .info-item {
+    margin-bottom: 0.75rem;
+  }
+  
+  .info-label {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .info-value {
+    color: #111827;
+    font-size: 1.05rem;
+  }
+  
+  .info-text {
+    color: #374151;
+    line-height: 1.6;
+    font-size: 1.05rem;
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  @media (min-width: 640px) {
+    .info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .info-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  /* Status Section */
+  .status-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 9999px;
+  }
+  
+  .status-draft {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  .status-published {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  
+  .status-archived {
+    background-color: #f3f4f6;
+    color: #4b5563;
+  }
+  
+  .status-date {
+    font-size: 1rem;
+    color: #4b5563;
+    font-weight: 500;
+  }
+  
+  .course-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+  
+  /* Publishing Options */
+  .options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .option-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.25rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .option-info {
+    flex: 1;
+    max-width: 70%;
+  }
+  
+  .option-control {
+    min-width: 150px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .checkbox-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 1rem;
+  }
+  
+  .option-label {
+    font-weight: 600;
+    color: #0f766e;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+  }
+  
+  .option-description {
+    font-size: 0.95rem;
+    color: #4b5563;
+    line-height: 1.5;
+  }
+  
+  /* Form Elements */
+  .form-select {
+    width: 100%;
+    min-width: 180px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    color: #1f2937;
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .form-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+  }
+  
+  .checkbox-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .form-checkbox {
+    opacity: 0;
+    position: absolute;
+  }
+  
+  .checkmark {
+    position: relative;
+    height: 24px;
+    width: 24px;
+    background-color: #fff;
+    border: 2px solid #3b82f6;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+  
+  .checkbox-container:hover .checkmark {
+    border-color: #2563eb;
+    background-color: #eff6ff;
+  }
+  
+  .form-checkbox:checked ~ .checkmark {
+    background-color: #3b82f6;
+    border-color: #2563eb;
+  }
+  
+  .form-checkbox:focus ~ .checkmark {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  }
+  
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  .form-checkbox:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  .checkbox-container .checkmark:after {
+    left: 8px;
+    top: 4px;
+    width: 6px;
+    height: 11px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  
+  /* Notes Section */
+  .notes-box {
+    padding: 1.5rem;
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .notes-text {
+    font-style: italic;
+    color: #065f46;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+  
+  .notes-textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 8rem;
+    color: #1f2937;
+    background-color: #f9fafb;
+    transition: all 0.2s ease;
+  }
+  
+  .notes-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    background-color: #ffffff;
+  }
+  
+  .notes-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  /* Action Buttons */
+  .action-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #3b82f6;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 140px;
+  }
+  
+  .action-btn:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .action-btn-outline {
+    background-color: transparent;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+  }
+  
+  .action-btn-outline:hover {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+  }
+  
+  .action-btn-danger {
+    background-color: #ef4444;
+    color: #ffffff;
+  }
+  
+  .action-btn-danger:hover {
+    background-color: #dc2626;
+  }
+  
+  .action-btn-secondary {
+    background-color: #0d9488;
+    color: #ffffff;
+  }
+  
+  .action-btn-secondary:hover {
+    background-color: #0f766e;
+  }
+  
+  @media (max-width: 768px) {
+    .option-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .option-info {
+      max-width: 100%;
+    }
+    
+    .option-control {
+      width: 100%;
+      justify-content: flex-start;
+    }
+    
+    .form-select {
+      width: 100%;
+    }
+    
+    .checkbox-wrapper {
+      padding-right: 0;
+      justify-content: flex-start;
+    }
+    
+    .status-container {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .course-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+    
+    .action-btn {
+      width: 100%;
+    }
+  }

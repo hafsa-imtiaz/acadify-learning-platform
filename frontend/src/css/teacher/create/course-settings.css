@@ -2,277 +2,303 @@
 
 /* Main container */
 .course-settings-container {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 24px;
-    max-width: 64rem;
-    margin: 0 auto;
-  }
-  
-  /* Header styles */
-  .settings-header {
-    margin-bottom: 24px;
-  }
-  
-  .settings-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #111827;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  /* Grid layout for settings cards */
+  background-color: #ffffff;
+  /* border-radius: 8px; - removed */
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); - removed */
+  padding: 24px;
+  max-width: 64rem;
+  margin: 0; /* Changed from "margin: 0 auto;" */
+}
+
+/* Header styles */
+.settings-header {
+  margin-bottom: 32px; /* Increased for more spacing */
+}
+
+.settings-title {
+  font-size: 1.5rem; /* Increased size */
+  font-weight: 700;
+  color: #0f172a; /* Darker color for better contrast */
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Increased gap */
+  border-bottom: 2px solid #e2e8f0; /* Added stylish underline */
+  padding-bottom: 12px;
+}
+
+/* Grid layout for settings cards */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px; /* Increased gap for better spacing */
+  margin-bottom: 32px; /* Increased margin */
+}
+
+/* Full width element (spans both columns) */
+.full-width {
+  grid-column: span 2;
+}
+
+/* Settings card */
+.settings-card {
+  background-color: #f8fafc; /* Slightly lighter background */
+  border-radius: 10px; /* More rounded corners */
+  border: 1px solid #e5e7eb;
+  padding: 20px; /* Increased padding */
+  height: 100%;
+  transition: all 0.2s ease; /* Smooth transition for hover effect */
+}
+
+.settings-card:hover {
+  border-color: #cbd5e1; /* Border changes color on hover */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Subtle shadow on hover */
+}
+
+/* Card header */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px; /* Increased margin */
+  color: #1e293b; /* Darker for better readability */
+}
+
+.card-header h3 {
+  font-size: 1.1rem; /* Slightly larger */
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Course level section */
+.level-options {
+  display: flex;
+  gap: 10px; /* Increased gap */
+}
+
+.level-button {
+  flex: 1;
+  padding: 12px; /* Increased padding */
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px; /* More rounded */
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s; /* Slightly slower transition */
+}
+
+.level-button:hover {
+  background-color: #f1f5f9; /* Softer hover color */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.level-button.active {
+  background-color: #dbeafe; /* Slightly adjusted color */
+  border-color: #3b82f6; /* Brighter blue */
+  color: #1d4ed8; /* Darker text for contrast */
+  font-weight: 500;
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Duration inputs */
+.duration-inputs {
+  display: flex;
+  gap: 12px; /* Increased gap */
+}
+
+.duration-value {
+  width: 80px;
+  padding: 10px 14px; /* Increased padding */
+  border: 1px solid #d1d5db;
+  border-radius: 8px; /* More rounded */
+  font-size: 0.875rem;
+}
+
+.duration-unit {
+  flex: 1;
+  padding: 10px 14px; /* Increased padding */
+  border: 1px solid #d1d5db;
+  border-radius: 8px; /* More rounded */
+  background-color: #ffffff;
+  font-size: 0.875rem;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* Softer, larger focus ring */
+}
+
+/* Prerequisites and Learning Outcomes */
+.list-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px; /* Increased gap */
+}
+
+.items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Increased gap */
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px; /* Increased padding */
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px; /* More rounded */
+  font-size: 0.875rem;
+  transition: all 0.2s ease; /* Smooth hover transition */
+}
+
+.list-item:hover {
+  border-color: #cbd5e1; /* Border changes color on hover */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* Subtle shadow on hover */
+}
+
+.remove-button {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 6px; /* Increased padding */
+  border-radius: 6px; /* More rounded */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease; /* Smooth transition */
+}
+
+.remove-button:hover {
+  background-color: #fecaca; /* Slightly darker shade for better visibility */
+  transform: scale(1.1); /* Slight zoom effect */
+}
+
+/* Add item form */
+.add-item-form {
+  display: flex;
+  gap: 12px; /* Increased gap */
+}
+
+.add-item-input {
+  flex: 1;
+  padding: 10px 14px; /* Increased padding */
+  border: 1px solid #d1d5db;
+  border-radius: 8px; /* More rounded */
+  font-size: 0.875rem;
+}
+
+.add-item-button {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Increased gap */
+  padding: 10px 16px; /* Increased padding */
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px; /* More rounded */
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500; /* Made it a bit bolder */
+  transition: all 0.3s ease; /* Smoother transition */
+}
+
+.add-item-button:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px); /* Slight lift effect */
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); /* Stylish shadow on hover */
+}
+
+/* Enrollment type */
+.enrollment-options {
+  display: flex;
+  gap: 12px; /* Increased gap */
+  margin-bottom: 20px; /* Increased margin */
+}
+
+.enrollment-button {
+  flex: 1;
+  padding: 12px; /* Increased padding */
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px; /* More rounded */
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s; /* Slightly slower transition */
+}
+
+.enrollment-button:hover {
+  background-color: #f1f5f9; /* Softer hover color */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.enrollment-button.active {
+  background-color: #dbeafe;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  font-weight: 500;
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Price input */
+.price-input-container {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Increased gap */
+  padding-top: 16px; /* Increased padding */
+  border-top: 1px solid #e5e7eb;
+}
+
+.price-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.price-input {
+  width: 120px;
+  padding: 10px 14px; /* Increased padding */
+  border: 1px solid #d1d5db;
+  border-radius: 8px; /* More rounded */
+  font-size: 0.875rem;
+}
+
+/* Footer */
+.settings-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 32px; /* Added margin top */
+}
+
+.save-button {
+  padding: 12px 24px; /* Increased padding */
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px; /* More rounded */
+  font-size: 0.95rem; /* Slightly larger */
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smoother transition */
+}
+
+.save-button:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px); /* Slight lift effect */
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); /* Stylish shadow on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
   .settings-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
+    grid-template-columns: 1fr;
   }
   
-  /* Full width element (spans both columns) */
   .full-width {
-    grid-column: span 2;
+    grid-column: span 1;
   }
-  
-  /* Settings card */
-  .settings-card {
-    background-color: #f9fafb;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-    padding: 16px;
-    height: 100%;
-  }
-  
-  /* Card header */
-  .card-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
-    color: #1f2937;
-  }
-  
-  .card-header h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0;
-  }
-  
-  /* Course level section */
-  .level-options {
-    display: flex;
-    gap: 8px;
-  }
-  
-  .level-button {
-    flex: 1;
-    padding: 10px;
-    background-color: #ffffff;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .level-button:hover {
-    background-color: #f3f4f6;
-  }
-  
-  .level-button.active {
-    background-color: #e0f2fe;
-    border-color: #0ea5e9;
-    color: #0369a1;
-    font-weight: 500;
-  }
-  
-  /* Duration inputs */
-  .duration-inputs {
-    display: flex;
-    gap: 8px;
-  }
-  
-  .duration-value {
-    width: 80px;
-    padding: 8px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 0.875rem;
-  }
-  
-  .duration-unit {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background-color: #ffffff;
-    font-size: 0.875rem;
-  }
-  
-  input:focus, select:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-  }
-  
-  /* Prerequisites and Learning Outcomes */
-  .list-section {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .items-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .list-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 12px;
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    font-size: 0.875rem;
-  }
-  
-  .remove-button {
-    background: none;
-    border: none;
-    color: #ef4444;
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .remove-button:hover {
-    background-color: #fee2e2;
-  }
-  
-  /* Add item form */
-  .add-item-form {
-    display: flex;
-    gap: 8px;
-  }
-  
-  .add-item-input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 0.875rem;
-  }
-  
-  .add-item-button {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 8px 12px;
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: background-color 0.2s;
-  }
-  
-  .add-item-button:hover {
-    background-color: #2563eb;
-  }
-  
-  /* Enrollment type */
-  .enrollment-options {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  
-  .enrollment-button {
-    flex: 1;
-    padding: 10px;
-    background-color: #ffffff;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .enrollment-button:hover {
-    background-color: #f3f4f6;
-  }
-  
-  .enrollment-button.active {
-    background-color: #e0f2fe;
-    border-color: #0ea5e9;
-    color: #0369a1;
-    font-weight: 500;
-  }
-  
-  /* Price input */
-  .price-input-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-top: 12px;
-    border-top: 1px solid #e5e7eb;
-  }
-  
-  .price-label {
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-  
-  .price-input {
-    width: 120px;
-    padding: 8px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 0.875rem;
-  }
-  
-  /* Footer */
-  .settings-footer {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .save-button {
-    padding: 10px 20px;
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .save-button:hover {
-    background-color: #2563eb;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .settings-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .full-width {
-      grid-column: span 1;
-    }
-  }
+}

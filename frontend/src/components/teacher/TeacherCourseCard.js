@@ -1,6 +1,6 @@
 import React from 'react';
 import { Eye, Edit, Trash2, BarChart } from 'lucide-react';
-import '../../css/teacher/TeacherCourseCard.css';
+import '../../css/teacher/teacher-course-card.css';
 
 function CourseCardTeacher({ course, onView, onEdit, onDelete, onGoToDashboard }) {
   return (
@@ -68,18 +68,18 @@ function CourseCardTeacher({ course, onView, onEdit, onDelete, onGoToDashboard }
           <div className="course-price">${course.price}</div>
         )}
         
-        <div className="course-actions">
-          <button className="action-btn view" onClick={onView} title="View Course">
+        <div className="course-actions-card">
+          <button className="action-btn-teacard view" onClick={onView} title="View Course">
             <Eye size={18} />
           </button>
-          <button className="action-btn edit" onClick={onEdit} title="Edit Course">
+          <button className="action-btn-teacard edit" onClick={onEdit} title="Edit Course">
             <Edit size={18} />
           </button>
-          <button className="action-btn delete" onClick={onDelete} title="Delete Course">
+          <button className="action-btn-teacard delete" onClick={onDelete} title="Delete Course">
             <Trash2 size={18} />
           </button>
           {course.status.toLowerCase() === 'published' && (
-            <button className="action-btn dashboard" onClick={onGoToDashboard} title="Course Dashboard">
+            <button className="action-btn-teacard dashboard" onClick={onGoToDashboard} title="Course Dashboard">
               <BarChart size={18} />
             </button>
           )}

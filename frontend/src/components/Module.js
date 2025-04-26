@@ -1,17 +1,21 @@
 import React from "react";
-import { ChevronDown, ChevronRight, Plus, Edit2, Trash2, GripVertical } from "lucide-react";
+import { ChevronDown, ChevronRight, Plus, Edit2, Trash2, GripVertical, AlignLeft, AlertTriangle } from "lucide-react";
 import { Draggable, Droppable } from '@hello-pangea/dnd';
-import Lesson from "./Lesson"; 
+import Lesson from "./Lesson";
+import Assignment from "./Assignment";
 
-const Module = ({ 
-  module, 
-  moduleIndex, 
-  onToggleModule, 
-  onEditModule, 
-  onDeleteModule, 
-  onAddLesson, 
-  onEditLesson, 
-  onDeleteLesson 
+const Module = ({
+  module,
+  moduleIndex,
+  onToggleModule,
+  onEditModule,
+  onDeleteModule,
+  onAddLesson,
+  onEditLesson,
+  onDeleteLesson,
+  onAddAssignment,
+  onEditAssignment,
+  onDeleteAssignment
 }) => {
   return (
     <Draggable
@@ -26,7 +30,7 @@ const Module = ({
           {...provided.draggableProps}
         >
           <div className="module-header">
-            <div 
+            <div
               className="drag-handle"
               {...provided.dragHandleProps}
             >
@@ -61,6 +65,19 @@ const Module = ({
               />
             </div>
             
+            <div className="module-meta">
+              <div className="module-count">
+                <span className="count-item">
+                  <AlignLeft size={14} />
+                  {module.lessons.length} Lesson{module.lessons.length !== 1 ? 's' : ''}
+                </span>
+                <span className="count-item">
+                  <AlertTriangle size={14} />
+                  {module.assignments.length} Assignment{module.assignments.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+            </div>
+            
             <div className="module-actions">
               <button 
                 onClick={() => onDeleteModule(module.id)}
@@ -73,39 +90,96 @@ const Module = ({
           </div>
           
           {module.isOpen && (
-            <div className="lessons-container">
-              <Droppable
-                droppableId={module.id}
-                type="LESSON"
-              >
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className="lessons-list"
+            <div className="module-content">
+              {/* Lessons Section */}
+              <div className="content-section">
+                <div className="section-header">
+                  <h4 className="section-title">Lessons</h4>
+                  <button 
+                    onClick={() => onAddLesson(module.id)}
+                    className="btn-add-item"
                   >
-                    {module.lessons.map((lesson, lessonIndex) => (
-                      <Lesson 
-                        key={lesson.id}
-                        lesson={lesson}
-                        lessonIndex={lessonIndex}
-                        moduleId={module.id}
-                        onEditLesson={onEditLesson}
-                        onDeleteLesson={onDeleteLesson}
-                      />
-                    ))}
-                    {provided.placeholder}
-                    
-                    <button
-                      onClick={() => onAddLesson(module.id)}
-                      className="btn-add-lesson"
+                    <Plus size={14} />
+                    Add Lesson
+                  </button>
+                </div>
+                
+                <Droppable
+                  droppableId={`${module.id}-lessons`}
+                  type="LESSON"
+                >
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="lessons-list"
                     >
-                      <Plus size={16} className="icon-plus" />
-                      Add Lesson
-                    </button>
-                  </div>
-                )}
-              </Droppable>
+                      {module.lessons.length === 0 ? (
+                        <div className="empty-list-message">
+                          No lessons added yet. Click "Add Lesson" to create your first lesson.
+                        </div>
+                      ) : (
+                        module.lessons.map((lesson, lessonIndex) => (
+                          <Lesson
+                            key={lesson.id}
+                            lesson={lesson}
+                            lessonIndex={lessonIndex}
+                            moduleId={module.id}
+                            onEditLesson={onEditLesson}
+                            onDeleteLesson={onDeleteLesson}
+                          />
+                        ))
+                      )}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
+              
+              {/* Assignments Section */}
+              <div className="content-section">
+                <div className="section-header">
+                  <h4 className="section-title">Assignments</h4>
+                  <button 
+                    onClick={() => onAddAssignment(module.id)}
+                    className="btn-add-item"
+                  >
+                    <Plus size={14} />
+                    Add Assignment
+                  </button>
+                </div>
+                
+                <Droppable
+                  droppableId={`${module.id}-assignments`}
+                  type="ASSIGNMENT"
+                >
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="assignments-list"
+                    >
+                      {module.assignments.length === 0 ? (
+                        <div className="empty-list-message">
+                          No assignments added yet. Click "Add Assignment" to create your first assignment.
+                        </div>
+                      ) : (
+                        module.assignments.map((assignment, assignmentIndex) => (
+                          <Assignment
+                            key={assignment.id}
+                            assignment={assignment}
+                            assignmentIndex={assignmentIndex}
+                            moduleId={module.id}
+                            onEditAssignment={onEditAssignment}
+                            onDeleteAssignment={onDeleteAssignment}
+                          />
+                        ))
+                      )}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
             </div>
           )}
         </div>

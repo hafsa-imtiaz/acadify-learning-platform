@@ -1,0 +1,691 @@
+/* Main container */
+.settingsContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #333;
+}
+
+.settingsHeader {
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #1f2937;
+}
+
+.settingsTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.settingsDescription {
+  font-size: 1.1rem;
+  color: #6b7280;
+}
+
+/* Tab navigation */
+.tabsContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+  background-color: white;
+  border-radius: 20px;
+  padding: 6px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.tabButton {
+  padding: 12px 30px;
+  border: none;
+  background: none;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.tabButton:hover {
+  color: var(--primary-color);
+}
+
+.activeTab {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Tab content */
+.tabContent {
+  margin-bottom: 2rem;
+}
+
+/* Settings form */
+.settingsForm {
+  width: 100%;
+}
+
+.settingsSection {
+  margin-bottom: 2rem;
+}
+
+.sectionHeader {
+  margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1f2937;
+}
+
+.sectionDescription {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.subsectionTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+/* Form elements */
+.formGroup {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.formLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.formInput, 
+.formSelect {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.15s ease;
+}
+
+.formInput:focus,
+.formSelect:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.formInput:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
+}
+
+.formSelect {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M8 10.5a.5.5 0 0 1-.354-.146l-4-4a.5.5 0 1 1 .708-.708L8 9.293l3.646-3.647a.5.5 0 0 1 .708.708l-4 4A.5.5 0 0 1 8 10.5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px;
+}
+
+.formHelp {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+/* Password input */
+.passwordInput {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.passwordToggle:hover {
+  color: #4f46e5;
+}
+
+/* Current password display */
+.currentPasswordDisplay {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.passwordField {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.passwordLabel {
+  font-weight: 500;
+}
+
+.passwordDots {
+  font-family: monospace;
+  letter-spacing: 2px;
+}
+
+.passwordLastUpdated {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+/* Password change form */
+.passwordChangeForm {
+  margin-top: 1rem;
+}
+
+.passwordFields {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .passwordFields {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Password requirements */
+.passwordRequirements {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.requirementsTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.requirementsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.requirement {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 0.3rem;
+}
+
+.requirement::before {
+  content: "•";
+  color: #d1d5db;
+  margin-right: 0.5rem;
+}
+
+.met {
+  color: #10b981;
+}
+
+.met::before {
+  content: "✓";
+  color: #10b981;
+}
+
+/* Danger zone */
+.dangerZone {
+  margin-top: 3rem;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 1.5rem;
+}
+
+.dangerTitle {
+  font-size: 1.2rem;
+  color: #ef4444;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.dangerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.dangerInfo {
+  max-width: 400px;
+}
+
+.dangerAction {
+  font-size: 1.1rem;
+  color: #b91c1c;
+  margin: 0 0 0.25rem 0;
+}
+
+.dangerDescription {
+  color: #7f1d1d;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.dangerButton {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dangerButton:hover {
+  background-color: #fecaca;
+}
+
+/* Notification settings */
+.notificationGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.notificationGroup {
+  margin-bottom: 1.5rem;
+}
+
+.groupTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.notificationItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.notificationItem:last-child {
+  border-bottom: none;
+}
+
+.notificationInfo {
+  flex: 1;
+}
+
+.notificationTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 0.25rem 0;
+  color: #1f2937;
+}
+
+.notificationDescription {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Toggle switch */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #d1d5db;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.toggle input:checked + .slider {
+  background-color: #4f46e5;
+}
+
+.toggle input:focus + .slider {
+  box-shadow: 0 0 1px #4f46e5;
+}
+
+.toggle input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* Notification actions */
+.notificationActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f3f4f6;
+  margin-top: 1rem;
+}
+
+/* Payment method selector */
+.paymentMethodSelector {
+  margin-bottom: 2rem;
+}
+
+.paymentOptions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.paymentOption {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: calc(50% - 0.5rem);
+  min-width: 250px;
+}
+
+@media (max-width: 768px) {
+  .paymentOption {
+    width: 100%;
+  }
+}
+
+.paymentOption:hover {
+  border-color: #d1d5db;
+}
+
+.selectedPayment {
+  border-color: #4f46e5;
+  background-color: #f5f3ff;
+}
+
+.paymentOptionIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background-color: #0ea5e9;
+}
+
+.paymentOptionInfo {
+  flex: 1;
+}
+
+.paymentOptionTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 0.25rem 0;
+  color: #1f2937;
+}
+
+.paymentOptionDescription {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Bank details */
+.bankDetails, 
+.paypalDetails {
+  margin-bottom: 2rem;
+}
+
+.bankDetailsRow {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .bankDetailsRow {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.secureField {
+  position: relative;
+}
+
+.changeButton {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #4f46e5;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Payout preferences */
+.payoutPreferences {
+  margin-bottom: 2rem;
+}
+
+.payoutPreferencesRow {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .payoutPreferencesRow {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Tax information */
+.taxInformation {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.taxHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.taxStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.taxDescription {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-bottom: 1.25rem;
+}
+
+/* Buttons */
+.primaryButton,
+.secondaryButton,
+.cancelButton,
+.saveButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.primaryButton {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+}
+
+.primaryButton:hover {
+  background-color: #4338ca;
+}
+
+.primaryButton:disabled {
+  background-color: #c7d2fe;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  background-color: #fff;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+
+.secondaryButton:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.cancelButton {
+  background-color: #fff;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+
+.cancelButton:hover {
+  background-color: #f9fafb;
+}
+
+.saveButton {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  min-width: 140px;
+}
+
+.saveButton:hover {
+  background-color: #4338ca;
+}
+
+/* Form actions */
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+/* Success notification */
+.successNotification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: #ecfdf5;
+  color: #047857;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #10b981;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
+  z-index: 50;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import CourseCardTeacher from '../../components/teacher/TeacherCourseCard';
 import { PlusCircle, Search, Filter } from 'lucide-react';
 import Sidebar from '../../components/teacher/sidebar';
-import '../../css/teacher/MyCourses.css';
+import '../../css/teacher/my-courses.css';
 
 const MyCourses = () => {
   const navigate = useNavigate();
@@ -92,7 +92,7 @@ const MyCourses = () => {
 
   // Handle course navigation
   const handleCourseClick = (courseId) => {
-    navigate(`/courses/${courseId}`);
+    //navigate(`/teacher/courses/${courseId}`);
   };
 
   // Handle adding a new course
@@ -198,8 +198,8 @@ const MyCourses = () => {
               <div key={course.id} onClick={() => handleCourseClick(course.id)}>
                 <CourseCardTeacher 
                   course={course}
-                  onView={() => navigate(`/courses/${course.id}`)}
-                  onEdit={() => navigate(`/courses/${course.id}/edit`)}
+                  onView={() => navigate(`/teacher/course/${course.id}`)}
+                  onEdit={() => navigate(`/courses/edit/${course.id}`)}
                   onDelete={(e) => {
                     e.stopPropagation();
                     if (window.confirm(`Are you sure you want to delete "${course.title}"?`)) {

@@ -5,7 +5,7 @@ import UpcomingItems from '../../components/teacher/TeacherDashboard/UpcomingIte
 import ActivityFeed from '../../components/teacher/TeacherDashboard/ActivityFeed';
 import QuickActions from '../../components/teacher/TeacherDashboard/QuickActions';
 import TeacherLayout from '../../components/teacher/sidebar';
-import '../../css/teacher/TeacherDashboard.css';
+import '../../css/teacher/teacher-dashboard.css';
 
 const TeacherDashboard = () => {
   const [courses, setCourses] = useState([

@@ -11,11 +11,20 @@ import AboutSection from './pages/AboutSection';
 import TeacherDashboard from './pages/teacher/dashboard';
 import TeacherCourses from './pages/teacher/MyCourses';
 import TeacherCalender from './pages/teacher/MyCalendar';
-import CreateCourse from './pages/teacher/createcourse';
+import CreateEditCourse from './pages/teacher/createcourse';
+import ViewCourse from './pages/teacher/view-course';
+import HelpCenter from './pages/teacher/HelpCenter';
+import TeacherNotifications from './pages/teacher/Notifications';
+import TeacherAnalytics from './pages/teacher/Instructor-Analytics';
+import TeacherReports from './pages/teacher/Instructor-Reports';
+import TeacherProfile from './pages/teacher/teacher-profile'
+import ScrollToTop from './components/ScrollToTop';
+import TeacherSettings from './pages/teacher/teacher-settings';
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -28,7 +37,15 @@ function App() {
         <Route path='/teacher/dashboard' element={<TeacherDashboard />} />
         <Route path='/teacher/courses' element={<TeacherCourses />} />
         <Route path='/teacher/calendar' element={<TeacherCalender />} />
-        <Route path='/courses/create' element={<CreateCourse />} />
+        <Route path='/courses/create' element={<CreateEditCourse />} />
+        <Route path="/courses/edit/:courseId" element={<CreateEditCourse />} />
+        <Route path="/teacher/course/:courseId" element={<ViewCourse />} />
+        <Route path="/teacher/help" element={<HelpCenter />} />
+        <Route path="/teacher/notifications" element={<TeacherNotifications />} />
+        <Route path='/teacher/analytics' element={<TeacherAnalytics />} />
+        <Route path='/teacher/reports' element={<TeacherReports />} />
+        <Route path='/teacher/profile' element={<TeacherProfile />} /> 
+        <Route path='/teacher/settings' element={<TeacherSettings />} />
       </Routes>
     </Router>
   );

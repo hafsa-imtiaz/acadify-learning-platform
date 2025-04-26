@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Upload, Plus, Link, Trash2, FileText, File, ExternalLink, FileSpreadsheet} from 'lucide-react';
 import "../../../css/teacher/create/CourseResources.css";
 
-export default function CourseResourcesUploader() {
+export default function CourseResourcesUploader( initialData, onSave, isEditMode ) {
   const [attachments, setAttachments] = useState([
     { id: 1, name: 'Course Syllabus.pdf', type: 'pdf', size: '1.2 MB', assignedTo: 'general' },
     { id: 2, name: 'Week 1 Slides.pptx', type: 'ppt', size: '3.5 MB', assignedTo: 'Lesson 1: Introduction' },
@@ -22,6 +22,41 @@ export default function CourseResourcesUploader() {
     'Lesson 2: Core Concepts',
     'Lesson 3: Advanced Topics'
   ]);
+
+  useEffect(() => {
+    if (initialData && initialData.length > 0) {
+      // Extract lessons from course structure
+      const extractedLessons = ['general'];
+      const resources = [];
+      
+      initialData.forEach(section => {
+        // Add lessons from sections
+        if (section.lessons && section.lessons.length > 0) {
+          section.lessons.forEach(lesson => {
+            extractedLessons.push(lesson.title);
+          });
+        }
+        
+        // Extract resources if they exist in the structure
+        if (section.resources && section.resources.length > 0) {
+          section.resources.forEach(resource => {
+            resources.push({
+              ...resource,
+              assignedTo: resource.assignedTo || section.title
+            });
+          });
+        }
+      });
+      
+      setLessons(extractedLessons);
+      
+      // If resources were found in initialData, use them; otherwise keep default
+      if (resources.length > 0) {
+        setAttachments(resources);
+      }
+    }
+  }, [initialData]);
+
 
   const getFileIcon = (type) => {
     switch(type) {

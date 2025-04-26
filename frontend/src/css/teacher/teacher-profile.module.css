@@ -1,0 +1,682 @@
+:root {
+  --primary-color: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-light: #e0e7ff;
+  --secondary-color: #f5f7fa;
+  --accent-color: #8b5cf6;
+  --accent-light: #ede9fe;
+  --text-color: #334155;
+  --text-light: #64748b;
+  --border-color: #e2e8f0;
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --warning-color: #f59e0b;
+  --section-gap: 32px;
+  --border-radius: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --transition: all 0.2s ease-in-out;
+}
+
+.instructorProfilePage {
+  position: relative;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-color);
+  background-color: #f8fafc;
+}
+
+.profileBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 400px;
+  background: linear-gradient(135deg, #c7d2fe 0%, #ddd6fe 50%, #fbcfe8 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 65%, 0 100%);
+  z-index: 0;
+}
+
+.instructorProfileContainer {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+  z-index: 1;
+}
+
+.profileHeader {
+  text-align: center;
+  margin-bottom: 36px;
+  color: #1e293b;
+}
+
+.profileHeader h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.profileHeader p {
+  font-size: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  color: #475569;
+}
+
+.profileTabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+  background-color: white;
+  border-radius: 20px;
+  padding: 6px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.tabButton {
+  padding: 12px 24px;
+  border: none;
+  background: none;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.tabButton:hover {
+  color: var(--primary-color);
+}
+
+.tabButtonActive {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.profileTabContent {
+  display: none;
+}
+
+.profileTabContentActive {
+  display: block;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profileCard {
+  background-color: white;
+  border-radius: var(--border-radius);
+  padding: 32px;
+  margin-bottom: var(--section-gap);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.profileSectionHeader {
+  margin-bottom: 28px;
+}
+
+.profileSectionHeader h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.profileSectionHeader p {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+/* Profile Photo Section */
+.profilePhotoSection {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.profilePhotoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profilePhotoWrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-md);
+  border: 4px solid white;
+}
+
+.profilePhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoChangeOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0;
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+}
+
+.photoChangeOverlay span {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.profilePhotoWrapper:hover .photoChangeOverlay {
+  opacity: 1;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.photoGuidelines {
+  flex: 1;
+  background-color: var(--accent-light);
+  border-radius: var(--border-radius);
+  padding: 16px 20px;
+}
+
+.photoGuidelines h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--accent-color);
+}
+
+.photoGuidelines ul {
+  padding-left: 20px;
+  color: var(--text-color);
+}
+
+.photoGuidelines li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* Form Elements */
+.formRow {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.formRow .formGroup {
+  flex: 1;
+}
+
+.formGroup {
+  margin-bottom: 24px;
+}
+
+.formGroup label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-size: 15px;
+  color: var(--text-color);
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 15px;
+  transition: var(--transition);
+  color: var(--text-color);
+  background-color: #fff;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.formGroup input::placeholder,
+.formGroup textarea::placeholder {
+  color: #cbd5e1;
+}
+
+.selectField {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.inputHelpText {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+/* Expertise Tags */
+.expertiseSection {
+  margin-top: 24px;
+}
+
+.expertiseInputGroup {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0 16px;
+}
+
+.expertiseInputGroup input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 15px;
+}
+
+.addExpertiseBtn {
+  padding: 0 24px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.addExpertiseBtn:hover {
+  background-color: var(--primary-hover);
+}
+
+.expertiseTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.expertiseTag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--primary-light);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: var(--primary-hover);
+}
+
+.removeTagBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text-light);
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.removeTagBtn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
+}
+
+/* Social Links Section */
+.socialLinksContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.socialGroup label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.socialIcon {
+  margin-right: 4px;
+}
+
+.socialIconLinkedin {
+  color: #0077b5;
+}
+
+.socialIconTwitter {
+  color: #1da1f2;
+}
+
+.socialIconInstagram {
+  color: #e4405f;
+}
+
+.socialIconWebsite {
+  color: #4285F4;
+}
+
+.socialIconEmail {
+  color: #ea4335;
+}
+
+.socialInputWrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.socialPrefix {
+  background-color: var(--secondary-color);
+  padding: 12px 12px;
+  color: var(--text-light);
+  font-size: 14px;
+  border-right: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.socialInputWrapper input {
+  border: none;
+  border-radius: 0;
+}
+
+.socialInputWrapper input:focus {
+  box-shadow: none;
+}
+
+/* Form Actions */
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.primaryButton,
+.secondaryButton {
+  padding: 14px 28px;
+  border-radius: var(--border-radius);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.primaryButton {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.primaryButton:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.primaryButtonDisabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  transform: none;
+  animation: pulse 1.5s infinite;
+}
+
+.secondaryButton {
+  background-color: white;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.secondaryButton:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Success Message */
+.successMessage {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: var(--success-color);
+  color: white;
+  padding: 14px 28px;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-lg);
+  animation: slideIn 0.3s ease-out;
+  z-index: 100;
+}
+
+.successMessage span {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive Styling */
+@media screen and (max-width: 768px) {
+  .instructorProfileContainer {
+    padding: 24px 16px 40px;
+  }
+  
+  .profileCard {
+    padding: 24px 20px;
+  }
+  
+  .profileTabs {
+    flex-wrap: wrap;
+  }
+  
+  .tabButton {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+  
+  .formRow {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .socialLinksContainer {
+    grid-template-columns: 1fr;
+  }
+  
+  .profilePhotoSection {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .photoGuidelines {
+    width: 100%;
+  }
+  
+  .formActions {
+    flex-direction: column-reverse;
+  }
+  
+  .formActions button {
+    width: 100%;
+  }
+  
+  .profileHeader h1 {
+    font-size: 26px;
+  }
+  
+  .profileBackground {
+    height: 300px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .profileTabs {
+    gap: 6px;
+    padding: 4px;
+  }
+  
+  .tabButton {
+    padding: 8px 12px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+  
+  .profileCard {
+    padding: 20px 16px;
+  }
+  
+  .profileSectionHeader h2 {
+    font-size: 18px;
+  }
+  
+  .successMessage {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* Additional visual enhancements */
+.formGroup input:hover,
+.formGroup textarea:hover,
+.formGroup select:hover {
+  border-color: #cbd5e1;
+}
+
+.socialGroup:hover .socialIcon {
+  transform: scale(1.1);
+}
+
+.socialIcon {
+  transition: transform 0.2s ease;
+}
+
+/* Visual feedback on interactions */
+.formGroup input:active,
+.formGroup textarea:active,
+.formGroup select:active {
+  border-color: var(--primary-color);
+}
+
+.expertiseTag:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Animation for tab transitions */
+.profileTabContent {
+  transform-origin: top center;
+}
+
+/* Pulsing animation for saving state */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Gradient borders and accents */
+.profileCard {
+  position: relative;
+}
+
+.profileCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+/* Custom scrollbar for textareas */
+.customScrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
