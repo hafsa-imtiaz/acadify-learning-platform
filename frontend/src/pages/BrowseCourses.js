@@ -3,7 +3,7 @@ import CourseCard from "../components/CourseCard";
 import Navbar from '../components/Home/Navbar';
 import Footer from '../components/Home/Footer';
 import { Search, Filter } from "lucide-react";
-import "../css/BrowseCourses.css";
+import "../css/Home/BrowseCourses.css";
 import { Link } from 'react-router-dom';
 import dscourse from '../assets/Courses/datascicourse.jpg';
 import webcourse from '../assets/Courses/webdev.png';

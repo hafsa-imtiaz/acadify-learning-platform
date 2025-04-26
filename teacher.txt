@@ -12,3 +12,99 @@
 
 ### 🧱 Additional Components
 - **Progress Tabs or Stepper** (to show which step they’re on)
+
+
+Absolutely — here’s a **professional**, clean, highly detailed and polished version of the prompt, as if you were writing to a serious, high-quality AI developer:
+
+---
+
+# 📋 **Final Professional Prompt for AI Developer**
+
+---
+
+> **Prompt:**
+> 
+> Please design and implement a **Teacher Assignments Management Page** using:
+> - **JavaScript** (no TypeScript).
+> - **External CSS Modules** (e.g., `AssignmentsPage.module.css`) for styling.
+> 
+> The page should focus on viewing and managing existing assignments.  
+> No new assignment creation is needed.
+
+---
+
+## 🛠️ **Functional Requirements**:
+
+### Main Page: `AssignmentsPage.js`
+- Display a **list of all assignments** (quizzes, file submissions, long answer assignments).
+- Include a **filter toolbar** to sort assignments by:
+  - All
+  - Quizzes
+  - File Submissions
+  - Long Answers
+  - Needs Grading
+  - Graded
+
+### Assignment Cards:
+- For each assignment, display key details:
+  - Assignment Title
+  - Assignment Type (Quiz / File / Long Answer)
+  - Related Course
+  - Due Date
+  - Submission Statistics (e.g., 7/15 students submitted)
+- **Action Buttons** on each card:
+  - **Edit Assignment** → opens an `AssignmentModal`
+  - **View Submissions** → opens a `SubmissionsModal`
+
+---
+
+## 🧩 **Component Requirements**:
+
+### 1. `AssignmentCard.js`
+- Small component showing assignment summary and actions.
+
+### 2. `AssignmentModal.js`
+- Modal to **edit assignment details**:
+  - Title
+  - Description
+  - Quiz questions (MCQs, True/False, Short Answers)
+  - Attachments and file-related settings.
+
+### 3. `SubmissionsModal.js` (**New Component**)
+- Modal that allows viewing and grading student submissions:
+  - **Quiz Submissions**: Show auto-graded questions + manually graded ones.
+  - **File Submissions**: Show downloadable attachments submitted by students.
+  - **Long Answers**: Display typed answers for manual grading.
+- Provide ability to **grade** and **leave feedback** directly inside the modal.
+- Display submission date, student name, and status.
+
+---
+
+## 🎨 **Styling Requirements**:
+
+- Use a clean, modern design with **responsive layout**.
+- Assignments should display in a **two-column grid** on desktop and a single column on mobile.
+- Cards should have **hover effects** and light shadows.
+- Modals should be **smooth** (simple fade/scale animations if desired).
+- Inside Modals:
+  - Submissions list should be **scrollable** if there are many students.
+  - Grading form should be clean and minimalistic (input fields, dropdowns, textareas).
+
+---
+
+## 📄 **Additional Notes**:
+
+- Use **dummy placeholder data** where needed for assignment entries and student submissions.
+- Avoid heavy libraries; stick to **vanilla JS, React** basics, and **modular CSS**.
+- All action handlers (like editing or grading) can initially console log the action for demonstration if no backend is connected.
+
+---
+
+> **Summary**:
+> 
+> Build a fully functional **Teacher Assignments Management** page that allows teachers to:
+> - View and filter assignments.
+> - Edit existing assignments (title, questions, details).
+> - View, grade, and give feedback on student submissions.
+> 
+> The final product must be clean, responsive, and intuitive to use.

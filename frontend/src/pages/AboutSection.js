@@ -1,11 +1,11 @@
 // AboutSection.js
 import React from 'react';
-import '../css/AboutSection.css';
+import '../css/Home/AboutSection.css';
 import Navbar from '../components/Home/Navbar';
 import Footer from '../components/Home/Footer';
-import ContactSection from '../components/ContactSection';
+import ContactSection from '../components/Home/ContactSection';
 import { Link } from 'react-router-dom';
-import FAQSection from '../components/FAQSection';
+import FAQSection from '../components/Home/FAQSection';
 import { useNavigate } from 'react-router-dom';
 
 const AboutSection = () => {

@@ -1,6 +1,6 @@
 // ContactSection.js
 import React, { useState } from 'react';
-import '../css/ContactSection.css';
+import '../../css/Home/ContactSection.css';
 import { Link } from 'react-router-dom';
 
 const ContactSection = () => {
