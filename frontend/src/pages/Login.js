@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/Login.css';
 import Navbar from '../components/Home/Navbar';
 import Footer from '../components/Home/Footer';
-import { useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; 
+import { jwtDecode } from 'jwt-decode';
 
 function Login() {
   useEffect(() => {
@@ -14,21 +16,101 @@ function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp < currentTime) {
+          // Token expired, clear storage
+          localStorage.removeItem('token');
+          sessionStorage.removeItem('token');
+          setIsLoggedIn(false);
+        } else {
+          // Token is valid, check the role and redirect
+          const storedUser = JSON.parse(localStorage.getItem('user'));
+          setIsLoggedIn(true); // User is logged in
+          if (storedUser.role === 'Teacher') {
+            navigate('/teacher/dashboard'); // Redirect to Teacher dashboard
+          } else if (storedUser.role === 'Student') {
+            navigate('/student/dashboard'); // Redirect to Student dashboard
+          }
+        }
+      } catch (error) {
+        console.error("Invalid token or error decoding", error);
+        // Clear invalid token from storage
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+        setIsLoggedIn(false);
+      }
+    }
+  }, [navigate]);
+
+  if (isLoggedIn) {
+    return null;
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    setTimeout(() => {
-      console.log({ email, password, rememberMe });
+    
+    try {
+      // Connect to your backend API
+      const response = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password
+      });
+      
+      // Handle successful login
+      if (response.data && response.data.token) {
+        // Store token in localStorage or sessionStorage based on rememberMe
+        if (rememberMe) {
+          localStorage.setItem('token', response.data.token);
+        } else {
+          localStorage.setItem('token', response.data.token);
+          sessionStorage.setItem('token', response.data.token);
+        }
+      
+        if (response.data.user) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
+        if (response.data.roleDetails) {
+          localStorage.setItem('roleDetails', JSON.stringify(response.data.roleDetails));
+        }
+      
+        if (response.data.user.role === 'Teacher') {
+          navigate('/teacher/dashboard'); 
+        } else if (response.data.user.role === 'Student') {
+          navigate('/student/dashboard');  
+        } else {
+          navigate('/home'); 
+        }
+      }
+      
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(
+        err.response?.data?.message || 
+        'Login failed. Please check your credentials and try again.'
+      );
+    } finally {
       setIsLoading(false);
-      // Uncomment to test error state
-      // setError('Invalid email or password. Please try again.');
-    }, 1000);
+    }
   };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleForgotPassword = (e) => {
+    e.preventDefault();
+    navigate('/forgot-password');
   };
 
   return (
@@ -88,7 +170,7 @@ function Login() {
               />
               Remember me
             </label>
-            <a href="#" className="forgot-password">Forgot your password?</a>
+            <a href="/forgot-password" onClick={handleForgotPassword} className="forgot-password">Forgot your password?</a>
           </div>
 
           <button 
@@ -105,15 +187,19 @@ function Login() {
         </div>
 
         <div className="social-buttons">
-          <button className="social-button">
+          <button className="social-button" type="button" onClick={() => window.location.href = 'http://localhost:5000/api/auth/google'}>
             <i className="fab fa-google"></i> Google
           </button>
-          <button className="social-button">
+          <button className="social-button" type="button" onClick={() => window.location.href = 'http://localhost:5000/api/auth/facebook'}>
             <i className="fab fa-facebook-f"></i> Facebook
           </button>
-          <button className="social-button">
+          <button className="social-button" type="button" onClick={() => window.location.href = 'http://localhost:5000/api/auth/twitter'}>
             <i className="fab fa-twitter"></i> Twitter
           </button>
+        </div>
+        
+        <div className="signup-link">
+          Don't have an account? <a href="/signup">Sign up</a>
         </div>
       </div>
     </div>

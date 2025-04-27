@@ -278,6 +278,14 @@ export default function TeacherLayout({ children }) {
   };
 
   const handleLogout = () => {
+    // Clear the token and user info from both sessionStorage and localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('roleDetails')
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+    
+    // Redirect user to the login page after logout
     navigate('/login');
   };
   

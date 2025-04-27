@@ -5,11 +5,47 @@ import Navbar from '../../components/Home/Navbar';
 import Footer from '../../components/Home/Footer';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 function Register() {
   useEffect(() => {
       window.scrollTo(0, 0);
     }, []); 
+
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp < currentTime) {
+          // Token expired, clear storage
+          localStorage.removeItem('token');
+          sessionStorage.removeItem('token');
+          setIsLoggedIn(false);
+        } else {
+          // Token is valid, check the role and redirect
+          const storedUser = JSON.parse(localStorage.getItem('user'));
+          setIsLoggedIn(true); // User is logged in
+          if (storedUser.role === 'Teacher') {
+            navigate('/teacher/dashboard'); // Redirect to Teacher dashboard
+          } else if (storedUser.role === 'Student') {
+            navigate('/student/dashboard'); // Redirect to Student dashboard
+          }
+        }
+      } catch (error) {
+        console.error("Invalid token or error decoding", error);
+        // Clear invalid token from storage
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+        setIsLoggedIn(false);
+      }
+    }
+  }, [navigate]);
+
   const [hoveredRole, setHoveredRole] = useState(null);
   const [selectedRole, setSelectedRole] = useState(null);
 
@@ -27,7 +63,10 @@ function Register() {
     }, 500);
   };
 
-  const navigate = useNavigate();
+  if (isLoggedIn) {
+    return null;
+  }
+
   return (
     <div class="registerpage">
     <Navbar />

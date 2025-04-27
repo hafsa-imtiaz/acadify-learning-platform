@@ -19,7 +19,7 @@ const InstructorProfilePage = () => {
       linkedin: 'sarahjohnson',
       twitter: 'sarahj_tech',
       website: 'sarahjohnson.edu',
-      instagram: 'sarahj.code'
+      instagram: 'sarahj.code',
     }
   });
 

@@ -11,6 +11,9 @@ import reactcourse from '../assets/Courses/reactdev.jpeg';
 import pythoncourse from '../assets/Courses/python.png';
 import uiuxcourse from '../assets/Courses/advanceuiux.png';
 import mlcourse from '../assets/Courses/machineL.jpeg'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; 
+import { jwtDecode } from 'jwt-decode';
 
 const mockCourses = [
   {
@@ -94,6 +97,8 @@ const mockCourses = [
 ];
 
 const BrowseCourses = () => {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [courses, setCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
@@ -108,6 +113,37 @@ const BrowseCourses = () => {
   const [sortBy, setSortBy] = useState("popular");
 
   const categories = ["All Courses", "Programming", "Design", "Business", "Data Science"];
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp < currentTime) {
+          // Token expired, clear storage
+          localStorage.removeItem('token');
+          sessionStorage.removeItem('token');
+          setIsLoggedIn(false);
+        } else {
+          // Token is valid, check the role and redirect
+          const storedUser = JSON.parse(localStorage.getItem('user'));
+          setIsLoggedIn(true); // User is logged in
+          if (storedUser.role === 'Teacher') {
+            navigate('/teacher/dashboard'); // Redirect to Teacher dashboard
+          } else if (storedUser.role === 'Student') {
+            navigate('/student/dashboard'); // Redirect to Student dashboard
+          }
+        }
+      } catch (error) {
+        console.error("Invalid token or error decoding", error);
+        // Clear invalid token from storage
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+        setIsLoggedIn(false);
+      }
+    }
+  }, [navigate]);
 
   useEffect(() => {
     // Simulating API fetch with a small delay
@@ -239,6 +275,9 @@ const BrowseCourses = () => {
   const allTopics = Array.from(
     new Set(courses.flatMap(course => course.topics))
   );
+  if (isLoggedIn) {
+    return null;
+  }
 
   return (
     <div>
