@@ -83,7 +83,7 @@ function Login() {
         if (response.data.roleDetails) {
           localStorage.setItem('roleDetails', JSON.stringify(response.data.roleDetails));
         }
-        console.log(response.data.user);
+        console.log(response.data.roleDetails);
       
         if (response.data.user.role === 'Teacher') {
           navigate('/teacher/dashboard'); 

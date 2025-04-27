@@ -1,35 +1,127 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Camera, Linkedin, Twitter, Globe, Instagram, Mail, Book, Award, Briefcase, GraduationCap, MapPin, Phone } from 'lucide-react';
+import axios from 'axios';
 import styles from '../../css/teacher/teacher-profile.module.css';
 import TeacherLayout from '../../components/teacher/sidebar';
+import DefaultProfileImage from '../../assets/Profile/default-pfp.jpeg'; // Fallback image
 
 const InstructorProfilePage = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [profile, setProfile] = useState({
-    name: 'Dr. Sarah Johnson',
-    email: 'sarah.johnson@example.edu',
-    phone: '+1 (555) 123-4567',
-    address: '123 University Avenue, Cambridge, MA 02138',
-    title: 'Professor of Computer Science',
-    bio: 'I have over 10 years of experience teaching programming and software development. My research focuses on machine learning applications in education technology.',
-    specialization: 'Computer Science',
-    qualifications: 'Ph.D. in Computer Science, MIT',
-    experience: '5-10 years',
-    expertise: ['Machine Learning', 'Python', 'Data Science', 'Software Engineering', 'Educational Technology'],
+    // User schema fields
+    fullName: '',
+    email: '',
+    phoneNumber: '',
+    address: '',
+    bio: '',
+    profilePicture: '',
     socialLinks: {
-      linkedin: 'sarahjohnson',
-      twitter: 'sarahj_tech',
-      website: 'sarahjohnson.edu',
-      instagram: 'sarahj.code',
-    }
+      linkedin: '',
+      twitter: '',
+      website: '',
+      instagram: '',
+      github: '',
+      youtube: '',
+      facebook: ''
+    },
+    
+    // Teacher schema fields
+    specialization: '',
+    teachingExperience: '',
+    qualifications: [],
+    professionalTitle: '',
+    areasOfExpertise: [],
+    currentInstitution: '',
+    previousInstitutions: [],
+    department: '',
+    profileVisibility: 'Public',
+    teachingMethodology: [],
+    teachingStyle: ''
   });
 
-  const [profileImage, setProfileImage] = useState(null);
-  const [previewImage, setPreviewImage] = useState('/api/placeholder/250/250');
+  const [profileImage, setProfileImage] = useState(DefaultProfileImage);
+  const [previewImage, setPreviewImage] = useState('../../');
   const fileInputRef = useRef(null);
   const [newExpertise, setNewExpertise] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState('personal');
+
+  // Load data from localStorage on component mount and when tab changes
+  useEffect(() => {
+    loadProfileData();
+  }, []);
+
+  // Function to load profile data from localStorage
+  const loadProfileData = () => {
+    try {
+      setLoading(true);
+      
+      // Get user data from localStorage
+      const userData = JSON.parse(localStorage.getItem('user')) || {};
+      // Get teacher data from localStorage
+      const teacherData = JSON.parse(localStorage.getItem('roleDetails')) || {};
+      console.log(teacherData);
+      
+      if (!userData || Object.keys(userData).length === 0) {
+        setError('User data not found. Please login again.');
+        setLoading(false);
+        return;
+      }
+
+      // Combine data from both sources
+      setProfile({
+        // User schema fields
+        fullName: userData.fullName || '',
+        email: userData.email || '',
+        phoneNumber: userData.phoneNumber || '',
+        address: userData.address || '',
+        bio: userData.bio || '',
+        profilePicture: userData.profilePicture || '',
+        socialLinks: userData.socialLinks || {
+          linkedin: '',
+          twitter: '',
+          website: '',
+          instagram: '',
+          github: '',
+          youtube: '',
+          facebook: ''
+        },
+        
+        // Teacher schema fields from roleDetails
+        specialization: teacherData?.specialization || '',
+        teachingExperience: teacherData?.teachingExperience || '',
+        qualifications: teacherData?.qualifications || [],
+        professionalTitle: teacherData?.professionalTitle || '',
+        areasOfExpertise: teacherData?.areasOfExpertise || [],
+        currentInstitution: teacherData?.currentInstitution || '',
+        previousInstitutions: teacherData?.previousInstitutions || [],
+        department: teacherData?.department || '',
+        profileVisibility: teacherData?.profileVisibility || 'Public',
+        teachingMethodology: teacherData?.teachingMethodology || [],
+        teachingStyle: teacherData?.teachingStyle || ''
+      });
+
+      // Set profile picture if available
+      if (userData.profilePicture) {
+        setPreviewImage(userData.profilePicture);
+      }
+
+      setLoading(false);
+    } catch (err) {
+      console.error('Error loading profile data:', err);
+      setError('Failed to load profile data from local storage');
+      setLoading(false);
+    }
+  };
+
+  // Change tab handler with loading of relevant data
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    // This ensures fresh data is loaded when switching tabs
+    loadProfileData();
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -67,10 +159,10 @@ const InstructorProfilePage = () => {
   };
 
   const addExpertise = () => {
-    if (newExpertise.trim() && !profile.expertise.includes(newExpertise.trim())) {
+    if (newExpertise.trim() && !profile.areasOfExpertise.includes(newExpertise.trim())) {
       setProfile(prev => ({
         ...prev,
-        expertise: [...prev.expertise, newExpertise.trim()]
+        areasOfExpertise: [...prev.areasOfExpertise, newExpertise.trim()]
       }));
       setNewExpertise('');
     }
@@ -79,7 +171,7 @@ const InstructorProfilePage = () => {
   const removeExpertise = (index) => {
     setProfile(prev => ({
       ...prev,
-      expertise: prev.expertise.filter((_, i) => i !== index)
+      areasOfExpertise: prev.areasOfExpertise.filter((_, i) => i !== index)
     }));
   };
 
@@ -87,17 +179,100 @@ const InstructorProfilePage = () => {
     e.preventDefault();
     setIsSaving(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSaving(false);
-    setSaveSuccess(true);
-    
-    // Hide success message after 3 seconds
-    setTimeout(() => {
-      setSaveSuccess(false);
-    }, 3000);
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Authentication token not found. Please login again.');
+        setIsSaving(false);
+        return;
+      }
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token
+        }
+      };
+
+      // Handle profile image upload if changed
+      if (profileImage) {
+        const formData = new FormData();
+        formData.append('profileImage', profileImage);
+        
+        const imgConfig = {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'x-auth-token': token
+          }
+        };
+        
+        // This would be a separate endpoint to handle image upload
+        await axios.post(`/api/user/profile-image/${userData._id}`, formData, imgConfig);
+      }
+
+      // Split data into user and teacher objects
+      const userData = {
+        fullName: profile.fullName,
+        phoneNumber: profile.phoneNumber,
+        address: profile.address,
+        bio: profile.bio,
+        socialLinks: profile.socialLinks
+      };
+      
+      const teacherData = {
+        specialization: profile.specialization,
+        teachingExperience: profile.teachingExperience,
+        qualifications: profile.qualifications,
+        professionalTitle: profile.professionalTitle,
+        areasOfExpertise: profile.areasOfExpertise,
+        currentInstitution: profile.currentInstitution,
+        previousInstitutions: profile.previousInstitutions,
+        department: profile.department,
+        profileVisibility: profile.profileVisibility,
+        teachingMethodology: profile.teachingMethodology,
+        teachingStyle: profile.teachingStyle
+      };
+
+      // Send update request with both user and teacher data
+      const res = await axios.put(`/api/teachers/${userData._id}`, {
+        userData,
+        teacherData
+      }, config);
+      
+      // Update localStorage with new data
+      const existingUser = JSON.parse(localStorage.getItem('user')) || {};
+      const updatedUser = { ...existingUser, ...userData };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      const existingTeacher = JSON.parse(localStorage.getItem('roleDetails')) || {};
+      const updatedTeacher = { ...existingTeacher, ...teacherData };
+      localStorage.setItem('roleDetails', JSON.stringify(updatedTeacher));
+      
+      setIsSaving(false);
+      setSaveSuccess(true);
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setSaveSuccess(false);
+      }, 3000);
+    } catch (err) {
+      alert("ERROR: ", err);
+      setError(err.response?.data?.msg || 'Failed to update profile');
+      setIsSaving(false);
+    }
   };
+
+  if (loading) return (
+    <TeacherLayout>
+      <div className="text-center py-10">Loading your profile...</div>
+    </TeacherLayout>
+  );
+  
+  if (error) return (
+    <TeacherLayout>
+      <div className="text-center py-10 text-red-500">{error}</div>
+    </TeacherLayout>
+  );
 
   return (
     <TeacherLayout>
@@ -113,19 +288,19 @@ const InstructorProfilePage = () => {
           <div className={styles.profileTabs}>
             <button 
               className={`${styles.tabButton} ${activeTab === 'personal' ? styles.tabButtonActive : ''}`}
-              onClick={() => setActiveTab('personal')}
+              onClick={() => handleTabChange('personal')}
             >
               Personal Information
             </button>
             <button 
               className={`${styles.tabButton} ${activeTab === 'professional' ? styles.tabButtonActive : ''}`}
-              onClick={() => setActiveTab('professional')}
+              onClick={() => handleTabChange('professional')}
             >
               Professional Details
             </button>
             <button 
               className={`${styles.tabButton} ${activeTab === 'social' ? styles.tabButtonActive : ''}`}
-              onClick={() => setActiveTab('social')}
+              onClick={() => handleTabChange('social')}
             >
               Social & Contact
             </button>
@@ -174,24 +349,24 @@ const InstructorProfilePage = () => {
                 
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
-                    <label htmlFor="name">Full Name</label>
+                    <label htmlFor="fullName">Full Name</label>
                     <input
                       type="text"
-                      id="name"
-                      name="name"
-                      value={profile.name}
+                      id="fullName"
+                      name="fullName"
+                      value={profile.fullName}
                       onChange={handleInputChange}
                       required
                     />
                   </div>
                   
                   <div className={styles.formGroup}>
-                    <label htmlFor="title">Professional Title</label>
+                    <label htmlFor="professionalTitle">Professional Title</label>
                     <input
                       type="text"
-                      id="title"
-                      name="title"
-                      value={profile.title}
+                      id="professionalTitle"
+                      name="professionalTitle"
+                      value={profile.professionalTitle}
                       onChange={handleInputChange}
                       placeholder="e.g., Professor of Computer Science, Software Engineer"
                     />
@@ -213,13 +388,13 @@ const InstructorProfilePage = () => {
                 
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
-                    <label htmlFor="phone"><Phone size={16} /> Phone Number</label>
+                    <label htmlFor="phoneNumber"><Phone size={16} /> Phone Number</label>
                     <input
                       type="tel"
-                      id="phone"
-                      name="phone"
+                      id="phoneNumber"
+                      name="phoneNumber"
                       placeholder="Your contact number"
-                      value={profile.phone}
+                      value={profile.phoneNumber}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -270,11 +445,11 @@ const InstructorProfilePage = () => {
                   </div>
                   
                   <div className={styles.formGroup}>
-                    <label htmlFor="experience"><Briefcase size={16} /> Teaching Experience</label>
+                    <label htmlFor="teachingExperience"><Briefcase size={16} /> Teaching Experience</label>
                     <select
-                      id="experience"
-                      name="experience"
-                      value={profile.experience}
+                      id="teachingExperience"
+                      name="teachingExperience"
+                      value={profile.teachingExperience}
                       onChange={handleInputChange}
                       className={styles.selectField}
                     >
@@ -295,7 +470,39 @@ const InstructorProfilePage = () => {
                     id="qualifications"
                     name="qualifications"
                     placeholder="Your highest academic qualification"
-                    value={profile.qualifications}
+                    value={Array.isArray(profile.qualifications) ? profile.qualifications.join(', ') : profile.qualifications}
+                    onChange={(e) => {
+                      // Split by comma and trim whitespace
+                      const quals = e.target.value.split(',').map(qual => qual.trim());
+                      setProfile(prev => ({
+                        ...prev,
+                        qualifications: quals
+                      }));
+                    }}
+                  />
+                  <p className={styles.inputHelpText}>Separate multiple qualifications with commas</p>
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="currentInstitution">Current Institution</label>
+                  <input
+                    type="text"
+                    id="currentInstitution"
+                    name="currentInstitution"
+                    placeholder="University or institution where you currently teach"
+                    value={profile.currentInstitution}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="department">Department</label>
+                  <input
+                    type="text"
+                    id="department"
+                    name="department"
+                    placeholder="Your department or faculty"
+                    value={profile.department}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -319,7 +526,7 @@ const InstructorProfilePage = () => {
                   </div>
                   
                   <div className={styles.expertiseTags}>
-                    {profile.expertise.map((item, index) => (
+                    {profile.areasOfExpertise.map((item, index) => (
                       <div key={index} className={styles.expertiseTag}>
                         <span>{item}</span>
                         <button 
@@ -332,6 +539,33 @@ const InstructorProfilePage = () => {
                       </div>
                     ))}
                   </div>
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="teachingStyle">Teaching Style</label>
+                  <textarea
+                    id="teachingStyle"
+                    name="teachingStyle"
+                    placeholder="Describe your teaching approach and methodology"
+                    value={profile.teachingStyle}
+                    onChange={handleInputChange}
+                    rows={3}
+                  />
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="profileVisibility">Profile Visibility</label>
+                  <select
+                    id="profileVisibility"
+                    name="profileVisibility"
+                    value={profile.profileVisibility}
+                    onChange={handleInputChange}
+                    className={styles.selectField}
+                  >
+                    <option value="Public">Public - Visible to everyone</option>
+                    <option value="Students Only">Students Only - Visible to enrolled students</option>
+                    <option value="Private">Private - Limited visibility</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -355,7 +589,7 @@ const InstructorProfilePage = () => {
                       <input
                         type="text"
                         name="linkedin"
-                        value={profile.socialLinks.linkedin}
+                        value={profile.socialLinks?.linkedin || ''}
                         onChange={handleSocialLinkChange}
                         placeholder="username"
                       />
@@ -372,7 +606,7 @@ const InstructorProfilePage = () => {
                       <input
                         type="text"
                         name="twitter"
-                        value={profile.socialLinks.twitter}
+                        value={profile.socialLinks?.twitter || ''}
                         onChange={handleSocialLinkChange}
                         placeholder="username"
                       />
@@ -389,7 +623,7 @@ const InstructorProfilePage = () => {
                       <input
                         type="text"
                         name="instagram"
-                        value={profile.socialLinks.instagram}
+                        value={profile.socialLinks?.instagram || ''}
                         onChange={handleSocialLinkChange}
                         placeholder="username"
                       />
@@ -404,7 +638,7 @@ const InstructorProfilePage = () => {
                     <input
                       type="url"
                       name="website"
-                      value={profile.socialLinks.website}
+                      value={profile.socialLinks?.website || ''}
                       onChange={handleSocialLinkChange}
                       placeholder="https://yourwebsite.com"
                     />
@@ -421,8 +655,9 @@ const InstructorProfilePage = () => {
                       value={profile.email}
                       onChange={handleInputChange}
                       placeholder="your@email.com"
+                      readOnly
                     />
-                    <p className={styles.inputHelpText}>This email will be visible to students. Use your institutional or professional email.</p>
+                    <p className={styles.inputHelpText}>This email will be visible to students. Email can only be changed in account settings.</p>
                   </div>
                 </div>
               </div>
