@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from '../../css/teacher/teacher-sidebar.module.css';
-import Areen from '../../assets/Profile/Areen.jpg';
+import DefaultProfileImage from '../../assets/Profile/default-pfp.jpeg'; // Fallback image
 
 // Create context for managing page metadata
 export const PageMetadataContext = createContext();
@@ -45,9 +45,13 @@ const specialRoutes = {
 };
 
 export default function TeacherLayout({ children }) {
-  const PFPImage = Areen;
   const navigate = useNavigate();
   const location = useLocation();
+  
+  // States for user and teacher data from localStorage
+  const [userData, setUserData] = useState(null);
+  const [teacherData, setTeacherData] = useState(null);
+  const [profileImage, setProfileImage] = useState(DefaultProfileImage);
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notifications, setNotifications] = useState(3);
@@ -65,6 +69,37 @@ export default function TeacherLayout({ children }) {
   const [dynamicMetadata, setDynamicMetadata] = useState(null);
 
   const profileRef = useRef(null);
+  
+  // Load user and teacher data from localStorage on component mount
+  useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      const storedTeacher = localStorage.getItem('roleDetails');
+      console.log(storedUser);
+      
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUserData(parsedUser);
+      }
+      
+      if (storedTeacher) {
+        const parsedTeacher = JSON.parse(storedTeacher);
+        setTeacherData(parsedTeacher);
+      }
+      
+      // Set profile image if available in user data
+      // This assumes you have a profileImage field in your user data
+      // Adjust according to your actual user data structure
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser.profileImage) {
+          setProfileImage(parsedUser.profileImage);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading user data from localStorage:", error);
+    }
+  }, []);
 
   // Menu structure with routes
   const menuGroups = [
@@ -155,6 +190,26 @@ export default function TeacherLayout({ children }) {
       title: title,
       breadcrumbs: crumbs
     });
+  };
+
+  // Format teacher name with appropriate title
+  const getFormattedTeacherName = () => {
+    if (!userData) return "Teacher";
+    
+    const title = teacherData?.professionalTitle || "Prof.";
+    const full_name = userData.fullName || "";
+    
+    return `${title} ${full_name}`.trim();
+  };
+
+  // Get teacher specialization
+  const getTeacherSpecialization = () => {
+    return teacherData?.specialization || teacherData?.department || "Educator";
+  };
+
+  // Get teacher rating
+  const getTeacherRating = () => {
+    return teacherData?.averageRating?.toFixed(1) || "N/A";
   };
 
   // Initialize active item and submenu based on current path
@@ -281,7 +336,7 @@ export default function TeacherLayout({ children }) {
     // Clear the token and user info from both sessionStorage and localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.removeItem('roleDetails')
+    localStorage.removeItem('roleDetails');
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');
     
@@ -292,6 +347,11 @@ export default function TeacherLayout({ children }) {
   // Context value for child components
   const pageMetadataContextValue = {
     setPageMetadata: updatePageMetadata
+  };
+
+  // Get user email from userData
+  const getUserEmail = () => {
+    return userData?.email || "";
   };
 
   return (
@@ -308,16 +368,16 @@ export default function TeacherLayout({ children }) {
 
           <div className={styles.profileSection}>
             <div className={styles.avatarContainer}>
-              <img src={PFPImage} alt="Teacher Profile" className={styles.avatar} onClick={() => navigate('/teacher/profile')}/>
+              <img src={profileImage} alt="Teacher Profile" className={styles.avatar} onClick={() => navigate('/teacher/profile')}/>
               <span className={styles.statusIndicator}></span>
             </div>
             {sidebarOpen && (
               <div className={styles.profileDetails}>
-                <div className={styles.name}>Prof. Areen Zainab</div>
-                <div className={styles.department}>Computer Science</div>
+                <div className={styles.name}>{getFormattedTeacherName()}</div>
+                <div className={styles.department}>{getTeacherSpecialization()}</div>
                 <div className={styles.badges}>
                   <span className={`${styles.badge} ${styles.badgeInstructor}`}>Instructor</span>
-                  <span className={`${styles.badge} ${styles.badgeRating}`}>4.9 ★</span>
+                  <span className={`${styles.badge} ${styles.badgeRating}`}>{getTeacherRating()} ★</span>
                 </div>
               </div>
             )}
@@ -425,18 +485,20 @@ export default function TeacherLayout({ children }) {
                     className={styles.profileButton}
                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                   >
-                    <img src={PFPImage} alt="Teacher" className={styles.avatarSmall} />
-                    <span className={styles.profileName}>Areen Zainab</span>
+                    <img src={profileImage} alt="Teacher" className={styles.avatarSmall} />
+                    <span className={styles.profileName}>
+                      {userData ? `${userData.firstName || ''} ${userData.lastName || ''}`.trim() : 'Teacher'}
+                    </span>
                     <ChevronDown size={16} className={`${styles.dropdownArrow} ${profileDropdownOpen ? styles.rotated : ''}`} />
                   </button>
 
                   {profileDropdownOpen && (
                     <div className={styles.dropdownMenu}>
                       <div className={styles.dropdownHeader}>
-                        <img src={PFPImage} alt="Teacher" className={styles.dropdownAvatar} />
+                        <img src={profileImage} alt="Teacher" className={styles.dropdownAvatar} />
                         <div>
-                          <div className={styles.dropdownName}>Prof. Areen Zainab</div>
-                          <div className={styles.dropdownEmail}>i221115@nu.edu.pk</div>
+                          <div className={styles.dropdownName}>{getFormattedTeacherName()}</div>
+                          <div className={styles.dropdownEmail}>{getUserEmail()}</div>
                         </div>
                       </div>
                       <div className={styles.dropdownDivider}></div>

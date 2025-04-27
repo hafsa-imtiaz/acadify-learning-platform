@@ -8,6 +8,7 @@ import RegisterTeacher from './pages/Sign-Up/RegisterTeacher';
 import BrowseCourses from './pages/BrowseCourses';
 import CoursePreview from './pages/CoursePreview';
 import AboutSection from './pages/AboutSection';
+// teacher
 import TeacherDashboard from './pages/teacher/dashboard';
 import TeacherCourses from './pages/teacher/MyCourses';
 import TeacherCalender from './pages/teacher/MyCalendar';
@@ -22,6 +23,8 @@ import ScrollToTop from './components/ScrollToTop';
 import TeacherSettings from './pages/teacher/teacher-settings';
 import TeacherSessions from './pages/teacher/liveSessions';
 import TeacherReviews from './pages/teacher/teacher-reviews'
+// student
+import StudentDashboard from './pages/student/dashboard';
 
 function App() {
   return (
@@ -36,6 +39,7 @@ function App() {
         <Route path="/courses" element={<BrowseCourses />} />
         <Route path="/courses/:courseId" element={<CoursePreview />} />
         <Route path='/about' element={<AboutSection />} />
+
         <Route path='/teacher/dashboard' element={<TeacherDashboard />} />
         <Route path='/teacher/courses' element={<TeacherCourses />} />
         <Route path='/teacher/calendar' element={<TeacherCalender />} />
@@ -50,6 +54,8 @@ function App() {
         <Route path='/teacher/settings' element={<TeacherSettings />} />
         <Route path='/teacher/sessions' element={<TeacherSessions />} />
         <Route path='/teacher/reviews' element={<TeacherReviews />} />
+
+        <Route path="/student/dashboard" element={<StudentDashboard />} />
       </Routes>
     </Router>
   );
