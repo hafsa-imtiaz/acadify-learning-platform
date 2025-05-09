@@ -1,0 +1,831 @@
+/* CourseView.css - Place this in src/css/student/CourseView.css */
+
+.course-view {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Course Header */
+  .course-header {
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    margin: 1rem;
+    padding: 2.5rem;
+    color: white;
+  }
+  
+  .course-header-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  
+  .course-details {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .course-category {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0.3rem 1rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+    backdrop-filter: blur(5px);
+  }
+  
+  .course-title {
+    font-size: 2rem;
+    margin: 0 0 1.25rem 0;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+  
+  .course-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+  
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .meta-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  /* Progress Card */
+  .course-progress-card {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    padding: 1.5rem;
+    width: 300px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  
+  .progress-header h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 500;
+  }
+  
+  .progress-percent {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  
+  .progress-bar {
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  
+  .progress-value {
+    height: 100%;
+    background-color: #4361ee;
+    border-radius: 4px;
+  }
+  
+  .progress-stats {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  .stat-label {
+    font-size: 0.8rem;
+    opacity: 0.8;
+  }
+  
+  .stat-divider {
+    width: 1px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .continue-button {
+    display: block;
+    width: 100%;
+    background-color: #4361ee;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    margin-bottom: 1rem;
+  }
+  
+  .continue-button:hover {
+    background-color: #3a56d4;
+  }
+  
+  .enrollment-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    opacity: 0.8;
+  }
+  
+  .info-icon {
+    width: 14px;
+    height: 14px;
+  }
+  
+  /* Course Navigation */
+  .course-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .nav-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    background: none;
+    border: none;
+    color: #4a5568;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+  }
+  
+  .nav-tab:hover {
+    color: #4361ee;
+  }
+  
+  .nav-tab.active {
+    color: #4361ee;
+  }
+  
+  .nav-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #4361ee;
+    border-radius: 3px 3px 0 0;
+  }
+  
+  .tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background-color: #4361ee;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+  }
+  
+  /* Course Content */
+  .course-content {
+    padding: 0 1rem 2rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 1.5rem 0;
+    color: #2d3748;
+  }
+  
+  /* Curriculum */
+  .curriculum-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: #f8fafc;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    min-width: 250px;
+  }
+  
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+    background-color: #e6effd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4361ee;
+  }
+  
+  .stat-text {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .stat-text .stat-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+  }
+  
+  .stat-text .stat-label {
+    font-size: 0.85rem;
+    color: #718096;
+  }
+  
+  /* Curriculum Sections */
+  .curriculum-section {
+    margin-bottom: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    background-color: #f8fafc;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .section-header:hover {
+    background-color: #f0f5ff;
+  }
+  
+  .section-info {
+    flex: 1;
+  }
+  
+  .section-name {
+    font-size: 1.1rem;
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+    color: #2d3748;
+  }
+  
+  .section-meta {
+    font-size: 0.85rem;
+    color: #718096;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .section-progress {
+    color: #4361ee;
+    font-weight: 500;
+  }
+  
+  .section-toggle {
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* Lessons */
+  .section-lessons {
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .lesson-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e2e8f0;
+    text-decoration: none;
+    color: #2d3748;
+    transition: background-color 0.2s;
+  }
+  
+  .lesson-item:last-child {
+    border-bottom: none;
+  }
+  
+  .lesson-item:hover {
+    background-color: #f8fafc;
+  }
+  
+  .lesson-item.completed {
+    background-color: #f0fff4;
+  }
+  
+  .lesson-item.locked {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .lesson-icon {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    background-color: #f0f5ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4361ee;
+  }
+  
+  .lesson-item.completed .lesson-icon {
+    background-color: #ebfaf5;
+    color: #38a169;
+  }
+  
+  .lesson-item.locked .lesson-icon {
+    background-color: #f8fafc;
+    color: #a0aec0;
+  }
+  
+  .lesson-info {
+    flex: 1;
+  }
+  
+  .lesson-title {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  
+  .lesson-meta {
+    font-size: 0.8rem;
+    color: #718096;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .lesson-type {
+    text-transform: capitalize;
+  }
+  
+  .lesson-status {
+    min-width: 80px;
+    text-align: right;
+  }
+  
+  .status-start {
+    color: #4361ee;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  
+  .status-completed {
+    color: #38a169;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  
+  .status-locked {
+    color: #a0aec0;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  
+  /* Course Overview */
+  .course-overview {
+    max-width: 800px;
+  }
+  
+  .overview-section {
+    margin-bottom: 3rem;
+  }
+  
+  .course-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4a5568;
+    margin-bottom: 2rem;
+  }
+  
+  .course-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    background-color: #f0f5ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4361ee;
+  }
+  
+  .feature-text h4 {
+    font-size: 1rem;
+    margin: 0 0 0.25rem 0;
+    color: #2d3748;
+  }
+  
+  .feature-text p {
+    margin: 0;
+    color: #718096;
+    font-size: 0.9rem;
+  }
+  
+  .instructor-card {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 1.5rem;
+    background-color: #f8fafc;
+    border-radius: 12px;
+  }
+  
+  .instructor-avatar {
+    width: 100px;
+    flex-shrink: 0;
+  }
+  
+  .instructor-avatar img {
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .instructor-info {
+    flex: 1;
+  }
+  
+  .instructor-name {
+    font-size: 1.2rem;
+    margin: 0 0 0.25rem 0;
+    color: #2d3748;
+  }
+  
+  .instructor-title {
+    font-size: 0.9rem;
+    color: #4361ee;
+    margin: 0 0 1rem 0;
+  }
+  
+  .instructor-bio {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #4a5568;
+    margin: 0;
+  }
+  
+  /* Assignments */
+  .assignments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .assignment-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .assignment-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .assignment-icon {
+    width: 48px;
+    height: 48px;
+    background-color: #f0f5ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4361ee;
+  }
+  
+  .assignment-info {
+    flex: 1;
+  }
+  
+  .assignment-title {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+    color: #2d3748;
+  }
+  
+  .assignment-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .due-date {
+    color: #718096;
+  }
+  
+  .status {
+    font-weight: 500;
+  }
+  
+  .status.pending {
+    color: #f9a826;
+  }
+  
+  .status.completed {
+    color: #38a169;
+  }
+  
+  .status.late {
+    color: #e53e3e;
+  }
+  
+  .assignment-action {
+    min-width: 120px;
+    text-align: right;
+  }
+  
+  .view-assignment {
+    display: inline-block;
+    background-color: transparent;
+    border: 1px solid #4361ee;
+    color: #4361ee;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  
+  .view-assignment:hover {
+    background-color: #4361ee;
+    color: white;
+  }
+  
+  /* Announcements */
+  .announcements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .announcement-card {
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+  
+  .announcement-date {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-bottom: 0.5rem;
+  }
+  
+  .announcement-title {
+    font-size: 1.2rem;
+    margin: 0 0 0.75rem 0;
+    color: #2d3748;
+  }
+  
+  .announcement-content {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #4a5568;
+    margin: 0;
+  }
+  
+  /* Resources */
+  .resources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .resource-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .resource-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .resource-icon {
+    width: 48px;
+    height: 48px;
+    background-color: #f0f5ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4361ee;
+  }
+  
+  .resource-info {
+    flex: 1;
+  }
+  
+  .resource-title {
+    font-size: 1.1rem;
+    margin: 0 0 0.25rem 0;
+    color: #2d3748;
+  }
+  
+  .resource-size {
+    font-size: 0.85rem;
+    color: #718096;
+  }
+  
+  .resource-action {
+    min-width: 100px;
+    text-align: right;
+  }
+  
+  .resource-link, .resource-download {
+    display: inline-block;
+    background-color: transparent;
+    border: 1px solid #4361ee;
+    color: #4361ee;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  
+  .resource-link:hover, .resource-download:hover {
+    background-color: #4361ee;
+    color: white;
+  }
+  
+  /* Empty States */
+  .empty-state {
+    padding: 3rem;
+    text-align: center;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .empty-icon {
+    width: 70px;
+    height: 70px;
+    background-color: #f0f5ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: #4361ee;
+  }
+  
+  .empty-state h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: #2d3748;
+  }
+  
+  .empty-state p {
+    color: #718096;
+    margin: 0;
+  }
+  
+  /* Loading and Error States */
+  .course-loading, .course-error {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #718096;
+    font-size: 1.1rem;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 992px) {
+    .course-header {
+      padding: 1.5rem;
+    }
+    
+    .course-header-content {
+      flex-direction: column;
+    }
+    
+    .course-progress-card {
+      width: 100%;
+      max-width: 400px;
+    }
+    
+    .curriculum-stats {
+      flex-direction: column;
+    }
+    
+    .instructor-card {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .instructor-avatar {
+      margin-bottom: 1rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .course-title {
+      font-size: 1.5rem;
+    }
+    
+    .course-meta {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .course-navigation {
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+    
+    .nav-tab {
+      padding: 0.75rem 1rem;
+      white-space: nowrap;
+    }
+    
+    .assignment-card, .resource-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .assignment-action, .resource-action {
+      margin-top: 1rem;
+      align-self: flex-end;
+    }
+  }
