@@ -5,6 +5,11 @@ import {
   Play, BookmarkIcon, Star, AlertCircle, MessageSquare
 } from 'lucide-react';
 import '../../css/student/Dashboard.css';
+import reactImg from '../../assets/react.jpg';
+import jsImg from '../../assets/js.png';
+import uiImg from '../../assets/uiux.webp';
+import webImg from '../../assets/web.jpeg';
+import pythonImg from '../../assets/python.jpg';
 
 const StudentDashboard = () => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
@@ -32,7 +37,7 @@ const StudentDashboard = () => {
           nextLesson: "React Hooks",
           dueAssignments: 2,
           lastAccessed: "2 days ago",
-          image: "https://via.placeholder.com/150",
+          image: reactImg,
           totalLessons: 24,
           completedLessons: 16
         },
@@ -44,7 +49,7 @@ const StudentDashboard = () => {
           nextLesson: "Promises and Async/Await",
           dueAssignments: 1,
           lastAccessed: "Yesterday",
-          image: "https://via.placeholder.com/150",
+          image: jsImg,
           totalLessons: 32,
           completedLessons: 13
         },
@@ -56,7 +61,7 @@ const StudentDashboard = () => {
           nextLesson: "User Research Methods",
           dueAssignments: 0,
           lastAccessed: "5 days ago",
-          image: "https://via.placeholder.com/150",
+          image: uiImg,
           totalLessons: 18,
           completedLessons: 4
         },
@@ -68,7 +73,7 @@ const StudentDashboard = () => {
           nextLesson: "Machine Learning Basics",
           dueAssignments: 1,
           lastAccessed: "Today",
-          image: "https://via.placeholder.com/150",
+          image: pythonImg,
           totalLessons: 28,
           completedLessons: 24
         }
@@ -111,7 +116,7 @@ const StudentDashboard = () => {
           id: 201,
           title: "Web Development Fundamentals",
           issueDate: "2025-03-15",
-          image: "https://via.placeholder.com/100"
+          image: webImg
         },
         {
           id: 202,

@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect, createContext, useContext } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
-  Home, BookOpen, User, Layers, FileText, Award, Settings, 
-  LogOut, Menu, X, Bell, Search, Calendar, Video,
-  MessageCircle, ChevronDown, ChevronLeft, ChevronRight, Moon
+  User, Bell, Search, Moon, Settings, LogOut
 } from 'lucide-react';
-import Sidebar from './sidebar';
+import Sidebar from './sidebar';  // Use your Sidebar component
+import StudentDashboard from './StudentDashboard';
 import '../../css/student/StudentLayout.css';
 
 // Create context for managing page metadata
@@ -36,62 +35,12 @@ const StudentLayout = () => {
   const [notifications, setNotifications] = useState(2);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   
-  // Set default active states based on current path
-  const [activeItem, setActiveItem] = useState('dashboard');
-  const [expandedGroup, setExpandedGroup] = useState('main');
-  
   // Page metadata state
   const [pageTitle, setPageTitle] = useState('Dashboard');
   const [breadcrumbs, setBreadcrumbs] = useState(['Home', 'Dashboard']);
   const [dynamicMetadata, setDynamicMetadata] = useState(null);
 
   const profileRef = useRef(null);
-
-  // Menu structure with routes
-  const menuGroups = [
-    {
-      id: 'main',
-      title: 'Main',
-      items: [
-        { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/student/dashboard', 
-          description: 'Overview of your courses and progress' },
-        { id: 'calendar', label: 'Calendar', icon: Calendar, path: '/student/calendar',
-          description: 'View upcoming assignments and events' },
-      ]
-    },
-    {
-      id: 'learning',
-      title: 'Learning',
-      items: [
-        { id: 'courses', label: 'My Courses', icon: BookOpen, path: '/student/courses',
-          description: 'Access your enrolled courses' },
-        { id: 'assignments', label: 'Assignments', icon: FileText, path: '/student/assignments', 
-          description: 'View and submit assignments' },
-        { id: 'achievements', label: 'Achievements', icon: Award, path: '/student/achievements', 
-          description: 'View your certificates and badges' },
-      ]
-    },
-    {
-      id: 'community',
-      title: 'Community',
-      items: [
-        { id: 'discussions', label: 'Discussions', icon: MessageCircle, path: '/student/discussions', 
-          description: 'Participate in course discussions' },
-        { id: 'live-sessions', label: 'Live Sessions', icon: Video, path: '/student/live-sessions', 
-          description: 'Join live classes and webinars' },
-      ]
-    },
-    {
-      id: 'account',
-      title: 'Account',
-      items: [
-        { id: 'profile', label: 'My Profile', icon: User, path: '/student/profile', 
-          description: 'Manage your profile and settings' },
-        { id: 'settings', label: 'Settings', icon: Settings, path: '/student/settings', 
-          description: 'Configure account preferences' },
-      ]
-    },
-  ];
 
   // Helper function to match dynamic routes
   const findSpecialRoute = (path) => {
@@ -125,7 +74,7 @@ const StudentLayout = () => {
     });
   };
 
-  // Initialize active item based on current path
+  // Initialize page title and breadcrumbs based on current path
   useEffect(() => {
     const currentPath = location.pathname;
     
@@ -135,20 +84,6 @@ const StudentLayout = () => {
     if (specialRoute) {
       setPageTitle(specialRoute.title);
       setBreadcrumbs(specialRoute.breadcrumbs);
-      
-      if (specialRoute.parentId) {
-        setActiveItem(specialRoute.parentId);
-        
-        // Find the group containing this item
-        for (const group of menuGroups) {
-          for (const item of group.items) {
-            if (item.id === specialRoute.parentId) {
-              setExpandedGroup(group.id);
-              break;
-            }
-          }
-        }
-      }
       return;
     }
     
@@ -156,32 +91,40 @@ const StudentLayout = () => {
     if (dynamicMetadata) {
       setPageTitle(dynamicMetadata.title);
       setBreadcrumbs(dynamicMetadata.breadcrumbs);
+      return;
     }
     
-    // Standard sidebar-based navigation
-    let foundItem = false;
-    
-    for (const group of menuGroups) {
-      for (const item of group.items) {
-        // Check if the current path matches this item's path
-        if (currentPath === item.path || currentPath.startsWith(item.path + '/')) {
-          setActiveItem(item.id);
-          setExpandedGroup(group.id);
-          setPageTitle(item.label);
-          setBreadcrumbs(['Home', item.label]);
-          foundItem = true;
-          break;
-        }
-      }
-      if (foundItem) break;
-    }
-    
-    // Default to dashboard if no match found
-    if (!foundItem && !specialRoute && !dynamicMetadata) {
-      setActiveItem('dashboard');
-      setExpandedGroup('main');
-      setPageTitle('Dashboard');
-      setBreadcrumbs(['Home', 'Dashboard']);
+    // Set page title based on route
+    switch (currentPath) {
+      case '/student':
+      case '/student/dashboard':
+        setPageTitle('Dashboard');
+        setBreadcrumbs(['Home', 'Dashboard']);
+        break;
+      case '/student/courses':
+        setPageTitle('My Courses');
+        setBreadcrumbs(['Home', 'My Courses']);
+        break;
+      case '/student/assignments':
+        setPageTitle('Assignments');
+        setBreadcrumbs(['Home', 'Assignments']);
+        break;
+      case '/student/achievements':
+        setPageTitle('Achievements');
+        setBreadcrumbs(['Home', 'Achievements']);
+        break;
+      case '/student/profile':
+        setPageTitle('My Profile');
+        setBreadcrumbs(['Home', 'My Profile']);
+        break;
+      case '/student/settings':
+        setPageTitle('Settings');
+        setBreadcrumbs(['Home', 'Settings']);
+        break;
+      default:
+        // If no match found, fallback to Dashboard
+        setPageTitle('Dashboard');
+        setBreadcrumbs(['Home', 'Dashboard']);
     }
   }, [location.pathname, dynamicMetadata]);
 
@@ -201,15 +144,6 @@ const StudentLayout = () => {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const toggleGroup = (groupId) => {
-    setExpandedGroup(expandedGroup === groupId ? '' : groupId);
-  };
-  
-  const handleNavigation = (path, itemId) => {
-    setActiveItem(itemId);
-    navigate(path);
   };
 
   const handleLogout = () => {
@@ -232,81 +166,11 @@ const StudentLayout = () => {
   return (
     <PageMetadataContext.Provider value={pageMetadataContextValue}>
       <div className="student-layout">
-        {/* Sidebar */}
+        {/* Sidebar Component */}
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <div className={`sidebar ${isSidebarOpen ? 'expanded' : 'collapsed'}`}>
-          <div className="sidebar-header">
-            {isSidebarOpen && <div className="logo">Acadify</div>}
-            <button onClick={toggleSidebar} className="toggle-button">
-              {isSidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-            </button>
-          </div>
-
-          <div className="profile-section">
-            <div className="avatar-container">
-              <div className="avatar">
-                <User size={24} />
-              </div>
-              <span className="status-indicator"></span>
-            </div>
-            {isSidebarOpen && (
-              <div className="profile-details">
-                <div className="name">John Doe</div>
-                <div className="role">Student</div>
-                <div className="badges">
-                  <span className="badge badge-level">Level 3</span>
-                  <span className="badge badge-courses">5 Courses</span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <nav className="menu">
-            {menuGroups.map(group => (
-              <div key={group.id} className="menu-group">
-                {isSidebarOpen && (
-                  <div
-                    className="group-header"
-                    onClick={() => toggleGroup(group.id)}
-                  >
-                    <span className="group-title">{group.title}</span>
-                    <ChevronDown
-                      size={16}
-                      className={`group-chevron ${expandedGroup === group.id ? 'rotated' : ''}`}
-                    />
-                  </div>
-                )}
-
-                <ul className={`menu-list ${(!isSidebarOpen || expandedGroup === group.id) ? 'visible' : 'hidden'}`}>
-                  {group.items.map(item => (
-                    <li key={item.id}>
-                      <button
-                        onClick={() => handleNavigation(item.path, item.id)}
-                        className={`menu-item ${activeItem === item.id ? 'active' : ''}`}
-                        title={!isSidebarOpen ? item.description : ""}
-                      >
-                        <item.icon size={20} />
-                        {isSidebarOpen && (
-                          <span className="menu-label">{item.label}</span>
-                        )}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </nav>
-
-          <div className="logout-section">
-            <button className="logout-button" onClick={handleLogout}>
-              <LogOut size={20} />
-              {isSidebarOpen && <span className="menu-label">Logout</span>}
-            </button>
-          </div>
-        </div>
 
         {/* Main Content */}
-        <div className="main-content">
+        <div className={`main-content ${isSidebarOpen ? '' : 'expanded'}`}>
           <header className="header">
             <div className="header-top">
               <h1 className="page-title">{pageTitle}</h1>
@@ -315,13 +179,13 @@ const StudentLayout = () => {
                 <div className="search-bar">
                   <input type="text" placeholder="Search courses, assignments, or lessons..." />
                   <button className="search-icon">
-                    <Search size={18} />
+                    <Search size={20} />
                   </button>
                 </div>
                 
                 <div className="notification">
                   <button className="icon-button" title="Notifications">
-                    <Bell size={20} />
+                    <Bell size={30} />
                     {notifications > 0 && <span className="notification-badge">{notifications}</span>}
                   </button>
                 </div>
@@ -336,7 +200,7 @@ const StudentLayout = () => {
                       <User size={18} />
                     </div>
                     <span className="profile-name">John Doe</span>
-                    <ChevronDown size={16} className={`dropdown-arrow ${profileDropdownOpen ? 'rotated' : ''}`} />
+                    <span className={`dropdown-arrow ${profileDropdownOpen ? 'up' : 'down'}`}></span>
                   </button>
 
                   {profileDropdownOpen && (
@@ -388,7 +252,12 @@ const StudentLayout = () => {
 
           {/* Page Content */}
           <div className="content">
-            <Outlet />
+            {/* Conditional rendering: Show Dashboard for dashboard routes, otherwise show other components */}
+            {(location.pathname === '/student/dashboard' || location.pathname === '/student') ? (
+              <StudentDashboard />
+            ) : (
+              <Outlet />
+            )}
           </div>
         </div>
         
