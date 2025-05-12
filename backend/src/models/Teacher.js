@@ -31,12 +31,14 @@ const TeacherSchema = new Schema({
     },
     // Simplified qualifications field
     qualifications: {
+        /*
         type: [{
             degree: String,
             institution: String,
             year: Number,
             fieldOfStudy: String
-        }],
+        }],*/
+        type: [String],
         required: true,
         validate: [arr => arr.length > 0, 'At least one qualification is required']
     },

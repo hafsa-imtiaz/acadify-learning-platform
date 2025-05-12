@@ -1,13 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
+import Home from './pages/Home/Home';
 import Login from './pages/Login';
 import Register from './pages/Sign-Up/Register';
 import RegisterStudent from './pages/Sign-Up/RegisterStudent';
 import RegisterTeacher from './pages/Sign-Up/RegisterTeacher';
-import BrowseCourses from './pages/BrowseCourses';
+import BrowseCourses from './pages/Home/BrowseCourses';
 import CoursePreview from './pages/CoursePreview';
-import AboutSection from './pages/AboutSection';
+import AboutSection from './pages/Home/AboutSection';
+// teacher
 import TeacherDashboard from './pages/teacher/dashboard';
 import TeacherCourses from './pages/teacher/MyCourses';
 import TeacherCalender from './pages/teacher/MyCalendar';
@@ -21,6 +22,10 @@ import TeacherProfile from './pages/teacher/teacher-profile'
 import ScrollToTop from './components/ScrollToTop';
 import TeacherSettings from './pages/teacher/teacher-settings';
 import TeacherSessions from './pages/teacher/liveSessions';
+import TeacherReviews from './pages/teacher/teacher-reviews'
+
+// student
+import StudentDashboard from './pages/student/dashboard'
 import TeacherReviews from './pages/teacher/teacher-reviews';
 
 import StudentLayout from './components/student/StudentLayout';
@@ -44,6 +49,7 @@ function App() {
         <Route path="/courses" element={<BrowseCourses />} />
         <Route path="/courses/:courseId" element={<CoursePreview />} />
         <Route path='/about' element={<AboutSection />} />
+
         <Route path='/teacher/dashboard' element={<TeacherDashboard />} />
         <Route path='/teacher/courses' element={<TeacherCourses />} />
         <Route path='/teacher/calendar' element={<TeacherCalender />} />
@@ -58,13 +64,15 @@ function App() {
         <Route path='/teacher/settings' element={<TeacherSettings />} />
         <Route path='/teacher/sessions' element={<TeacherSessions />} />
         <Route path='/teacher/reviews' element={<TeacherReviews />} />
-        <Route path='/student' element={<StudentLayout />} />
+
+        {/*<Route path='/student' element={<StudentLayout />} /> */}
         <Route path='/student/dashboard' element={<StudentDashboard />} />
         {/* <Route path='/student/courses' element={<StudentCourses />} /> */}
         <Route path='/student/course/:courseId' element={<CourseView />} />
         <Route path='/student/calendar' element={<Calendar />} />
+        {/*<Route path='/student/course/:courseId' element={<CourseView />} /> */}
         {/* <Route path='/student/course/:courseId/lesson/:lessonId' element={<LessonView />} /> */}
-        <Route path='/student/course/:courseId/assignment/:assignmentId' element={<Assignment />} />
+        {/*<Route path='/student/course/:courseId/assignment/:assignmentId' element={<Assignment />} />*/}
         
       </Routes>
     </Router>

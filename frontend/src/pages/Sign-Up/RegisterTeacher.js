@@ -62,6 +62,7 @@ function TeacherRegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -71,24 +72,85 @@ function TeacherRegisterPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-
+    setSuccessMessage('');
+  
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       setIsLoading(false);
       return;
     }
-
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Teacher Registration Data:', formData);
+  
+    // Check password strength
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long');
       setIsLoading(false);
-      // Here you would normally redirect on success
-    }, 1000);
+      return;
+    }
+  
+    // Prepare the data for the API request
+    const teacherData = {
+      fullName: formData.name,
+      email: formData.email,
+      password: formData.password,
+      phoneNumber: formData.phone,
+      address: formData.address,
+      specialization: formData.specialization,
+      qualifications: formData.qualifications.split(','), // Assuming multiple qualifications separated by commas
+      teachingExperience: formData.experience,
+      profilePicture: '', // Add if you're handling profile picture upload
+      bio: '', // Optional field
+      gender: formData.gender, // Optional field
+      dateOfBirth: formData.dob, // Optional field
+    };
+  
+    try {
+      // Make API call to register teacher
+      const response = await fetch('http://localhost:5000/api/auth/register/teacher', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(teacherData),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        // Registration was successful
+        setSuccessMessage('Registration successful! Redirecting to dashboard...');
+        console.log('Teacher registered successfully:', data);
+        
+        // Store token and user info in local storage if the API returned them
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+        }
+        if (data.user) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+        }
+        if (data.teacherDetails) {
+          localStorage.setItem('roleDetails', JSON.stringify(data.teacherDetails));
+        }
+        
+        // Wait a moment before redirecting
+        setTimeout(() => {
+          navigate('/teacher/dashboard');
+        }, 1500);
+      } else {
+        // Handle server-side errors (e.g., validation errors)
+        setError(data.message || 'An error occurred. Please try again.');
+      }
+    } catch (error) {
+      // Handle network or other errors
+      console.error('Error during registration:', error);
+      setError('Server error during registration. Please check your internet connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -103,6 +165,7 @@ function TeacherRegisterPage() {
           </div>
 
           {error && <div className="error-message">{error}</div>}
+          {successMessage && <div className="success-message">{successMessage}</div>}
 
           <form className="register-form" onSubmit={handleSubmit}>
             <div className="form-section">
@@ -164,6 +227,39 @@ function TeacherRegisterPage() {
                   required
                   className="input-field textarea"
                 />
+              </div>
+
+              <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="dob">Date of Birth</label>
+                  <input
+                    type="date"
+                    id="dob"
+                    name="dob"
+                    value={formData.dob}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="experience">Gender</label>
+                  <select
+                    id="gender"
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  >
+                    <option value="">Gender</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="0ther">Other</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -302,7 +398,6 @@ function TeacherRegisterPage() {
               type="submit"
               className={`submit-button ${isLoading ? 'loading' : ''}`}
               disabled={isLoading || !formData.agreeTerms}
-              onClick={() => navigate("/teacher/dashboard")}
             >
               {isLoading ? 'Processing...' : 'Create Account'}
             </button>

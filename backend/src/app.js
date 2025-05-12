@@ -13,7 +13,9 @@ dotenv.config();
 
 // Then import routes
 const indexRouter = require('./routes/index');
-const authRoutes = require('./routes/user'); // Check the file path
+const authRoutes = require('./routes/authRoutes'); 
+const teachRoutes = require('./routes/teacher'); 
+const userRoutes = require('./routes/user')
 
 console.log('authRoutes type:', typeof authRoutes);
 
@@ -39,7 +41,8 @@ app.use(cors());
 console.log('Auth routes loaded');
 app.use('/', indexRouter);
 app.use('/api/auth', authRoutes);
-
+app.use('/api/teachers', teachRoutes);
+app.use('/api/user', userRoutes);
 // 404 handler
 app.use((req, res, next) => {
    next(createError(404));
