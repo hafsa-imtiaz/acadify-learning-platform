@@ -62,6 +62,7 @@ function App() {
         <Route path='/teacher/reviews' element={<TeacherReviews />} />
 
         <Route path='/student' element={<StudentLayout />} /> 
+        {/*<Route path='/student/dashboard' element={<StudentDashboard />} />*/}
         {/* <Route path='/student/courses' element={<StudentCourses />} /> */}
         <Route path='/student/course/:courseId' element={<CourseView />} />
         <Route path='/student/calendar' element={<Calendar />} />

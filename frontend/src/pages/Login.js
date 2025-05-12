@@ -38,7 +38,7 @@ function Login() {
           if (storedUser.role === 'Teacher') {
             navigate('/teacher/dashboard'); // Redirect to Teacher dashboard
           } else if (storedUser.role === 'Student') {
-            navigate('/student/dashboard'); // Redirect to Student dashboard
+            navigate('/student'); // Redirect to Student dashboard
           }
         }
       } catch (error) {
