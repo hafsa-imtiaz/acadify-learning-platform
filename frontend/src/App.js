@@ -25,11 +25,7 @@ import TeacherSessions from './pages/teacher/liveSessions';
 import TeacherReviews from './pages/teacher/teacher-reviews'
 
 // student
-import StudentDashboard from './pages/student/dashboard'
-import TeacherReviews from './pages/teacher/teacher-reviews';
-
 import StudentLayout from './components/student/StudentLayout';
-import StudentDashboard from './components/student/StudentDashboard';
 import Calendar from './components/student/Calendar';
 //import StudentCourses from './components/student/StudentCourses';
 import CourseView from './components/student/CourseView';
@@ -65,8 +61,7 @@ function App() {
         <Route path='/teacher/sessions' element={<TeacherSessions />} />
         <Route path='/teacher/reviews' element={<TeacherReviews />} />
 
-        {/*<Route path='/student' element={<StudentLayout />} /> */}
-        <Route path='/student/dashboard' element={<StudentDashboard />} />
+        <Route path='/student' element={<StudentLayout />} /> 
         {/* <Route path='/student/courses' element={<StudentCourses />} /> */}
         <Route path='/student/course/:courseId' element={<CourseView />} />
         <Route path='/student/calendar' element={<Calendar />} />
