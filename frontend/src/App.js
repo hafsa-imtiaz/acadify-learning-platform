@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
+import Home from './pages/Home/Home';
 import Login from './pages/Login';
 import Register from './pages/Sign-Up/Register';
 import RegisterStudent from './pages/Sign-Up/RegisterStudent';
 import RegisterTeacher from './pages/Sign-Up/RegisterTeacher';
-import BrowseCourses from './pages/BrowseCourses';
+import BrowseCourses from './pages/Home/BrowseCourses';
 import CoursePreview from './pages/CoursePreview';
-import AboutSection from './pages/AboutSection';
+import AboutSection from './pages/Home/AboutSection';
 // teacher
 import TeacherDashboard from './pages/teacher/dashboard';
 import TeacherCourses from './pages/teacher/MyCourses';

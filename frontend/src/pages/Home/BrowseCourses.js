@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import CourseCard from "../components/CourseCard";
-import Navbar from '../components/Home/Navbar';
-import Footer from '../components/Home/Footer';
+import CourseCard from "../../components/CourseCard";
+import Navbar from '../../components/Home/Navbar';
+import Footer from '../../components/Home/Footer';
 import { Search, Filter } from "lucide-react";
-import "../css/Home/BrowseCourses.css";
+import "../../css/Home/BrowseCourses.css";
 import { Link } from 'react-router-dom';
-import dscourse from '../assets/Courses/datascicourse.jpg';
-import webcourse from '../assets/Courses/webdev.png';
-import reactcourse from '../assets/Courses/reactdev.jpeg';
-import pythoncourse from '../assets/Courses/python.png';
-import uiuxcourse from '../assets/Courses/advanceuiux.png';
-import mlcourse from '../assets/Courses/machineL.jpeg'
+import dscourse from '../../assets/Courses/datascicourse.jpg';
+import webcourse from '../../assets/Courses/webdev.png';
+import reactcourse from '../../assets/Courses/reactdev.jpeg';
+import pythoncourse from '../../assets/Courses/python.png';
+import uiuxcourse from '../../assets/Courses/advanceuiux.png';
+import mlcourse from '../../assets/Courses/machineL.jpeg'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
 import { jwtDecode } from 'jwt-decode';

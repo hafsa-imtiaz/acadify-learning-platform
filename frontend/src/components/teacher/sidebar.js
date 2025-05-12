@@ -368,7 +368,7 @@ export default function TeacherLayout({ children }) {
 
           <div className={styles.profileSection}>
             <div className={styles.avatarContainer}>
-              <img src={profileImage} alt="Teacher Profile" className={styles.avatar} onClick={() => navigate('/teacher/profile')}/>
+              <img src={profileImage} alt="Teacher Profile" className={styles.avatar} onClick={() => navigate('/teacher/profile#profile')}/>
               <span className={styles.statusIndicator}></span>
             </div>
             {sidebarOpen && (
@@ -504,7 +504,7 @@ export default function TeacherLayout({ children }) {
                       <div className={styles.dropdownDivider}></div>
                       <ul className={styles.dropdownList}>
                         <li>
-                          <a href="/teacher/profile">
+                          <a href="/teacher/profile#profile">
                             <User size={16} />
                             <span>View Profile</span>
                           </a>
