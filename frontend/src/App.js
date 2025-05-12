@@ -23,8 +23,6 @@ import ScrollToTop from './components/ScrollToTop';
 import TeacherSettings from './pages/teacher/teacher-settings';
 import TeacherSessions from './pages/teacher/liveSessions';
 import TeacherReviews from './pages/teacher/teacher-reviews'
-// student
-import StudentDashboard from './pages/student/dashboard';
 
 function App() {
   return (
@@ -54,8 +52,13 @@ function App() {
         <Route path='/teacher/settings' element={<TeacherSettings />} />
         <Route path='/teacher/sessions' element={<TeacherSessions />} />
         <Route path='/teacher/reviews' element={<TeacherReviews />} />
-
-        <Route path="/student/dashboard" element={<StudentDashboard />} />
+        <Route path='/student' element={<StudentLayout />} />
+        <Route path='/student/dashboard' element={<StudentDashboard />} />
+        {/* <Route path='/student/courses' element={<StudentCourses />} /> */}
+        <Route path='/student/course/:courseId' element={<CourseView />} />
+        {/* <Route path='/student/course/:courseId/lesson/:lessonId' element={<LessonView />} /> */}
+        <Route path='/student/course/:courseId/assignment/:assignmentId' element={<Assignment />} />
+        
       </Routes>
     </Router>
   );
