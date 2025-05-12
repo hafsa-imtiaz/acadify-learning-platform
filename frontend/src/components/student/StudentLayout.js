@@ -74,59 +74,62 @@ const StudentLayout = () => {
     });
   };
 
-  // Initialize page title and breadcrumbs based on current path
   useEffect(() => {
-    const currentPath = location.pathname;
-    
-    // Check if this is a special route
-    const specialRoute = findSpecialRoute(currentPath);
-    
-    if (specialRoute) {
-      setPageTitle(specialRoute.title);
-      setBreadcrumbs(specialRoute.breadcrumbs);
-      return;
-    }
-    
-    // If we have dynamic metadata set by a child component, use that
-    if (dynamicMetadata) {
-      setPageTitle(dynamicMetadata.title);
-      setBreadcrumbs(dynamicMetadata.breadcrumbs);
-      return;
-    }
-    
-    // Set page title based on route
-    switch (currentPath) {
-      case '/student':
-      case '/student/dashboard':
-        setPageTitle('Dashboard');
-        setBreadcrumbs(['Home', 'Dashboard']);
-        break;
-      case '/student/courses':
-        setPageTitle('My Courses');
-        setBreadcrumbs(['Home', 'My Courses']);
-        break;
-      case '/student/assignments':
-        setPageTitle('Assignments');
-        setBreadcrumbs(['Home', 'Assignments']);
-        break;
-      case '/student/achievements':
-        setPageTitle('Achievements');
-        setBreadcrumbs(['Home', 'Achievements']);
-        break;
-      case '/student/profile':
-        setPageTitle('My Profile');
-        setBreadcrumbs(['Home', 'My Profile']);
-        break;
-      case '/student/settings':
-        setPageTitle('Settings');
-        setBreadcrumbs(['Home', 'Settings']);
-        break;
-      default:
-        // If no match found, fallback to Dashboard
-        setPageTitle('Dashboard');
-        setBreadcrumbs(['Home', 'Dashboard']);
-    }
-  }, [location.pathname, dynamicMetadata]);
+  const currentPath = location.pathname;
+  
+  // Check if this is a special route
+  const specialRoute = findSpecialRoute(currentPath);
+  
+  if (specialRoute) {
+    setPageTitle(specialRoute.title);
+    setBreadcrumbs(specialRoute.breadcrumbs);
+    return;
+  }
+  
+  // If we have dynamic metadata set by a child component, use that
+  if (dynamicMetadata) {
+    setPageTitle(dynamicMetadata.title);
+    setBreadcrumbs(dynamicMetadata.breadcrumbs);
+    return;
+  }
+  
+  // Set page title based on route
+  switch (currentPath) {
+    case '/student':
+    case '/student/dashboard':
+      setPageTitle('Dashboard');
+      setBreadcrumbs(['Home', 'Dashboard']);
+      break;
+    case '/student/calendar':  // Add this case for Calendar route
+      setPageTitle('Calendar');
+      setBreadcrumbs(['Home', 'Calendar']);
+      break;
+    case '/student/courses':
+      setPageTitle('My Courses');
+      setBreadcrumbs(['Home', 'My Courses']);
+      break;
+    case '/student/assignments':
+      setPageTitle('Assignments');
+      setBreadcrumbs(['Home', 'Assignments']);
+      break;
+    case '/student/achievements':
+      setPageTitle('Achievements');
+      setBreadcrumbs(['Home', 'Achievements']);
+      break;
+    case '/student/profile':
+      setPageTitle('My Profile');
+      setBreadcrumbs(['Home', 'My Profile']);
+      break;
+    case '/student/settings':
+      setPageTitle('Settings');
+      setBreadcrumbs(['Home', 'Settings']);
+      break;
+    default:
+      // If no match found, fallback to Dashboard
+      setPageTitle('Dashboard');
+      setBreadcrumbs(['Home', 'Dashboard']);
+  }
+}, [location.pathname, dynamicMetadata]);
 
   // Close profile dropdown when clicking outside
   useEffect(() => {

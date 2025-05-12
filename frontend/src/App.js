@@ -25,6 +25,7 @@ import TeacherReviews from './pages/teacher/teacher-reviews';
 
 import StudentLayout from './components/student/StudentLayout';
 import StudentDashboard from './components/student/StudentDashboard';
+import Calendar from './components/student/Calendar';
 //import StudentCourses from './components/student/StudentCourses';
 import CourseView from './components/student/CourseView';
 //import LessonView from './components/student/LessonView';
@@ -61,6 +62,7 @@ function App() {
         <Route path='/student/dashboard' element={<StudentDashboard />} />
         {/* <Route path='/student/courses' element={<StudentCourses />} /> */}
         <Route path='/student/course/:courseId' element={<CourseView />} />
+        <Route path='/student/calendar' element={<Calendar />} />
         {/* <Route path='/student/course/:courseId/lesson/:lessonId' element={<LessonView />} /> */}
         <Route path='/student/course/:courseId/assignment/:assignmentId' element={<Assignment />} />
         

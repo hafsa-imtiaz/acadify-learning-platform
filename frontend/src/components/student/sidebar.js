@@ -99,7 +99,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </div>
         {isOpen && (
           <div className="profile-details">
-            <div className="name">John Doe</div>
+            <div className="name">Hafsa Imtiaz</div>
             <div className="role">Student</div>
             <div className="badges">
               <span className="badge badge-level">Level 3</span>
