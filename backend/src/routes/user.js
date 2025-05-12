@@ -133,9 +133,6 @@ router.get('/:id', async (req, res, next) => {
  * Create a new user
  */
 router.post('/', async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  
   try {
     const { 
       fullName, 
@@ -151,11 +148,9 @@ router.post('/', async (req, res, next) => {
     } = req.body;
     
     // Check if email already exists
-    const existingUser = await User.findOne({ email }).session(session);
+    const existingUser = await User.findOne({ email });
     
     if (existingUser) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(400).json({ message: 'Email already in use' });
     }
     
@@ -178,10 +173,7 @@ router.post('/', async (req, res, next) => {
       lastLogin: new Date()
     });
     
-    await newUser.save({ session });
-    
-    await session.commitTransaction();
-    session.endSession();
+    await newUser.save();
     
     // Remove password from response
     const userResponse = newUser.toObject();
@@ -189,8 +181,6 @@ router.post('/', async (req, res, next) => {
     
     res.status(201).json(userResponse);
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     next(error);
   }
 });
@@ -200,9 +190,6 @@ router.post('/', async (req, res, next) => {
  * Update a user
  */
 router.put('/:id', async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  
   try {
     // Find user by ID, userId, or email
     const user = await User.findOne({ 
@@ -211,11 +198,9 @@ router.put('/:id', async (req, res, next) => {
         { userId: req.params.id },
         { email: req.params.id }
       ]
-    }).session(session);
+    });
     
     if (!user) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(404).json({ message: 'User not found' });
     }
     
@@ -246,10 +231,7 @@ router.put('/:id', async (req, res, next) => {
       user.password = await bcrypt.hash(req.body.password, 12);
     }
     
-    await user.save({ session });
-    
-    await session.commitTransaction();
-    session.endSession();
+    await user.save();
     
     // Remove password from response
     const userResponse = user.toObject();
@@ -257,8 +239,6 @@ router.put('/:id', async (req, res, next) => {
     
     res.json(userResponse);
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     next(error);
   }
 });
@@ -268,9 +248,6 @@ router.put('/:id', async (req, res, next) => {
  * Partial update a user
  */
 router.patch('/:id', async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  
   try {
     // Find user by ID, userId, or email
     const user = await User.findOne({ 
@@ -279,11 +256,9 @@ router.patch('/:id', async (req, res, next) => {
         { userId: req.params.id },
         { email: req.params.id }
       ]
-    }).session(session);
+    });
     
     if (!user) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(404).json({ message: 'User not found' });
     }
     
@@ -308,10 +283,7 @@ router.patch('/:id', async (req, res, next) => {
       }
     });
     
-    await user.save({ session });
-    
-    await session.commitTransaction();
-    session.endSession();
+    await user.save();
     
     // Remove password from response
     const userResponse = user.toObject();
@@ -319,8 +291,6 @@ router.patch('/:id', async (req, res, next) => {
     
     res.json(userResponse);
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     next(error);
   }
 });
@@ -330,9 +300,6 @@ router.patch('/:id', async (req, res, next) => {
  * Delete a user (hard delete)
  */
 router.delete('/:id', async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  
   try {
     // Find user by ID, userId, or email
     const user = await User.findOne({ 
@@ -341,18 +308,16 @@ router.delete('/:id', async (req, res, next) => {
         { userId: req.params.id },
         { email: req.params.id }
       ]
-    }).session(session);
+    });
     
     if (!user) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(404).json({ message: 'User not found' });
     }
     
     // Check if we should perform soft delete instead
     if (req.query.soft === 'true') {
       user.isActive = false;
-      await user.save({ session });
+      await user.save();
     } else {
       // If user has a profile picture, delete it from server
       if (user.profilePicture) {
@@ -362,19 +327,14 @@ router.delete('/:id', async (req, res, next) => {
         }
       }
       
-      await User.deleteOne({ _id: user._id }).session(session);
+      await User.deleteOne({ _id: user._id });
     }
-    
-    await session.commitTransaction();
-    session.endSession();
     
     res.json({ 
       success: true, 
       message: req.query.soft === 'true' ? 'User has been deactivated' : 'User has been deleted'
     });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     next(error);
   }
 });
@@ -428,13 +388,8 @@ router.post('/login', async (req, res, next) => {
  * Update user profile image
  */
 router.post('/profile-image/:id', upload.single('profileImage'), async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  
   try {
     if (!req.file) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(400).json({ message: 'No image file provided' });
     }
     
@@ -445,12 +400,9 @@ router.post('/profile-image/:id', upload.single('profileImage'), async (req, res
         { userId: req.params.id },
         { email: req.params.id }
       ]
-    }).session(session);
+    });
     
     if (!user) {
-      await session.abortTransaction();
-      session.endSession();
-      
       // Delete uploaded file since user doesn't exist
       if (req.file && req.file.path) {
         fs.unlinkSync(req.file.path);
@@ -469,10 +421,7 @@ router.post('/profile-image/:id', upload.single('profileImage'), async (req, res
     
     // Update user with new profile image path
     user.profilePicture = '/' + req.file.path.replace(/\\/g, '/'); // Convert Windows backslashes to forward slashes
-    await user.save({ session });
-    
-    await session.commitTransaction();
-    session.endSession();
+    await user.save();
     
     // Remove password from response
     const userResponse = user.toObject();
@@ -483,9 +432,6 @@ router.post('/profile-image/:id', upload.single('profileImage'), async (req, res
       user: userResponse
     });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
-    
     // Delete uploaded file in case of error
     if (req.file && req.file.path) {
       fs.unlinkSync(req.file.path);
@@ -500,9 +446,6 @@ router.post('/profile-image/:id', upload.single('profileImage'), async (req, res
  * Remove user profile image
  */
 router.delete('/profile-image/:id', async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  
   try {
     // Find user by ID, userId, or email
     const user = await User.findOne({ 
@@ -511,11 +454,9 @@ router.delete('/profile-image/:id', async (req, res, next) => {
         { userId: req.params.id },
         { email: req.params.id }
       ]
-    }).session(session);
+    });
     
     if (!user) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(404).json({ message: 'User not found' });
     }
     
@@ -528,15 +469,10 @@ router.delete('/profile-image/:id', async (req, res, next) => {
       
       // Reset profile picture field
       user.profilePicture = undefined;
-      await user.save({ session });
+      await user.save();
     } else {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(400).json({ message: 'User does not have a profile image' });
     }
-    
-    await session.commitTransaction();
-    session.endSession();
     
     // Remove password from response
     const userResponse = user.toObject();
@@ -547,8 +483,6 @@ router.delete('/profile-image/:id', async (req, res, next) => {
       user: userResponse
     });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     next(error);
   }
 });
@@ -558,15 +492,10 @@ router.delete('/profile-image/:id', async (req, res, next) => {
  * Change user password
  */
 router.post('/change-password/:id', async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  
   try {
     const { currentPassword, newPassword } = req.body;
     
     if (!currentPassword || !newPassword) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(400).json({ message: 'Current password and new password are required' });
     }
     
@@ -577,11 +506,9 @@ router.post('/change-password/:id', async (req, res, next) => {
         { userId: req.params.id },
         { email: req.params.id }
       ]
-    }).session(session);
+    });
     
     if (!user) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(404).json({ message: 'User not found' });
     }
     
@@ -589,8 +516,6 @@ router.post('/change-password/:id', async (req, res, next) => {
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     
     if (!isMatch) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(401).json({ message: 'Current password is incorrect' });
     }
     
@@ -600,15 +525,10 @@ router.post('/change-password/:id', async (req, res, next) => {
     
     // Update password
     user.password = hashedPassword;
-    await user.save({ session });
-    
-    await session.commitTransaction();
-    session.endSession();
+    await user.save();
     
     res.json({ message: 'Password changed successfully' });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     next(error);
   }
 });
@@ -654,9 +574,6 @@ router.get('/search/:query', async (req, res, next) => {
  * Activate a user account
  */
 router.put('/:id/activate', async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  
   try {
     // Find user by ID, userId, or email
     const user = await User.findOne({ 
@@ -665,20 +582,15 @@ router.put('/:id/activate', async (req, res, next) => {
         { userId: req.params.id },
         { email: req.params.id }
       ]
-    }).session(session);
+    });
     
     if (!user) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(404).json({ message: 'User not found' });
     }
     
     // Activate user
     user.isActive = true;
-    await user.save({ session });
-    
-    await session.commitTransaction();
-    session.endSession();
+    await user.save();
     
     // Remove password from response
     const userResponse = user.toObject();
@@ -689,8 +601,6 @@ router.put('/:id/activate', async (req, res, next) => {
       user: userResponse
     });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     next(error);
   }
 });
@@ -700,9 +610,6 @@ router.put('/:id/activate', async (req, res, next) => {
  * Deactivate a user account
  */
 router.put('/:id/deactivate', async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  
   try {
     // Find user by ID, userId, or email
     const user = await User.findOne({ 
@@ -711,20 +618,15 @@ router.put('/:id/deactivate', async (req, res, next) => {
         { userId: req.params.id },
         { email: req.params.id }
       ]
-    }).session(session);
+    });
     
     if (!user) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(404).json({ message: 'User not found' });
     }
     
     // Deactivate user
     user.isActive = false;
-    await user.save({ session });
-    
-    await session.commitTransaction();
-    session.endSession();
+    await user.save();
     
     // Remove password from response
     const userResponse = user.toObject();
@@ -735,8 +637,6 @@ router.put('/:id/deactivate', async (req, res, next) => {
       user: userResponse
     });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     next(error);
   }
 });

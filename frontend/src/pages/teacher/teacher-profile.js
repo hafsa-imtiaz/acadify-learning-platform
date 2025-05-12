@@ -1,25 +1,31 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Camera, Linkedin, Twitter, Globe, Instagram, Mail, Book, Award, Briefcase, GraduationCap, MapPin, Phone } from 'lucide-react';
 import styles from '../../css/teacher/teacher-profile.module.css';
 import TeacherLayout from '../../components/teacher/sidebar';
+import axios from 'axios';
 
 const InstructorProfilePage = () => {
   const [profile, setProfile] = useState({
-    name: 'Dr. Sarah Johnson',
-    email: 'sarah.johnson@example.edu',
-    phone: '+1 (555) 123-4567',
-    address: '123 University Avenue, Cambridge, MA 02138',
-    title: 'Professor of Computer Science',
-    bio: 'I have over 10 years of experience teaching programming and software development. My research focuses on machine learning applications in education technology.',
-    specialization: 'Computer Science',
-    qualifications: 'Ph.D. in Computer Science, MIT',
-    experience: '5-10 years',
-    expertise: ['Machine Learning', 'Python', 'Data Science', 'Software Engineering', 'Educational Technology'],
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    professionalTitle: '',
+    bio: '',
+    specialization: '',
+    qualifications: [],
+    teachingExperience: '',
+    areasOfExpertise: [],
+    currentInstitution: '',
+    department: '',
+    teachingMethodology: [],
+    teachingStyle: '',
+    contactPreference: 'Discussion Forums',
     socialLinks: {
-      linkedin: 'sarahjohnson',
-      twitter: 'sarahj_tech',
-      website: 'sarahjohnson.edu',
-      instagram: 'sarahj.code',
+      linkedin: '',
+      twitter: '',
+      website: '',
+      instagram: '',
     }
   });
 
@@ -27,9 +33,99 @@ const InstructorProfilePage = () => {
   const [previewImage, setPreviewImage] = useState('/api/placeholder/250/250');
   const fileInputRef = useRef(null);
   const [newExpertise, setNewExpertise] = useState('');
+  const [newMethodology, setNewMethodology] = useState('');
+  const [newQualification, setNewQualification] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState('personal');
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Get logged in user and teacher details from localStorage
+  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const storedTeacher = JSON.parse(localStorage.getItem('roleDetails'));
+  
+  // Use stored data or fetch from API if not available
+  useEffect(() => {
+    if (storedUser && storedUser.userId) {
+      if (storedTeacher) {
+        // Use teacher and user details from localStorage
+        mapDataToState(storedUser, storedTeacher);
+        setLoading(false);
+      } else {
+        // Fallback to API if roleDetails not found
+        fetchProfileData(storedUser.userId);
+      }
+    } else {
+      setLoading(false);
+      setError('No user found in local storage. Please log in again.');
+    }
+  }, []);
+
+  // Function to map teacher and user data to component state
+  const mapDataToState = (userData, teacherData) => {
+    setProfile({
+      name: userData.fullName || '',
+      email: userData.email || '',
+      phone: userData.phoneNumber || '',
+      address: userData.address || '',
+      professionalTitle: teacherData.professionalTitle || '',
+      bio: userData.bio || '',
+      specialization: teacherData.specialization || '',
+      qualifications: Array.isArray(teacherData.qualifications) ? teacherData.qualifications : [],
+      teachingExperience: teacherData.teachingExperience || '',
+      areasOfExpertise: teacherData.areasOfExpertise || [],
+      currentInstitution: teacherData.currentInstitution || '',
+      department: teacherData.department || '',
+      teachingMethodology: teacherData.teachingMethodology || [],
+      teachingStyle: teacherData.teachingStyle || '',
+      contactPreference: teacherData.contactPreference || 'Discussion Forums',
+      socialLinks: {
+        linkedin: userData.socialLinks?.linkedin || '',
+        twitter: userData.socialLinks?.twitter || '',
+        website: userData.socialLinks?.website || '',
+        instagram: userData.socialLinks?.instagram || '',
+      }
+    });
+
+    // Set profile image if available
+    if (userData.profilePicture) {
+      setPreviewImage(userData.profilePicture);
+    }
+  };
+
+  const fetchProfileData = async (userId) => {
+    try {
+      setLoading(true);
+      // Get both user and teacher data, but handle separately to avoid transaction issues
+      try {
+        // Updated to match router - using correct endpoint
+        const userResponse = await axios.get(`http://localhost:5000/api/user/${userId}`);
+        const userData = userResponse.data;
+        
+        try {
+          const teacherResponse = await axios.get(`http://localhost:5000/api/teachers/${userId}`);
+          const teacherData = teacherResponse.data;
+          
+          // Map data to our state
+          mapDataToState(userData, teacherData);
+        } catch (teacherErr) {
+          console.error('Error fetching teacher data:', teacherErr);
+          // Still show user data if teacher data fails
+          mapDataToState(userData, {});
+        }
+      } catch (userErr) {
+        console.error('Error fetching user data:', userErr);
+        setError('Failed to load user profile. Please try again later.');
+      }
+      
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching profile data:', err);
+      setError('Failed to load profile. Please try again later.');
+      setLoading(false);
+    }
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -67,10 +163,10 @@ const InstructorProfilePage = () => {
   };
 
   const addExpertise = () => {
-    if (newExpertise.trim() && !profile.expertise.includes(newExpertise.trim())) {
+    if (newExpertise.trim() && !profile.areasOfExpertise.includes(newExpertise.trim())) {
       setProfile(prev => ({
         ...prev,
-        expertise: [...prev.expertise, newExpertise.trim()]
+        areasOfExpertise: [...prev.areasOfExpertise, newExpertise.trim()]
       }));
       setNewExpertise('');
     }
@@ -79,25 +175,183 @@ const InstructorProfilePage = () => {
   const removeExpertise = (index) => {
     setProfile(prev => ({
       ...prev,
-      expertise: prev.expertise.filter((_, i) => i !== index)
+      areasOfExpertise: prev.areasOfExpertise.filter((_, i) => i !== index)
     }));
+  };
+  
+  const addMethodology = () => {
+    if (newMethodology.trim() && !profile.teachingMethodology.includes(newMethodology.trim())) {
+      setProfile(prev => ({
+        ...prev,
+        teachingMethodology: [...prev.teachingMethodology, newMethodology.trim()]
+      }));
+      setNewMethodology('');
+    }
+  };
+  
+  const removeMethodology = (index) => {
+    setProfile(prev => ({
+      ...prev,
+      teachingMethodology: prev.teachingMethodology.filter((_, i) => i !== index)
+    }));
+  };
+  
+  const addQualification = () => {
+    if (newQualification.trim() && !profile.qualifications.includes(newQualification.trim())) {
+      setProfile(prev => ({
+        ...prev,
+        qualifications: [...prev.qualifications, newQualification.trim()]
+      }));
+      setNewQualification('');
+    }
+  };
+  
+  const removeQualification = (index) => {
+    setProfile(prev => ({
+      ...prev,
+      qualifications: prev.qualifications.filter((_, i) => i !== index)
+    }));
+  };
+
+  const uploadProfileImage = async (userId) => {
+    if (!profileImage) return null;
+    
+    try {
+      const formData = new FormData();
+      formData.append('profileImage', profileImage);
+      
+      // Updated to match router - using /users/profile-image/:id endpoint
+      const uploadResponse = await axios.post(`http://localhost:5000/api/user/profile-image/${userId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      // Update user in localStorage with new profile image
+      const updatedUser = uploadResponse.data.user;
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      return updatedUser.profilePicture;
+    } catch (err) {
+      console.error('Error uploading profile image:', err);
+      throw new Error('Failed to upload profile image');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
+    setError(null);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSaving(false);
-    setSaveSuccess(true);
-    
-    // Hide success message after 3 seconds
-    setTimeout(() => {
-      setSaveSuccess(false);
-    }, 3000);
+    try {
+      // Upload profile image if changed
+      let profilePictureUrl = previewImage;
+      if (profileImage) {
+        try {
+          profilePictureUrl = await uploadProfileImage(storedUser.userId);
+        } catch (uploadErr) {
+          console.error('Error uploading image:', uploadErr);
+          // Continue with the rest of the updates even if image upload fails
+        }
+      }
+      
+      // 1. Update User data first - using direct put without any other params
+      try {
+        const userData = {
+          fullName: profile.name,
+          phoneNumber: profile.phone,
+          address: profile.address,
+          bio: profile.bio,
+          socialLinks: {
+            linkedin: profile.socialLinks.linkedin,
+            twitter: profile.socialLinks.twitter,
+            website: profile.socialLinks.website,
+            instagram: profile.socialLinks.instagram
+          }
+        };
+        
+        // Updated to match router - using /users/:id endpoint
+        const userResponse = await axios.put(`http://localhost:5000/api/user/${storedUser.userId}`, userData);
+        
+        // Update user in localStorage
+        localStorage.setItem('user', JSON.stringify(userResponse.data));
+      } catch (userErr) {
+        console.error('Error updating user data:', userErr);
+        setError(`Failed to update user data: ${userErr.response?.data?.message || userErr.message}`);
+        setIsSaving(false);
+        return; // Stop if user update fails
+      }
+      
+      // 2. Then update teacher data - creating a direct update for each field to avoid transactions
+      try {
+        // Updated to match the teacher router - using PUT /teachers/:userId endpoint
+        const teacherData = {
+          teacherData: {
+            professionalTitle: profile.professionalTitle,
+            specialization: profile.specialization,
+            teachingExperience: profile.teachingExperience,
+            qualifications: profile.qualifications,
+            areasOfExpertise: profile.areasOfExpertise,
+            currentInstitution: profile.currentInstitution,
+            department: profile.department,
+            teachingMethodology: profile.teachingMethodology,
+            teachingStyle: profile.teachingStyle,
+            contactPreference: profile.contactPreference
+          }
+        };
+        
+        const response = await axios.put(`http://localhost:5000/api/teachers/${storedUser.userId}`, teacherData);
+        
+        // Update teacher details in localStorage
+        localStorage.setItem('roleDetails', JSON.stringify(response.data));
+      } catch (teacherErr) {
+        console.error('Error updating teacher data:', teacherErr);
+        setError(`Failed to update teacher data: ${teacherErr.response?.data?.message || teacherErr.message}`);
+        setIsSaving(false);
+        return;
+      }
+      
+      setIsSaving(false);
+      setSaveSuccess(true);
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setSaveSuccess(false);
+      }, 3000);
+    } catch (err) {
+      console.error('Error saving profile:', err);
+      setError(`Failed to save profile: ${err.response?.data?.message || err.message}`);
+      setIsSaving(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <TeacherLayout>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner}></div>
+          <p>Loading profile...</p>
+        </div>
+      </TeacherLayout>
+    );
+  }
+
+  if (error && !profile.name) {
+    return (
+      <TeacherLayout>
+        <div className={styles.errorContainer}>
+          <h2>Error Loading Profile</h2>
+          <p>{error}</p>
+          <button 
+            className={styles.primaryButton}
+            onClick={() => fetchProfileData(storedUser.userId)}
+          >
+            Try Again
+          </button>
+        </div>
+      </TeacherLayout>
+    );
+  }
 
   return (
     <TeacherLayout>
@@ -130,6 +384,12 @@ const InstructorProfilePage = () => {
               Social & Contact
             </button>
           </div>
+
+          {error && (
+            <div className={styles.errorMessage}>
+              <span>⚠️</span> {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="profile-form">
             {/* Personal Information Tab */}
@@ -186,12 +446,12 @@ const InstructorProfilePage = () => {
                   </div>
                   
                   <div className={styles.formGroup}>
-                    <label htmlFor="title">Professional Title</label>
+                    <label htmlFor="professionalTitle">Professional Title</label>
                     <input
                       type="text"
-                      id="title"
-                      name="title"
-                      value={profile.title}
+                      id="professionalTitle"
+                      name="professionalTitle"
+                      value={profile.professionalTitle}
                       onChange={handleInputChange}
                       placeholder="e.g., Professor of Computer Science, Software Engineer"
                     />
@@ -270,11 +530,11 @@ const InstructorProfilePage = () => {
                   </div>
                   
                   <div className={styles.formGroup}>
-                    <label htmlFor="experience"><Briefcase size={16} /> Teaching Experience</label>
+                    <label htmlFor="teachingExperience"><Briefcase size={16} /> Teaching Experience</label>
                     <select
-                      id="experience"
-                      name="experience"
-                      value={profile.experience}
+                      id="teachingExperience"
+                      name="teachingExperience"
+                      value={profile.teachingExperience}
                       onChange={handleInputChange}
                       className={styles.selectField}
                     >
@@ -290,14 +550,37 @@ const InstructorProfilePage = () => {
                 
                 <div className={styles.formGroup}>
                   <label htmlFor="qualifications"><GraduationCap size={16} /> Qualifications</label>
-                  <input
-                    type="text"
-                    id="qualifications"
-                    name="qualifications"
-                    placeholder="Your highest academic qualification"
-                    value={profile.qualifications}
-                    onChange={handleInputChange}
-                  />
+                  <div className={styles.expertiseInputGroup}>
+                    <input
+                      type="text"
+                      id="newQualification"
+                      value={newQualification}
+                      onChange={(e) => setNewQualification(e.target.value)}
+                      placeholder="Add a qualification (e.g., 'Ph.D. in Computer Science, MIT')"
+                    />
+                    <button 
+                      type="button" 
+                      onClick={addQualification}
+                      className={styles.addExpertiseBtn}
+                    >
+                      Add
+                    </button>
+                  </div>
+                  
+                  <div className={styles.expertiseTags}>
+                    {profile.qualifications.map((item, index) => (
+                      <div key={index} className={styles.expertiseTag}>
+                        <span>{item}</span>
+                        <button 
+                          type="button" 
+                          onClick={() => removeQualification(index)}
+                          className={styles.removeTagBtn}
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 
                 <div className={styles.expertiseSection}>
@@ -319,7 +602,7 @@ const InstructorProfilePage = () => {
                   </div>
                   
                   <div className={styles.expertiseTags}>
-                    {profile.expertise.map((item, index) => (
+                    {profile.areasOfExpertise.map((item, index) => (
                       <div key={index} className={styles.expertiseTag}>
                         <span>{item}</span>
                         <button 
@@ -332,6 +615,94 @@ const InstructorProfilePage = () => {
                       </div>
                     ))}
                   </div>
+                </div>
+                
+                <div className={styles.formRow}>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="currentInstitution">Current Institution</label>
+                    <input
+                      type="text"
+                      id="currentInstitution"
+                      name="currentInstitution"
+                      value={profile.currentInstitution}
+                      onChange={handleInputChange}
+                      placeholder="e.g., Harvard University"
+                    />
+                  </div>
+                  
+                  <div className={styles.formGroup}>
+                    <label htmlFor="department">Department</label>
+                    <input
+                      type="text"
+                      id="department"
+                      name="department"
+                      value={profile.department}
+                      onChange={handleInputChange}
+                      placeholder="e.g., Computer Science Department"
+                    />
+                  </div>
+                </div>
+                
+                <div className={styles.expertiseSection}>
+                  <label>Teaching Methodology</label>
+                  <div className={styles.expertiseInputGroup}>
+                    <input
+                      type="text"
+                      value={newMethodology}
+                      onChange={(e) => setNewMethodology(e.target.value)}
+                      placeholder="Add a teaching method (e.g., 'Project-based learning')"
+                    />
+                    <button 
+                      type="button" 
+                      onClick={addMethodology}
+                      className={styles.addExpertiseBtn}
+                    >
+                      Add
+                    </button>
+                  </div>
+                  
+                  <div className={styles.expertiseTags}>
+                    {profile.teachingMethodology.map((item, index) => (
+                      <div key={index} className={styles.expertiseTag}>
+                        <span>{item}</span>
+                        <button 
+                          type="button" 
+                          onClick={() => removeMethodology(index)}
+                          className={styles.removeTagBtn}
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="teachingStyle">Teaching Style</label>
+                  <textarea
+                    id="teachingStyle"
+                    name="teachingStyle"
+                    value={profile.teachingStyle}
+                    onChange={handleInputChange}
+                    placeholder="Describe your teaching style and approach..."
+                    rows={3}
+                  />
+                  <p className={styles.inputHelpText}>Share your unique teaching approach to help students understand what to expect.</p>
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="contactPreference">Contact Preference</label>
+                  <select
+                    id="contactPreference"
+                    name="contactPreference"
+                    value={profile.contactPreference}
+                    onChange={handleInputChange}
+                    className={styles.selectField}
+                  >
+                    <option value="Email">Email</option>
+                    <option value="Discussion Forums">Discussion Forums</option>
+                    <option value="Both">Both Email and Forums</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -429,7 +800,22 @@ const InstructorProfilePage = () => {
             </div>
             
             <div className={styles.formActions}>
-              <button type="button" className={styles.secondaryButton}>Cancel</button>
+              <button 
+                type="button" 
+                className={styles.secondaryButton}
+                onClick={() => {
+                  // Reset to stored data
+                  const storedUser = JSON.parse(localStorage.getItem('user'));
+                  const storedTeacher = JSON.parse(localStorage.getItem('roleDetails'));
+                  if (storedUser && storedTeacher) {
+                    mapDataToState(storedUser, storedTeacher);
+                  } else {
+                    fetchProfileData(storedUser.userId);
+                  }
+                }}
+              >
+                Cancel
+              </button>
               <button 
                 type="submit" 
                 className={isSaving ? `${styles.primaryButton} ${styles.primaryButtonDisabled}` : styles.primaryButton}

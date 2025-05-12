@@ -14,25 +14,6 @@ const handleError = (res, statusCode, message) => {
 };
 
 /**
- * Transaction helper function
- */
-const withTransaction = async (callback) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  
-  try {
-    const result = await callback(session);
-    await session.commitTransaction();
-    return result;
-  } catch (error) {
-    await session.abortTransaction();
-    throw error;
-  } finally {
-    session.endSession();
-  }
-};
-
-/**
  * Validation middleware
  */
 const validateRequest = (validations) => {
@@ -170,59 +151,57 @@ router.post('/', validateRequest([
   try {
     const { userData, teacherData } = req.body;
     
-    const result = await withTransaction(async (session) => {
-      // First create the user if it doesn't exist
-      let user;
-      
-      if (userData._id) {
-        // Validate ObjectId
-        if (!mongoose.Types.ObjectId.isValid(userData._id)) {
-          throw createError(400, 'Invalid user ID format');
-        }
-        
-        // Update existing user
-        user = await User.findById(userData._id).session(session);
-        
-        if (!user) {
-          throw createError(404, 'User not found');
-        }
-        
-        user.role = 'Teacher'; // Ensure role is set to Teacher
-        await user.save({ session });
-      } else {
-        // Create new user
-        user = new User({
-          ...userData,
-          role: 'Teacher'
-        });
-        
-        await user.save({ session });
+    // First create the user if it doesn't exist
+    let user;
+    
+    if (userData._id) {
+      // Validate ObjectId
+      if (!mongoose.Types.ObjectId.isValid(userData._id)) {
+        throw createError(400, 'Invalid user ID format');
       }
       
-      // Check if teacher profile already exists
-      const existingTeacher = await Teacher.findOne({ user: user._id }).session(session);
+      // Update existing user
+      user = await User.findById(userData._id);
       
-      if (existingTeacher) {
-        throw createError(400, 'Teacher profile already exists for this user');
+      if (!user) {
+        throw createError(404, 'User not found');
       }
       
-      // Create teacher profile linked to the user with default values for statistics
-      const newTeacher = new Teacher({
-        ...teacherData,
-        user: user._id,
-        coursesCreated: 0,
-        totalStudents: 0,
-        averageRating: 0,
-        totalRatings: 0,
-        responseTimeAverage: 0,
-        isVerified: false
+      user.role = 'Teacher'; // Ensure role is set to Teacher
+      await user.save();
+    } else {
+      // Create new user
+      user = new User({
+        ...userData,
+        role: 'Teacher'
       });
       
-      const savedTeacher = await newTeacher.save({ session });
-      
-      // Return the teacher with populated user information
-      return Teacher.findById(savedTeacher._id).populate('user').lean();
+      await user.save();
+    }
+    
+    // Check if teacher profile already exists
+    const existingTeacher = await Teacher.findOne({ user: user._id });
+    
+    if (existingTeacher) {
+      throw createError(400, 'Teacher profile already exists for this user');
+    }
+    
+    // Create teacher profile linked to the user with default values for statistics
+    const newTeacher = new Teacher({
+      ...teacherData,
+      user: user._id,
+      coursesCreated: 0,
+      totalStudents: 0,
+      averageRating: 0,
+      totalRatings: 0,
+      responseTimeAverage: 0,
+      isVerified: false
     });
+    
+    const savedTeacher = await newTeacher.save();
+    
+    // Return the teacher with populated user information
+    const result = await Teacher.findById(savedTeacher._id).populate('user').lean();
     
     res.status(201).json(result);
   } catch (error) {
@@ -249,53 +228,51 @@ router.put('/:userId', async (req, res, next) => {
       return handleError(res, 400, 'No update data provided');
     }
     
-    const result = await withTransaction(async (session) => {
-      // First find the teacher by user ID
-      const teacher = await Teacher.findOne({ user: req.params.userId }).session(session);
+    // First find the teacher by user ID
+    const teacher = await Teacher.findOne({ user: req.params.userId });
+    
+    if (!teacher) {
+      throw createError(404, 'Teacher profile not found');
+    }
+    
+    // Update the teacher profile
+    if (teacherData) {
+      // Protect critical statistics from direct updates
+      const protectedFields = ['averageRating', 'totalRatings', 'totalStudents', 'coursesCreated', 'responseTimeAverage'];
       
-      if (!teacher) {
-        throw createError(404, 'Teacher profile not found');
-      }
-      
-      // Update the teacher profile
-      if (teacherData) {
-        // Protect critical statistics from direct updates
-        const protectedFields = ['averageRating', 'totalRatings', 'totalStudents', 'coursesCreated', 'responseTimeAverage'];
-        
-        Object.keys(teacherData).forEach(key => {
-          // Skip protected fields that should only be updated through specific endpoints
-          if (!protectedFields.includes(key)) {
-            teacher[key] = teacherData[key];
-          }
-        });
-        
-        await teacher.save({ session });
-      }
-      
-      // If user data is provided, update the user as well
-      if (userData) {
-        const user = await User.findById(req.params.userId).session(session);
-        
-        if (!user) {
-          throw createError(404, 'User not found');
+      Object.keys(teacherData).forEach(key => {
+        // Skip protected fields that should only be updated through specific endpoints
+        if (!protectedFields.includes(key)) {
+          teacher[key] = teacherData[key];
         }
-        
-        // Update allowed user fields
-        const allowedUserFields = ['fullName', 'phoneNumber', 'address', 
-          'bio', 'profilePicture', 'socialLinks', 'dateOfBirth', 'gender'];
-        
-        allowedUserFields.forEach(field => {
-          if (userData[field] !== undefined) {
-            user[field] = userData[field];
-          }
-        });
-        
-        await user.save({ session });
+      });
+      
+      await teacher.save();
+    }
+    
+    // If user data is provided, update the user as well
+    if (userData) {
+      const user = await User.findById(req.params.userId);
+      
+      if (!user) {
+        throw createError(404, 'User not found');
       }
       
-      // Return the updated teacher with populated user information
-      return Teacher.findById(teacher._id).populate('user').lean();
-    });
+      // Update allowed user fields
+      const allowedUserFields = ['fullName', 'phoneNumber', 'address', 
+        'bio', 'profilePicture', 'socialLinks', 'dateOfBirth', 'gender'];
+      
+      allowedUserFields.forEach(field => {
+        if (userData[field] !== undefined) {
+          user[field] = userData[field];
+        }
+      });
+      
+      await user.save();
+    }
+    
+    // Return the updated teacher with populated user information
+    const result = await Teacher.findById(teacher._id).populate('user').lean();
     
     res.json(result);
   } catch (error) {
@@ -316,39 +293,37 @@ router.delete('/:userId', async (req, res, next) => {
       return handleError(res, 400, 'Invalid user ID format');
     }
     
-    await withTransaction(async (session) => {
-      const { deleteUser } = req.query;
-      const teacher = await Teacher.findOne({ user: req.params.userId }).session(session);
-      
-      if (!teacher) {
-        throw createError(404, 'Teacher profile not found');
+    const { deleteUser } = req.query;
+    const teacher = await Teacher.findOne({ user: req.params.userId });
+    
+    if (!teacher) {
+      throw createError(404, 'Teacher profile not found');
+    }
+    
+    // Delete the teacher profile
+    await Teacher.findByIdAndDelete(teacher._id);
+    
+    if (deleteUser === 'true') {
+      // Hard delete the user
+      const deleteResult = await User.findByIdAndDelete(req.params.userId);
+      if (!deleteResult) {
+        throw createError(404, 'User not found');
       }
+    } else {
+      // Soft delete by marking user as inactive and changing role back to User
+      const updateResult = await User.findByIdAndUpdate(
+        req.params.userId,
+        { 
+          isActive: false,
+          role: 'User' // Change role back to regular user
+        },
+        { new: true }
+      );
       
-      // Delete the teacher profile
-      await Teacher.findByIdAndDelete(teacher._id, { session });
-      
-      if (deleteUser === 'true') {
-        // Hard delete the user
-        const deleteResult = await User.findByIdAndDelete(req.params.userId, { session });
-        if (!deleteResult) {
-          throw createError(404, 'User not found');
-        }
-      } else {
-        // Soft delete by marking user as inactive and changing role back to User
-        const updateResult = await User.findByIdAndUpdate(
-          req.params.userId,
-          { 
-            isActive: false,
-            role: 'User' // Change role back to regular user
-          },
-          { session, new: true }
-        );
-        
-        if (!updateResult) {
-          throw createError(404, 'User not found');
-        }
+      if (!updateResult) {
+        throw createError(404, 'User not found');
       }
-    });
+    }
     
     res.json({ 
       success: true, 
@@ -375,29 +350,25 @@ router.post('/:userId/verification', validateRequest([
       return handleError(res, 400, 'Invalid user ID format');
     }
     
-    const result = await withTransaction(async (session) => {
-      const { documentType, documentURL } = req.body;
-      const teacher = await Teacher.findOne({ user: req.params.userId }).session(session);
-      
-      if (!teacher) {
-        throw createError(404, 'Teacher profile not found');
-      }
-      
-      // Add new verification document
-      teacher.verificationDocuments.push({
-        documentType,
-        documentURL,
-        uploadDate: new Date(),
-        verificationStatus: 'Pending'
-      });
-      
-      await teacher.save({ session });
-      
-      // Return updated teacher
-      return teacher;
+    const { documentType, documentURL } = req.body;
+    const teacher = await Teacher.findOne({ user: req.params.userId });
+    
+    if (!teacher) {
+      throw createError(404, 'Teacher profile not found');
+    }
+    
+    // Add new verification document
+    teacher.verificationDocuments.push({
+      documentType,
+      documentURL,
+      uploadDate: new Date(),
+      verificationStatus: 'Pending'
     });
     
-    res.status(201).json(result);
+    await teacher.save();
+    
+    // Return updated teacher
+    res.status(201).json(teacher);
   } catch (error) {
     if (error.status) {
       return handleError(res, error.status, error.message);
@@ -419,48 +390,44 @@ router.put('/:userId/verification/:documentId', validateRequest([
       return handleError(res, 400, 'Invalid ID format');
     }
     
-    const result = await withTransaction(async (session) => {
-      const { status, adminComments } = req.body;
-      const teacher = await Teacher.findOne({ user: req.params.userId }).session(session);
-      
-      if (!teacher) {
-        throw createError(404, 'Teacher profile not found');
-      }
-      
-      // Find the document and update its status
-      const docIndex = teacher.verificationDocuments.findIndex(doc => 
-        doc._id.toString() === req.params.documentId
-      );
-      
-      if (docIndex === -1) {
-        throw createError(404, 'Verification document not found');
-      }
-      
-      // Update document status and add admin comments if provided
-      teacher.verificationDocuments[docIndex].verificationStatus = status;
-      if (adminComments) {
-        teacher.verificationDocuments[docIndex].adminComments = adminComments;
-      }
-      
-      // Update the verification date
-      teacher.verificationDocuments[docIndex].verificationDate = new Date();
-      
-      // If all documents are verified, mark the teacher as verified
-      if (status === 'Verified' && 
-          teacher.verificationDocuments.every(doc => doc.verificationStatus === 'Verified')) {
-        teacher.isVerified = true;
-      } else if (status === 'Rejected') {
-        // If any document is rejected, mark the teacher as not verified
-        teacher.isVerified = false;
-      }
-      
-      await teacher.save({ session });
-      
-      // Return updated teacher
-      return teacher;
-    });
+    const { status, adminComments } = req.body;
+    const teacher = await Teacher.findOne({ user: req.params.userId });
     
-    res.json(result);
+    if (!teacher) {
+      throw createError(404, 'Teacher profile not found');
+    }
+    
+    // Find the document and update its status
+    const docIndex = teacher.verificationDocuments.findIndex(doc => 
+      doc._id.toString() === req.params.documentId
+    );
+    
+    if (docIndex === -1) {
+      throw createError(404, 'Verification document not found');
+    }
+    
+    // Update document status and add admin comments if provided
+    teacher.verificationDocuments[docIndex].verificationStatus = status;
+    if (adminComments) {
+      teacher.verificationDocuments[docIndex].adminComments = adminComments;
+    }
+    
+    // Update the verification date
+    teacher.verificationDocuments[docIndex].verificationDate = new Date();
+    
+    // If all documents are verified, mark the teacher as verified
+    if (status === 'Verified' && 
+        teacher.verificationDocuments.every(doc => doc.verificationStatus === 'Verified')) {
+      teacher.isVerified = true;
+    } else if (status === 'Rejected') {
+      // If any document is rejected, mark the teacher as not verified
+      teacher.isVerified = false;
+    }
+    
+    await teacher.save();
+    
+    // Return updated teacher
+    res.json(teacher);
   } catch (error) {
     if (error.status) {
       return handleError(res, error.status, error.message);
@@ -483,28 +450,24 @@ router.put('/:userId/payment', async (req, res, next) => {
       return handleError(res, 400, 'Payment details are required');
     }
     
-    const result = await withTransaction(async (session) => {
-      const paymentDetails = req.body;
-      const teacher = await Teacher.findOne({ user: req.params.userId }).session(session);
-      
-      if (!teacher) {
-        throw createError(404, 'Teacher profile not found');
-      }
-      
-      // Update payment details
-      teacher.paymentDetails = {
-        ...teacher.paymentDetails,
-        ...paymentDetails,
-        lastUpdated: new Date()
-      };
-      
-      await teacher.save({ session });
-      
-      // Return updated teacher
-      return teacher;
-    });
+    const paymentDetails = req.body;
+    const teacher = await Teacher.findOne({ user: req.params.userId });
     
-    res.json(result);
+    if (!teacher) {
+      throw createError(404, 'Teacher profile not found');
+    }
+    
+    // Update payment details
+    teacher.paymentDetails = {
+      ...teacher.paymentDetails,
+      ...paymentDetails,
+      lastUpdated: new Date()
+    };
+    
+    await teacher.save();
+    
+    // Return updated teacher
+    res.json(teacher);
   } catch (error) {
     if (error.status) {
       return handleError(res, error.status, error.message);
@@ -529,44 +492,40 @@ router.post('/:userId/rating', validateRequest([
       return handleError(res, 400, 'Invalid review ID format');
     }
     
-    const result = await withTransaction(async (session) => {
-      const { rating, reviewId } = req.body;
-      const teacher = await Teacher.findOne({ user: req.params.userId }).session(session);
-      
-      if (!teacher) {
-        throw createError(404, 'Teacher profile not found');
-      }
-      
-      // Calculate new average rating
-      const currentTotalScore = teacher.averageRating * teacher.totalRatings;
-      const newTotalRatings = teacher.totalRatings + 1;
-      const newAverageRating = (currentTotalScore + rating) / newTotalRatings;
-      
-      // Update teacher with new rating stats
-      teacher.totalRatings = newTotalRatings;
-      teacher.averageRating = parseFloat(newAverageRating.toFixed(2));
-      
-      // If a review ID is provided, add it to the teacher's reviews array
-      if (reviewId) {
-        if (!teacher.reviews) {
-          teacher.reviews = [];
-        }
-        
-        if (!teacher.reviews.includes(reviewId)) {
-          teacher.reviews.push(reviewId);
-        }
-      }
-      
-      await teacher.save({ session });
-      
-      return {
-        success: true,
-        averageRating: teacher.averageRating,
-        totalRatings: teacher.totalRatings
-      };
-    });
+    const { rating, reviewId } = req.body;
+    const teacher = await Teacher.findOne({ user: req.params.userId });
     
-    res.json(result);
+    if (!teacher) {
+      throw createError(404, 'Teacher profile not found');
+    }
+    
+    // Calculate new average rating
+    const currentTotalScore = teacher.averageRating * teacher.totalRatings;
+    const newTotalRatings = teacher.totalRatings + 1;
+    const newAverageRating = (currentTotalScore + rating) / newTotalRatings;
+    
+    // Update teacher with new rating stats
+    teacher.totalRatings = newTotalRatings;
+    teacher.averageRating = parseFloat(newAverageRating.toFixed(2));
+    
+    // If a review ID is provided, add it to the teacher's reviews array
+    if (reviewId) {
+      if (!teacher.reviews) {
+        teacher.reviews = [];
+      }
+      
+      if (!teacher.reviews.includes(reviewId)) {
+        teacher.reviews.push(reviewId);
+      }
+    }
+    
+    await teacher.save();
+    
+    return res.json({
+      success: true,
+      averageRating: teacher.averageRating,
+      totalRatings: teacher.totalRatings
+    });
   } catch (error) {
     if (error.status) {
       return handleError(res, error.status, error.message);
@@ -591,35 +550,31 @@ router.post('/:userId/course', validateRequest([
       return handleError(res, 400, 'Invalid course ID format');
     }
     
-    const result = await withTransaction(async (session) => {
-      const { courseId } = req.body;
-      const teacher = await Teacher.findOne({ user: req.params.userId }).session(session);
-      
-      if (!teacher) {
-        throw createError(404, 'Teacher profile not found');
-      }
-      
-      // Add course to teacher's courses array if not already there
-      if (!teacher.courses) {
-        teacher.courses = [];
-      }
-      
-      if (!teacher.courses.includes(courseId)) {
-        teacher.courses.push(courseId);
-        teacher.coursesCreated = teacher.courses.length;
-      } else {
-        throw createError(400, 'Course already added to teacher profile');
-      }
-      
-      await teacher.save({ session });
-      
-      return {
-        success: true,
-        coursesCreated: teacher.coursesCreated
-      };
-    });
+    const { courseId } = req.body;
+    const teacher = await Teacher.findOne({ user: req.params.userId });
     
-    res.json(result);
+    if (!teacher) {
+      throw createError(404, 'Teacher profile not found');
+    }
+    
+    // Add course to teacher's courses array if not already there
+    if (!teacher.courses) {
+      teacher.courses = [];
+    }
+    
+    if (!teacher.courses.includes(courseId)) {
+      teacher.courses.push(courseId);
+      teacher.coursesCreated = teacher.courses.length;
+    } else {
+      throw createError(400, 'Course already added to teacher profile');
+    }
+    
+    await teacher.save();
+    
+    return res.json({
+      success: true,
+      coursesCreated: teacher.coursesCreated
+    });
   } catch (error) {
     if (error.status) {
       return handleError(res, error.status, error.message);
@@ -640,26 +595,22 @@ router.put('/:userId/students', validateRequest([
       return handleError(res, 400, 'Invalid user ID format');
     }
     
-    const result = await withTransaction(async (session) => {
-      const { totalStudents } = req.body;
-      const teacher = await Teacher.findOne({ user: req.params.userId }).session(session);
-      
-      if (!teacher) {
-        throw createError(404, 'Teacher profile not found');
-      }
-      
-      // Update total students count
-      teacher.totalStudents = totalStudents;
-      
-      await teacher.save({ session });
-      
-      return {
-        success: true,
-        totalStudents: teacher.totalStudents
-      };
-    });
+    const { totalStudents } = req.body;
+    const teacher = await Teacher.findOne({ user: req.params.userId });
     
-    res.json(result);
+    if (!teacher) {
+      throw createError(404, 'Teacher profile not found');
+    }
+    
+    // Update total students count
+    teacher.totalStudents = totalStudents;
+    
+    await teacher.save();
+    
+    return res.json({
+      success: true,
+      totalStudents: teacher.totalStudents
+    });
   } catch (error) {
     if (error.status) {
       return handleError(res, error.status, error.message);
@@ -680,33 +631,29 @@ router.put('/:userId/response-time', validateRequest([
       return handleError(res, 400, 'Invalid user ID format');
     }
     
-    const result = await withTransaction(async (session) => {
-      const { responseTime } = req.body;
-      const teacher = await Teacher.findOne({ user: req.params.userId }).session(session);
-      
-      if (!teacher) {
-        throw createError(404, 'Teacher profile not found');
-      }
-      
-      // If this is the first response time entry
-      if (!teacher.responseTimeAverage || teacher.responseTimeAverage === 0) {
-        teacher.responseTimeAverage = responseTime;
-      } else {
-        // Calculate new weighted average (giving more weight to recent times)
-        // Using 80% weight for the new response time and 20% for the historical average
-        const weightedAverage = (responseTime * 0.8) + (teacher.responseTimeAverage * 0.2);
-        teacher.responseTimeAverage = parseFloat(weightedAverage.toFixed(2));
-      }
-      
-      await teacher.save({ session });
-      
-      return {
-        success: true,
-        responseTimeAverage: teacher.responseTimeAverage
-      };
-    });
+    const { responseTime } = req.body;
+    const teacher = await Teacher.findOne({ user: req.params.userId });
     
-    res.json(result);
+    if (!teacher) {
+      throw createError(404, 'Teacher profile not found');
+    }
+    
+    // If this is the first response time entry
+    if (!teacher.responseTimeAverage || teacher.responseTimeAverage === 0) {
+      teacher.responseTimeAverage = responseTime;
+    } else {
+      // Calculate new weighted average (giving more weight to recent times)
+      // Using 80% weight for the new response time and 20% for the historical average
+      const weightedAverage = (responseTime * 0.8) + (teacher.responseTimeAverage * 0.2);
+      teacher.responseTimeAverage = parseFloat(weightedAverage.toFixed(2));
+    }
+    
+    await teacher.save();
+    
+    return res.json({
+      success: true,
+      responseTimeAverage: teacher.responseTimeAverage
+    });
   } catch (error) {
     if (error.status) {
       return handleError(res, error.status, error.message);
