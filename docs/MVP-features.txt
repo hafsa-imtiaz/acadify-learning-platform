@@ -1,0 +1,133 @@
+Acadify Learning Platform — MVP Feature List
+
+Overview:
+The MVP enables public browsing of courses, user authentication (student and teacher), course enrollment, course content access (lessons and basic quizzes/assignments), assignment submission and grading, basic dashboards for students and teachers, and essential account settings. Focus on secure, tested, and deployable features.
+
+PRIORITIES: High = must-have for MVP; Medium = valuable but not blocking; Low = optional for MVP.
+
+1) Public / Unauthenticated Features (High)
+ - Landing page (Hero, CTA to Browse/Login/Register)
+   - Acceptance: Mobile-responsive, CTA links work
+   - Frontend: / (Home components)
+ - Course Catalog / Browse (list/grid with search and basic filters)
+   - Acceptance: Can view all public courses, filter by category or level
+   - Frontend: /courses (BrowseCourses)
+   - Backend: GET /api/courses (public fields)
+ - Course Preview (public course overview)
+   - Acceptance: Shows title, instructor, syllabus summary, price/requirement, reviews; Enroll/Sign-in button
+   - Frontend: /courses/:courseId (CoursePreview)
+   - Backend: GET /api/courses/:id (public view)
+ - Login / Register (Student & Teacher flows)
+   - Acceptance: Create account, login returns JWT, basic validation & error messages
+   - Frontend: /login, /register/student, /register/teacher
+   - Backend: POST /api/auth/register, POST /api/auth/login
+
+2) Authentication & Authorization (High)
+ - JWT-based auth with role (student/teacher)
+ - Protected routes on frontend (redirect to login if not authenticated)
+ - Token storage and refresh strategy (short-lived access token + refresh token OR reasonable expiry + re-login)
+ - Acceptance: Protected pages blocked for unauthenticated users; role-based access enforced on backend
+ - Backend: Auth middleware on private endpoints
+
+3) Student Features (High)
+ - Student Dashboard
+   - Acceptance: Shows enrolled courses, progress, upcoming assignments
+   - Frontend: /student (StudentLayout default component)
+ - Enroll in course (public course -> enroll button requires login)
+   - Backend: POST /api/courses/:id/enroll
+ - My Courses (list of enrolled courses)
+   - Frontend: /student/courses
+   - Backend: GET /api/users/:id/courses or GET /api/student/courses
+ - Course Player / Course Details (private view)
+   - Acceptance: List modules/lessons, mark lesson complete, view lesson content (video/text), cannot access if not enrolled
+   - Frontend: /student/course/:courseId
+   - Backend: GET /api/courses/:id/content (requires enrollment)
+ - Assignments Page & Submission
+   - Acceptance: Students can view assignments, upload files or submit text, see submission status
+   - Frontend: /student/assignments, /student/assignment/:id
+   - Backend: GET /api/courses/:courseId/assignments, POST /api/assignments/:id/submissions (multer upload), GET /api/assignments/:id/submissions (student view of own)
+ - Grades & Feedback
+   - Acceptance: Student sees grades and teacher feedback for submissions
+   - Backend: GET /api/users/:id/grades
+ - Profile & Settings
+   - Acceptance: Edit name, email, password and profile picture; change password flow
+   - Backend: GET/PUT /api/users/:id/profile, POST /api/auth/change-password
+
+4) Teacher Features (High)
+ - Teacher Dashboard
+   - Acceptance: Shows courses they teach, recent submissions, quick actions
+   - Frontend: /teacher/dashboard
+ - Create/Edit Course flow
+   - Acceptance: Create course metadata, create modules and lessons, upload resources, save draft, publish
+   - Frontend: /courses/create, /courses/edit/:courseId
+   - Backend: POST/PUT /api/courses, POST /api/courses/:id/modules, POST /api/courses/:id/lessons
+ - Assignment creation & management
+   - Acceptance: Teacher creates assignments with deadlines and upload resources; assignment appears for enrolled students
+   - Backend: POST /api/courses/:id/assignments
+ - View & grade submissions
+   - Acceptance: Teacher sees submissions list, opens submissions, grades and leaves feedback; grades stored and visible to student
+   - Backend: GET /api/assignments/:id/submissions, POST /api/submissions/:submissionId/grade
+ - Class management (optional MVP minimal)
+   - Acceptance: Add/remove students manually (optional for MVP), view roster
+   - Backend: POST /api/courses/:id/students (optional)
+
+5) Shared / Utility Features (High/Medium)
+ - 404 and error pages (High)
+ - Notifications (in-app basic) (Medium)
+ - Search across courses (Medium)
+ - Logout flow (High)
+ - Terms/Privacy page (Low)
+
+6) Backend & Data Models (High)
+ - User model: roles (student/teacher), basic profile, auth fields
+ - Course model: title, description, instructor(s), modules, published flag, tags
+ - Module & Lesson models: order, content type (video, text, file), resources
+ - Assignment & Submission models: deadline, attachments, grade, feedback
+ - Basic audit fields: createdAt, updatedAt
+ - Acceptance: data readable/writable via secure REST endpoints, migrations or seeders for sample data
+
+7) Security & Infrastructure (High)
+ - Fix critical vulnerabilities (multer limits, qs, form-data, axios, react-router etc.)
+ - Input validation & sanitization for all endpoints (express-validator or equivalent)
+ - File upload limits & validation (multer options and error handling)
+ - Rate limiting (basic throttling on auth and upload endpoints)
+ - HTTPS ready config for deployment
+
+8) Testing & Quality (High)
+ - Unit tests for critical backend logic (auth, enrollment, submissions)
+ - Integration tests for key flows (register/login, enroll, submit assignment, grade)
+ - Basic frontend tests for critical components and routes
+ - Lint and formatting (ESLint, Prettier) integrated into CI
+
+9) DevOps & CI/CD (Medium)
+ - CI pipeline running lint, tests, and build (GitHub Actions or equivalent)
+ - Deploy scripts or docs for deploying frontend and backend (staging & production)
+ - Health checks and basic monitoring logs
+
+10) Performance & UX (Medium)
+ - Lazy load course content where feasible (lessons, videos)
+ - Responsive design and accessibility basics (WCAG basics)
+ - Basic caching for course listing endpoints
+
+11) Acceptance criteria for MVP
+ - Visitor can browse and preview courses without login
+ - User can register/login as student or teacher
+ - Student can enroll in a course and access course content after enrolling
+ - Teacher can create a course, add lessons and assignments, and grade submissions
+ - Assignment submissions can be uploaded and graded; grades visible to students
+ - Basic profile management and logout
+ - App builds and runs locally; tests pass in CI
+
+12) Optional / Stretch (Low)
+ - Quizzes with auto grading
+ - Payments/checkout for paid courses
+ - Discussions or comments in course pages
+ - Certificates generation/export
+ - Analytics dashboards with advanced metrics
+
+Notes & next steps:
+ - Prioritize implementing authentication, enrollments, course content gating, assignment submission/grade flows, and fixing high-severity security findings.
+ - Create issues/tasks in repo for each high-priority item and assign owners/estimates.
+
+---
+If you want, I can turn each high-priority item into GitHub issues and open a task PR with an initial checklist and skeleton endpoints/components.
