@@ -29,6 +29,8 @@
     "jsonpath": "^1.1.1",
     "bfj": ">=7.1.0",
     "postcss": ">=8.4.31"
+    ,
+    "webpack-dev-server": ">=5.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
