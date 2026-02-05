@@ -16,20 +16,11 @@
     "react-router-dom": "^7.13.0",
     "react-scripts": "^5.0.1",
     "recharts": "^2.15.3",
-    "web-vitals": "^2.1.4",
-    "jsonpath": "^1.1.1"
-  },
-  "dependenciesMeta": {
-    "jsonpath": {
-      "optional": false
-    }
+    "web-vitals": "^2.1.4"
   },
   "overrides": {
     "nth-check": ">=2.0.1",
-    "jsonpath": "^1.1.1",
-    "bfj": ">=7.1.0",
-    "postcss": ">=8.4.31"
-    ,
+    "postcss": ">=8.4.31",
     "webpack-dev-server": ">=5.2.1"
   },
   "scripts": {
